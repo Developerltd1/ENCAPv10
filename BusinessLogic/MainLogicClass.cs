@@ -35,25 +35,7 @@ namespace BusinessLogic
                 return false; // Connection failed
             }
         }
-        public static int usp_RecordCount()
-        {
-            int Count = 0;
-            DataTable dataTable = new DataTable();
-
-            using (SqlConnection connection = new SqlConnection(new DbConnection().connectionString))
-            {
-                connection.Open();
-
-                using (SqlDataAdapter dataAdapter = new SqlDataAdapter("Select Count(*) From  tblStorePoints", connection))
-                {
-                    // Fill the DataTable with the results of the query
-                    dataAdapter.Fill(dataTable);
-                }
-                Count = Convert.ToInt32(dataTable.Rows[0][0]);
-            }
-
-            return Count;
-        }
+        
         public void SaveDataToDatabase(DataTable dataList)//List<BatteryData> dataList)
         {
             try
@@ -140,70 +122,8 @@ namespace BusinessLogic
                 }
             }
         }
-        public static void usp_Insert(DataTable dt, out string msg)
-        {
-            DataTable dt1 = new DataTable();
-            msg = null;
-            SqlConnection conn = null;
-            SqlCommand cmd = null;
-            SqlTransaction transaction = null;
-
-            try
-            {
-                //  string ConnectionString = @"Data Source = (LocalDB)\MSSQLLocalDB;AttachDbFilename = " + System.IO.Path.GetFullPath("ENCAPdb.mdf") + "; Integrated Security = True";  //System.Configuration.ConfigurationManager.ConnectionStrings["DbConnectionString"].ToString();
-
-
-                conn = new SqlConnection(new DbConnection().connectionString);
-                conn.Open();
-                transaction = conn.BeginTransaction();
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    cmd = new SqlCommand("usp_InsertRecord", conn, transaction);
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    // Add parameters for the current item in the loop
-                    cmd.Parameters.AddWithValue("@Parameter", dt.Rows[0]["Parameter"].ToString() ?? "");
-                    cmd.Parameters.AddWithValue("@Battery1", dt.Rows[1]["Battery-1"].ToString() ?? "");
-                    cmd.Parameters.AddWithValue("@Battery2", dt.Rows[2]["Battery-2"].ToString() ?? "");
-                    cmd.Parameters.AddWithValue("@Battery3", dt.Rows[3]["Battery-3"].ToString() ?? "");
-                    cmd.Parameters.AddWithValue("@Battery4", dt.Rows[4]["Battery-4"].ToString() ?? "");
-                    cmd.Parameters.AddWithValue("@Battery5", dt.Rows[5]["Battery-5"].ToString() ?? "");
-
-                    // Execute the command
-                    int isInserted = cmd.ExecuteNonQuery();
-
-                    if (isInserted > 0)
-                    {
-                        msg = "Saved Successfully";
-                    }
-                    else
-                    {
-                        msg = "Not Saved";
-                    }
-
-                    // Dispose command to clear parameters for the next iteration
-                    cmd.Dispose();
-                }
-
-                transaction.Commit();
-            }
-            catch (Exception ex)
-            {
-                msg = ex.Message;
-                transaction?.Rollback();
-                return;
-            }
-            finally
-            {
-                // Clean up resources
-                if (conn.State == ConnectionState.Open)
-                    conn.Close();
-                conn.Dispose();
-
-                if (cmd != null)
-                    cmd.Dispose();
-            }
-        }
+        
+        
         public async Task<List<List<StorePoint>>> GetStorePoints(DateTime startDate, DateTime endDate)
         {
             List<List<StorePoint>> allList = new List<List<StorePoint>>();
