@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Set1" targetNamespace="http://tempuri.org/Set1.xsd" xmlns:mstns="http://tempuri.org/Set1.xsd" xmlns="http://tempuri.org/Set1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="ENCAPdb" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="ENCAPdb (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.ENCAPv3.Properties.Settings.GlobalReference.Default.ENCAPdb" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="Set1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="Set1" msprop:Generator_UserDSName="Set1">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="DataTable1" msprop:Generator_TableClassName="DataTable1DataTable" msprop:Generator_RowEvArgName="DataTable1RowChangeEvent" msprop:Generator_TableVarName="tableDataTable1" msprop:Generator_TablePropName="DataTable1" msprop:Generator_RowDeletingName="DataTable1RowDeleting" msprop:Generator_RowChangingName="DataTable1RowChanging" msprop:Generator_RowEvHandlerName="DataTable1RowChangeEventHandler" msprop:Generator_RowDeletedName="DataTable1RowDeleted" msprop:Generator_RowChangedName="DataTable1RowChanged" msprop:Generator_UserTableName="DataTable1" msprop:Generator_RowClassName="DataTable1Row">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Parameter" msprop:Generator_ColumnVarNameInTable="columnParameter" msprop:Generator_ColumnPropNameInRow="Parameter" msprop:Generator_ColumnPropNameInTable="ParameterColumn" msprop:Generator_UserColumnName="Parameter" type="xs:string" minOccurs="0" />
+              <xs:element name="Battery1" msprop:Generator_ColumnVarNameInTable="columnBattery1" msprop:Generator_ColumnPropNameInRow="Battery1" msprop:Generator_ColumnPropNameInTable="Battery1Column" msprop:Generator_UserColumnName="Battery1" type="xs:string" minOccurs="0" />
+              <xs:element name="TimeStamp" msprop:Generator_ColumnVarNameInTable="columnTimeStamp" msprop:Generator_ColumnPropNameInRow="TimeStamp" msprop:Generator_ColumnPropNameInTable="TimeStampColumn" msprop:Generator_UserColumnName="TimeStamp" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="SlaveId1" msprop:Generator_ColumnVarNameInTable="columnSlaveId1" msprop:Generator_ColumnPropNameInRow="SlaveId1" msprop:Generator_ColumnPropNameInTable="SlaveId1Column" msprop:Generator_UserColumnName="SlaveId1" type="xs:string" minOccurs="0" />
+              <xs:element name="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnDataColumn1" msprop:Generator_ColumnPropNameInRow="DataColumn1" msprop:Generator_ColumnPropNameInTable="DataColumn1Column" msprop:Generator_UserColumnName="DataColumn1" type="xs:string" minOccurs="0" />
+              <xs:element name="DataColumn2" msprop:Generator_ColumnVarNameInTable="columnDataColumn2" msprop:Generator_ColumnPropNameInRow="DataColumn2" msprop:Generator_ColumnPropNameInTable="DataColumn2Column" msprop:Generator_UserColumnName="DataColumn2" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Battery2Dt" msprop:Generator_TableClassName="Battery2DtDataTable" msprop:Generator_TableVarName="tableBattery2Dt" msprop:Generator_TablePropName="Battery2Dt" msprop:Generator_RowDeletingName="Battery2DtRowDeleting" msprop:Generator_RowChangingName="Battery2DtRowChanging" msprop:Generator_RowEvHandlerName="Battery2DtRowChangeEventHandler" msprop:Generator_RowDeletedName="Battery2DtRowDeleted" msprop:Generator_UserTableName="Battery2Dt" msprop:Generator_RowChangedName="Battery2DtRowChanged" msprop:Generator_RowEvArgName="Battery2DtRowChangeEvent" msprop:Generator_RowClassName="Battery2DtRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Paramater" msprop:Generator_ColumnVarNameInTable="columnParamater" msprop:Generator_ColumnPropNameInRow="Paramater" msprop:Generator_ColumnPropNameInTable="ParamaterColumn" msprop:Generator_UserColumnName="Paramater" type="xs:string" minOccurs="0" />
+              <xs:element name="Battery2" msprop:Generator_ColumnVarNameInTable="columnBattery2" msprop:Generator_ColumnPropNameInRow="Battery2" msprop:Generator_ColumnPropNameInTable="Battery2Column" msprop:Generator_UserColumnName="Battery2" type="xs:string" minOccurs="0" />
+              <xs:element name="SlaveId2" msprop:Generator_ColumnVarNameInTable="columnSlaveId2" msprop:Generator_ColumnPropNameInRow="SlaveId2" msprop:Generator_ColumnPropNameInTable="SlaveId2Column" msprop:Generator_UserColumnName="SlaveId2" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Battery3Dt" msprop:Generator_TableClassName="Battery3DtDataTable" msprop:Generator_TableVarName="tableBattery3Dt" msprop:Generator_TablePropName="Battery3Dt" msprop:Generator_RowDeletingName="Battery3DtRowDeleting" msprop:Generator_RowChangingName="Battery3DtRowChanging" msprop:Generator_RowEvHandlerName="Battery3DtRowChangeEventHandler" msprop:Generator_RowDeletedName="Battery3DtRowDeleted" msprop:Generator_UserTableName="Battery3Dt" msprop:Generator_RowChangedName="Battery3DtRowChanged" msprop:Generator_RowEvArgName="Battery3DtRowChangeEvent" msprop:Generator_RowClassName="Battery3DtRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Paramater" msprop:Generator_ColumnVarNameInTable="columnParamater" msprop:Generator_ColumnPropNameInRow="Paramater" msprop:Generator_ColumnPropNameInTable="ParamaterColumn" msprop:Generator_UserColumnName="Paramater" type="xs:string" minOccurs="0" />
+              <xs:element name="Battery3" msdata:Caption="Battery2" msprop:Generator_ColumnVarNameInTable="columnBattery3" msprop:Generator_ColumnPropNameInRow="Battery3" msprop:Generator_ColumnPropNameInTable="Battery3Column" msprop:Generator_UserColumnName="Battery3" type="xs:string" minOccurs="0" />
+              <xs:element name="SlaveId3" msdata:Caption="SlaveId2" msprop:Generator_ColumnVarNameInTable="columnSlaveId3" msprop:Generator_ColumnPropNameInRow="SlaveId3" msprop:Generator_ColumnPropNameInTable="SlaveId3Column" msprop:Generator_UserColumnName="SlaveId3" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Battery4Dt" msprop:Generator_TableClassName="Battery4DtDataTable" msprop:Generator_TableVarName="tableBattery4Dt" msprop:Generator_TablePropName="Battery4Dt" msprop:Generator_RowDeletingName="Battery4DtRowDeleting" msprop:Generator_RowChangingName="Battery4DtRowChanging" msprop:Generator_RowEvHandlerName="Battery4DtRowChangeEventHandler" msprop:Generator_RowDeletedName="Battery4DtRowDeleted" msprop:Generator_UserTableName="Battery4Dt" msprop:Generator_RowChangedName="Battery4DtRowChanged" msprop:Generator_RowEvArgName="Battery4DtRowChangeEvent" msprop:Generator_RowClassName="Battery4DtRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Paramater" msprop:Generator_ColumnVarNameInTable="columnParamater" msprop:Generator_ColumnPropNameInRow="Paramater" msprop:Generator_ColumnPropNameInTable="ParamaterColumn" msprop:Generator_UserColumnName="Paramater" type="xs:string" minOccurs="0" />
+              <xs:element name="Battery3" msdata:Caption="Battery2" msprop:Generator_ColumnVarNameInTable="columnBattery3" msprop:Generator_ColumnPropNameInRow="Battery3" msprop:Generator_ColumnPropNameInTable="Battery3Column" msprop:Generator_UserColumnName="Battery3" type="xs:string" minOccurs="0" />
+              <xs:element name="SlaveId3" msdata:Caption="SlaveId2" msprop:Generator_ColumnVarNameInTable="columnSlaveId3" msprop:Generator_ColumnPropNameInRow="SlaveId3" msprop:Generator_ColumnPropNameInTable="SlaveId3Column" msprop:Generator_UserColumnName="SlaveId3" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
