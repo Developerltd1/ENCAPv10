@@ -60,7 +60,7 @@ namespace ENCAPv3
             //    return;
             //}
 
-            EnsureDatabaseExists();
+            //EnsureDatabaseExists();
             #endregion
 
 
