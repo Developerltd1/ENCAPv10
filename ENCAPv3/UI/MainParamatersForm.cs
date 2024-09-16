@@ -233,8 +233,9 @@ namespace ENCAPv3.UI
             UpdateSettingFormTextbox();
         }
 
-        public void UpdateSettingFormTextbox()
+        public async Task UpdateSettingFormTextbox()
         {
+
             // textBoxText.Text = StaticModelValues.ForTestVar.ToString();
             // Value from staticModel to TextBox
             //Done

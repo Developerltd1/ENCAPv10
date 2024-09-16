@@ -172,7 +172,7 @@ namespace ENCAPv3.UI
             }
             NavColor("pnBtnSetting");
         }
-        private void pnBtnMenu_Click(object sender, EventArgs e)
+        private async  void pnBtnMenu_Click(object sender, EventArgs e)
         {
             if (mainParamatersForm == null)
             {
@@ -186,12 +186,12 @@ namespace ENCAPv3.UI
             {
 
                 mainParamatersForm.Activate();
-                mainParamatersForm.UpdateSettingFormTextbox();
-                Application.DoEvents();
+                await  mainParamatersForm.UpdateSettingFormTextbox();
+                await Task.Yield();
             }
             NavColor("pnBtnMenu");
         }
-        private void pnBtnDashboard_Click(object sender, EventArgs e)
+        private async void pnBtnDashboard_Click(object sender, EventArgs e)
         {
              
             if (kiloWattLab == null)
@@ -231,8 +231,12 @@ namespace ENCAPv3.UI
             NavColor("pnBtnDataExport");
         }
 
-        public void NavColor(string tab)
+        public async Task  NavColor(string tab)
         {
+            // Simulate an async operation
+            await Task.Yield(); // Yields control back to the UI thread.
+
+
             if (tab == "pnBtnMenu")
             {
                 pnBtnMenu.BackColor = System.Drawing.Color.Black;

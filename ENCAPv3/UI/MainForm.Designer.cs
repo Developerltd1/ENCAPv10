@@ -137,9 +137,9 @@ namespace ENCAPv3.UI
             this.label1.Location = new System.Drawing.Point(131, 9);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(165, 19);
+            this.label1.Size = new System.Drawing.Size(81, 19);
             this.label1.TabIndex = 2;
-            this.label1.Text = "ENCAP Application v.10.2";
+            this.label1.Text = "EMView 1.0";
             // 
             // btnHam
             // 
