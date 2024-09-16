@@ -2574,6 +2574,7 @@ namespace ENCAPv3.UI
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "KiloWattLab";
             this.Text = "KiloWattLab";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.KiloWattLab_Load);
             this.panel23.ResumeLayout(false);
             this.panel23.PerformLayout();
