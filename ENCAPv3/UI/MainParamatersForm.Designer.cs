@@ -36,6 +36,8 @@ namespace ENCAPv3.UI
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblDbConnect = new System.Windows.Forms.Label();
+            this.lblDbInsertCount = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.moduleCount = new System.Windows.Forms.NumericUpDown();
             this.numSlaveID = new System.Windows.Forms.Label();
@@ -77,9 +79,6 @@ namespace ENCAPv3.UI
             this.panel9 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridViewAlarm = new System.Windows.Forms.DataGridView();
-            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Alarm = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.OccurrenceTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusConnection = new System.Windows.Forms.TextBox();
             this.infoMessages = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -107,8 +106,9 @@ namespace ENCAPv3.UI
             this.Battery20 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
-            this.lblDbConnect = new System.Windows.Forms.Label();
-            this.lblDbInsertCount = new System.Windows.Forms.Label();
+            this.ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Alarm = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.OccurrenceTime = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.moduleCount)).BeginInit();
             this.panel3.SuspendLayout();
@@ -153,6 +153,30 @@ namespace ENCAPv3.UI
             this.panel1.Size = new System.Drawing.Size(1080, 67);
             this.panel1.TabIndex = 3;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // lblDbConnect
+            // 
+            this.lblDbConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDbConnect.AutoSize = true;
+            this.lblDbConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDbConnect.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.lblDbConnect.Location = new System.Drawing.Point(914, 8);
+            this.lblDbConnect.Name = "lblDbConnect";
+            this.lblDbConnect.Size = new System.Drawing.Size(50, 16);
+            this.lblDbConnect.TabIndex = 34;
+            this.lblDbConnect.Text = "Default";
+            // 
+            // lblDbInsertCount
+            // 
+            this.lblDbInsertCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDbInsertCount.AutoSize = true;
+            this.lblDbInsertCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDbInsertCount.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.lblDbInsertCount.Location = new System.Drawing.Point(1017, 8);
+            this.lblDbInsertCount.Name = "lblDbInsertCount";
+            this.lblDbInsertCount.Size = new System.Drawing.Size(15, 16);
+            this.lblDbInsertCount.TabIndex = 33;
+            this.lblDbInsertCount.Text = "0";
             // 
             // label15
             // 
@@ -724,30 +748,6 @@ namespace ENCAPv3.UI
             this.dataGridViewAlarm.TabIndex = 0;
             this.dataGridViewAlarm.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewAlarm_CellContentClick);
             // 
-            // ID
-            // 
-            this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ID.FillWeight = 15.8866F;
-            this.ID.HeaderText = "ID";
-            this.ID.MinimumWidth = 2;
-            this.ID.Name = "ID";
-            this.ID.ReadOnly = true;
-            // 
-            // Alarm
-            // 
-            this.Alarm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Alarm.FillWeight = 88.1134F;
-            this.Alarm.HeaderText = "Alarm";
-            this.Alarm.Name = "Alarm";
-            this.Alarm.ReadOnly = true;
-            // 
-            // OccurrenceTime
-            // 
-            this.OccurrenceTime.HeaderText = "Occurrence Time";
-            this.OccurrenceTime.MinimumWidth = 8;
-            this.OccurrenceTime.Name = "OccurrenceTime";
-            this.OccurrenceTime.ReadOnly = true;
-            // 
             // statusConnection
             // 
             this.statusConnection.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -989,29 +989,29 @@ namespace ENCAPv3.UI
             this.cartesianChart1.TabIndex = 1;
             this.cartesianChart1.Text = "cartesianChart";
             // 
-            // lblDbConnect
+            // ID
             // 
-            this.lblDbConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDbConnect.AutoSize = true;
-            this.lblDbConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDbConnect.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.lblDbConnect.Location = new System.Drawing.Point(914, 8);
-            this.lblDbConnect.Name = "lblDbConnect";
-            this.lblDbConnect.Size = new System.Drawing.Size(50, 16);
-            this.lblDbConnect.TabIndex = 34;
-            this.lblDbConnect.Text = "Default";
+            this.ID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ID.FillWeight = 15.8866F;
+            this.ID.HeaderText = "ID";
+            this.ID.MinimumWidth = 2;
+            this.ID.Name = "ID";
+            this.ID.ReadOnly = true;
             // 
-            // lblDbInsertCount
+            // Alarm
             // 
-            this.lblDbInsertCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDbInsertCount.AutoSize = true;
-            this.lblDbInsertCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDbInsertCount.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.lblDbInsertCount.Location = new System.Drawing.Point(1017, 8);
-            this.lblDbInsertCount.Name = "lblDbInsertCount";
-            this.lblDbInsertCount.Size = new System.Drawing.Size(15, 16);
-            this.lblDbInsertCount.TabIndex = 33;
-            this.lblDbInsertCount.Text = "0";
+            this.Alarm.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.Alarm.FillWeight = 88.1134F;
+            this.Alarm.HeaderText = "Alarm";
+            this.Alarm.Name = "Alarm";
+            this.Alarm.ReadOnly = true;
+            // 
+            // OccurrenceTime
+            // 
+            this.OccurrenceTime.HeaderText = "OccurrenceTime";
+            this.OccurrenceTime.MinimumWidth = 8;
+            this.OccurrenceTime.Name = "OccurrenceTime";
+            this.OccurrenceTime.ReadOnly = true;
             // 
             // MainParamatersForm
             // 
@@ -1091,7 +1091,6 @@ namespace ENCAPv3.UI
         private LiveCharts.WinForms.CartesianChart cartesianChart1;
         private System.Windows.Forms.Label labelPower;
         private System.Windows.Forms.Label labelCurrent;
-        private System.Windows.Forms.Label labelVolt;
         private System.Windows.Forms.Label labelTemp;
         private System.Windows.Forms.Label labelSoc;
         private System.Windows.Forms.TextBox statusConnection;
@@ -1126,13 +1125,14 @@ namespace ENCAPv3.UI
         private System.Windows.Forms.DataGridViewTextBoxColumn Battery18;
         private System.Windows.Forms.DataGridViewTextBoxColumn Battery19;
         private System.Windows.Forms.DataGridViewTextBoxColumn Battery20;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Alarm;
-        private System.Windows.Forms.DataGridViewTextBoxColumn OccurrenceTime;
         private System.Windows.Forms.Label numSlaveID;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.NumericUpDown moduleCount;
         private System.Windows.Forms.Label lblDbConnect;
         private System.Windows.Forms.Label lblDbInsertCount;
+        public System.Windows.Forms.Label labelVolt;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Alarm;
+        private System.Windows.Forms.DataGridViewTextBoxColumn OccurrenceTime;
     }
 }

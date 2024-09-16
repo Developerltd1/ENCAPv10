@@ -18,6 +18,7 @@ using LiveCharts.Defaults;
 using System.Windows.Media;
 using System.Data.SqlClient;
 using log4net;
+using System.Text.RegularExpressions;
 //System.Windows.Forms
 namespace ENCAPv3.UI
 {
@@ -163,15 +164,13 @@ namespace ENCAPv3.UI
                     UnitIdentifier = Convert.ToByte(slaveID), // Slave ID
                     ConnectionTimeout = 300//Convert.ToInt32(readingTimeOut.Value) // Timeout in milliseconds
                 };
-
                 statusConnection.Text = ("Connected");
-               
                 modbusClient.Connect();
                 Logger.Info("MainParamaterForm/InitializeModbusClient| modbusClient.Connect()");
             }
             catch (Exception ex)
             {
-                Logger.Error("MainParamaterForm/InitializeModbusClient| Exception: "+ ex.Message);
+                Logger.Error("MainParamaterForm/InitializeModbusClient| Exception: " + ex.Message);
                 string ss = ex.Message;
                 string[] parts = ss.Split('\''); // Split by single quote
                 string port = parts.Length > 1 ? parts[1] : string.Empty; // Get the second part (COM4)
@@ -181,10 +180,8 @@ namespace ENCAPv3.UI
                 infoMessages.Text = ("Error reading: " + "+ port: " + port + ex.Message);
             }
         }
-
         public MainParamatersForm(int num)
         {
-
         }
 
         private void CheckDatabaseConnection()
@@ -209,8 +206,7 @@ namespace ENCAPv3.UI
                 Logger.Info("MainParametersForm/Constructor InitializePollingTimer");
 
                 dataList = new List<BatteryData>();
-
-                minuteTimer = new Timer { Interval = 60000 }; // 1 minute interval
+                minuteTimer = new Timer { Interval = 5000 };  //60000 }; // 1 minute interval
                 minuteTimer.Tick += MinuteTimerTick;
 
                 Paremeters();
@@ -230,21 +226,12 @@ namespace ENCAPv3.UI
         }
         public void MainParamatersForm_Load(object sender, EventArgs e)
         {
-            UpdateSettingFormTextbox();
         }
 
-        public async Task UpdateSettingFormTextbox()
-        {
-
-            // textBoxText.Text = StaticModelValues.ForTestVar.ToString();
-            // Value from staticModel to TextBox
-            //Done
-        }
         private void Paremeters()
         {
             try
             {
-
                 StaticModel.MainParamatersForm_Parameters _Parameters = new StaticData().MainParamatersForm_ParametersFn();
                 /* labelVolt.Text = _Parameters.Volt.ToString();
                  labelCurrent.Text = _Parameters.Current.ToString();
@@ -256,7 +243,6 @@ namespace ENCAPv3.UI
             {
                 JIMessageBox.ErrorMessage(ex.Message);
             }
-
         }
         //FUNCATIONS
 
@@ -287,8 +273,6 @@ namespace ENCAPv3.UI
             }
 
         }
-
-
 
         public void StartPollingDatabase()
         {
@@ -322,7 +306,6 @@ namespace ENCAPv3.UI
 
         }
 
-
         int _lblDbInsertCount = 0;
         private void MinuteTimerTick(object sender, EventArgs e)
         {
@@ -336,12 +319,58 @@ namespace ENCAPv3.UI
                     dataTable.Columns.Add(column.HeaderText);
                 }
                 // Add rows to the DataTable
+                Regex specialCharPattern = new Regex(@"^[,\/\-_%\s]+$");
                 foreach (DataGridViewRow row in dgvCellLevel.Rows)
                 {
                     // Skip the last empty row if AllowUserToAddRows is true
                     if (!row.IsNewRow)
                     {
-                        if (row.Cells[0].Value == "Serial") { }
+                        var cellValue = row.Cells[0].Value?.ToString();
+
+                        if (cellValue == "Serial") 
+                        {
+                            #region Skipp From DataTableCode
+                            //// Check if Serial value contains only special characters
+                            //if (!specialCharPattern.IsMatch(cellValue))
+                            //{
+                            //    // Valid Serial, assign to DataTable
+                            //    DataRow dataRow = dataTable.NewRow();
+                            //    foreach (DataGridViewCell cell in row.Cells)
+                            //    {
+                            //        dataRow[cell.ColumnIndex] = cell.Value;
+                            //    }
+                            //    dataTable.Rows.Add(dataRow);
+                            //}
+                            //else
+                            //{
+                            //    // Handle case where Serial contains only special characters (if needed)
+                            //    // Skip or log the invalid row
+                            //} 
+                            #endregion
+                            #region AssignNull to  DataTable  Currently i select this
+                                // Create a new DataRow
+                                DataRow dataRow = dataTable.NewRow();
+
+                                // Loop through all cells in the Serial row
+                                for (int i = 0; i < row.Cells.Count; i++)
+                                {
+                                    var cellText = row.Cells[i].Value?.ToString();
+
+                                    // If the cell contains only special characters, assign NULL
+                                    if (specialCharPattern.IsMatch(cellText))
+                                    {
+                                        dataRow[i] = DBNull.Value;
+                                    }
+                                    else
+                                    {
+                                        // Otherwise, assign the actual value
+                                        dataRow[i] = row.Cells[i].Value;
+                                    }
+                                }
+
+                                dataTable.Rows.Add(dataRow);
+                                #endregion
+                            }
                         else if (row.Cells[0].Value == "FAULT-1")
                         {
                         }
@@ -364,15 +393,61 @@ namespace ENCAPv3.UI
                             {
                                 dataRow[cell.ColumnIndex] = cell.Value;
                             }
-
                             dataTable.Rows.Add(dataRow);
                         }
                     }
-
                 }
                 #endregion
                 CheckDatabaseConnection();
                 new MainLogicClass().SaveDataToDatabase(dataTable);
+
+
+
+
+
+                #region AlarmFromGrid
+                DataTable dataTableAlarm = new DataTable();
+                foreach (DataGridViewColumn column in dataGridViewAlarm.Columns)
+                {
+                    dataTableAlarm.Columns.Add(column.HeaderText);
+                }
+                // Check if the GridView is not empty
+                if (dataGridViewAlarm.Rows.Count > 0)
+                {
+                    // Iterate through each row in the GridView
+                    foreach (DataGridViewRow row in dataGridViewAlarm.Rows)
+                    {
+                        // Skip new or empty rows
+                        if (!row.IsNewRow && row.Cells[0].Value != null)
+                        {
+                            DataRow dataRow = dataTableAlarm.NewRow();
+
+                            // Assign cell values to the DataTable row
+                            for (int i = 0; i < row.Cells.Count; i++)
+                            {
+                                dataRow[i] = row.Cells[i].Value;
+                            }
+
+                            // Add the DataRow to the DataTable
+                            dataTableAlarm.Rows.Add(dataRow);
+                        }
+                    }
+                    new MainLogicClass().SaveAlarmGridToDatabase(dataTableAlarm);
+                }
+                else
+                {
+                    // GridView is empty
+                   // MessageBox.Show("The grid is empty!");
+                }
+              
+                #endregion
+                decimal _labelVolt = Convert.ToDecimal(labelVolt.Text);
+                decimal _labelCurrent = Convert.ToDecimal(labelCurrent.Text);
+                decimal _labelPower = Convert.ToDecimal(labelPower.Text);
+                decimal _labelSoc = Convert.ToDecimal(labelSoc.Text);
+                decimal _labelTemp = Convert.ToDecimal(labelTemp.Text);
+                new MainLogicClass().SaveMainParamatersToDatabase(_labelVolt, _labelCurrent, _labelPower, _labelSoc, _labelTemp);
+
                 _lblDbInsertCount++;
                 lblDbInsertCount.Text = _lblDbInsertCount.ToString();
 
@@ -580,10 +655,10 @@ namespace ENCAPv3.UI
             try
             {
                 pollingTimer.Stop();
-                if (modbusClient.Connected)
-                {
-                    modbusClient.Disconnect();
-                }
+                //if (modbusClient.Connected)  //hassancode
+                //{
+                //    modbusClient.Disconnect();
+                //}
             }
             catch (Exception ex)
             {
@@ -594,6 +669,8 @@ namespace ENCAPv3.UI
         static ChartValues<double> lstvoltage = new ChartValues<double>();
         static ChartValues<double> lstcurrent = new ChartValues<double>();
         static ChartValues<double> lstpower = new ChartValues<double>();
+        static ChartValues<double> SocColor = new ChartValues<double>();
+        static ChartValues<double> TempColor = new ChartValues<double>();
         static List<ChartValues<double>> allLists = new List<ChartValues<double>>();
         //List<string> XAxisValue = new List<string>() { "Voltage (V)", "Current (Amps)", "Power (kW)", "SOC Power" };
         public static bool isPollSelected = false;
@@ -611,7 +688,8 @@ namespace ENCAPv3.UI
                     slaveID = 1;
 
                 }
-                LoadModbusData(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);
+                ////LoadModbusData(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);   //HassanCode
+                LoadModbusDataTestingByAqib(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);
                 slaveID++;
 
                 string[] avgVoltage = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
@@ -684,16 +762,22 @@ namespace ENCAPv3.UI
                     lstvoltage.Add(Convert.ToDouble(labelVolt.Text));
                     lstcurrent.Add(Convert.ToDouble(labelCurrent.Text));
                     lstpower.Add(Convert.ToDouble(labelPower.Text));
+                    lstpower.Add(Convert.ToDouble(labelPower.Text));
+                    SocColor.Add(Convert.ToDouble(labelSoc.Text));
+                    TempColor.Add(Convert.ToDouble(labelTemp.Text));
 
                     // Update allLists with the updated data
                     allLists.Clear();
                     allLists.Add(new ChartValues<double>(lstvoltage));
                     allLists.Add(new ChartValues<double>(lstcurrent));
                     allLists.Add(new ChartValues<double>(lstpower));
-
+                    allLists.Add(new ChartValues<double>(SocColor));
+                    allLists.Add(new ChartValues<double>(TempColor));
                     TrimChartValues(lstvoltage);
                     TrimChartValues(lstcurrent);
                     TrimChartValues(lstpower);
+                    TrimChartValues(SocColor);
+                    TrimChartValues(TempColor);
                     new ChartSet().chartGT3(allLists, cartesianChart1);
                 }
                 #endregion
@@ -716,8 +800,8 @@ namespace ENCAPv3.UI
         bool[] boolsRegister = { false };
         bool searchRegisterFlag = false;
         int z;
-        double voltage, current, soc, power, temp, ah, avgcell, cell1, cell2, cell3, cell4, cell5, cell6, cell7, 
-                cell8, cell9, cell10, cell11, cell12, cell13, cell14, cell15, fault1, fault2, fault3, fault4, 
+        double voltage, current, soc, power, temp, ah, avgcell, cell1, cell2, cell3, cell4, cell5, cell6, cell7,
+                cell8, cell9, cell10, cell11, cell12, cell13, cell14, cell15, fault1, fault2, fault3, fault4,
                 maxCell, minCell, diffCell, CMOS, DMOS, EMOS, Safety;
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -759,7 +843,7 @@ namespace ENCAPv3.UI
             {
                 lst = new List<double>();
                 dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                Logger.Info("MainParamaterForm/LoadModbusData| batteryIndex: " + batteryIndex.ToString() + " SERIAL_READ: " + functionCode.ToString() + " registerNumber: "+ registerNumber  + " data: "+ data.ToString());
+                Logger.Info("MainParamaterForm/LoadModbusData| batteryIndex: " + batteryIndex.ToString() + " SERIAL_READ: " + functionCode.ToString() + " registerNumber: " + registerNumber + " data: " + data.ToString());
 
                 modbusTotalReg = modbusRegCount + modbusStartReg;
                 Logger.Info("MainParamaterForm/LoadModbusData| modbusTotalReg: " + modbusTotalReg.ToString());
@@ -893,7 +977,7 @@ namespace ENCAPv3.UI
                                         #endregion
 
                                         #region CMOS & DMOS reading
-                                        string mos=(registers[CHARGING_MOS])+"/"+ (registers[DISCHARGING_MOS]);
+                                        string mos = (registers[CHARGING_MOS]) + "/" + (registers[DISCHARGING_MOS]);
 
                                         #endregion
 
@@ -927,7 +1011,7 @@ namespace ENCAPv3.UI
                                         dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(maxCell, 2);
                                         dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(minCell, 2);
                                         dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(diffCell, 2);
-                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = mos; 
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = mos;
                                         var w = dgvCellLevel.Rows[23].Cells[batteryIndex].Value;
                                         int c = Convert.ToInt32(dgvCellLevel.Rows[23].Cells[batteryIndex].Value);//int.Parse(w.ToString());
                                         #endregion
@@ -951,19 +1035,19 @@ namespace ENCAPv3.UI
                                         //modbusClient.WriteSingleRegister(7485, 2345);
                                         modbusClient.WriteSingleRegister(registerNumber, data);
                                         //modbusClient.WriteSingleRegister(Convert.ToInt32(StaticModelValues.tbLowCellVolt), Convert.ToInt32(StaticModelValues.tbHighCellVolt));
-                                        Logger.Info("MainParamaterForm/LoadModbusData| registerNumber " + registerNumber.ToString() + " data: "+ data.ToString());
+                                        Logger.Info("MainParamaterForm/LoadModbusData| registerNumber " + registerNumber.ToString() + " data: " + data.ToString());
                                         Logger.Info("MainParamaterForm/LoadModbusData| registers " + modbusClient.ToString());
                                         break;
                                     case 0x50:
                                         modbusClient.Disconnect();
                                         Logger.Info("MainParamaterForm/LoadModbusData| modbusClient.Disconnect() " + modbusClient.ToString());
-                                        
+
                                         InitializeSerialPort();
                                         Logger.Info("MainParamaterForm/LoadModbusData| InitializeSerialPort()");
                                         string FixedFrameID = "A5401908";
                                         Logger.Info("MainParamaterForm/LoadModbusData|  FixedFrameID");
                                         short value4 = (short)registerNumber;
-                                        Logger.Info("MainParamaterForm/LoadModbusData|  value4:"+ value4.ToString());
+                                        Logger.Info("MainParamaterForm/LoadModbusData|  value4:" + value4.ToString());
                                         short value3 = (short)registerNumber;
                                         Logger.Info("MainParamaterForm/LoadModbusData|  value3:" + value3.ToString());
                                         short value2 = (short)data;
@@ -978,22 +1062,22 @@ namespace ENCAPv3.UI
                                         Logger.Info("MainParamaterForm/LoadModbusData| Array.Copy");
                                         // Create the CAN packet
                                         byte[] canPacket = CreateCANPacket(FixedFrameID, canData);
-                                        
-                                        
+
+
                                         // Display the resulting CAN packet
                                         //canPkt.Text = "Generated CAN Packet: " + BitConverter.ToString(canPacket).Replace("-", "");
                                         SendCANPacket(canPacket);
                                         string tmpp = BitConverter.ToString(canPacket).Replace("-", string.Empty);
-                                        Logger.Info("MainParamaterForm/LoadModbusData|  canPacket:"+ tmpp);
-                                       /* try
-                                        {
-                                            serialPort.Close();
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            Logger.Error("MainParamaterForm/LoadModbusData|  SendCANPacket Exception:" + ex.Message.ToString());
-                                            JIMessageBox.ErrorMessage(ex.Message);
-                                        }*/
+                                        Logger.Info("MainParamaterForm/LoadModbusData|  canPacket:" + tmpp);
+                                        /* try
+                                         {
+                                             serialPort.Close();
+                                         }
+                                         catch (Exception ex)
+                                         {
+                                             Logger.Error("MainParamaterForm/LoadModbusData|  SendCANPacket Exception:" + ex.Message.ToString());
+                                             JIMessageBox.ErrorMessage(ex.Message);
+                                         }*/
                                         break;
                                     case 98://load setting page data points
                                         #region AqibComentAgain
@@ -1027,7 +1111,7 @@ namespace ENCAPv3.UI
                                     default:
                                         Logger.Info("MainParamaterForm/LoadModbusData|  Unsupported function code.");
                                         throw new InvalidOperationException("Unsupported function code.");
-                                      
+
                                 }
 
                                 z = 0;
@@ -1084,6 +1168,267 @@ namespace ENCAPv3.UI
 
             return allLists;
         }
+
+        public List<ChartValues<double>> LoadModbusDataTestingByAqib(Int32 batteryIndex, int functionCode, int registerNumber, int data)
+        {
+            string serialNumberString = "-";
+            try
+            {
+                lst = new List<double>();
+                dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                Logger.Info("MainParamaterForm/LoadModbusData| batteryIndex: " + batteryIndex.ToString() + " SERIAL_READ: " + functionCode.ToString() + " registerNumber: " + registerNumber + " data: " + data.ToString());
+
+                modbusTotalReg = modbusRegCount + modbusStartReg;
+                Logger.Info("MainParamaterForm/LoadModbusData| modbusTotalReg: " + modbusTotalReg.ToString());
+
+                index = 0;
+                searchValue = 0;
+                searchRange = 0;
+                string hexString;
+                z = 0;
+                {
+                    {
+                        numSlaveID.Text = batteryIndex.ToString();
+                        slaveID = batteryIndex;
+                        StaticModelValues.slaveId1 = Convert.ToInt32(numSlaveID.Text);
+                        Logger.Info("MainParamaterForm/LoadModbusData| slaveId1: " + StaticModelValues.slaveId1.ToString());
+                        try
+                        {
+                            //InitializeModbusClient();
+                            statusConnection.Text = ("Connected");
+                            try
+                            {
+                                Logger.Info("MainParamaterForm/LoadModbusData| functionCode: " + functionCode);
+                                switch (functionCode)
+                                {//StaticComment
+                                    //case 1:
+                                        //boolsRegister = modbusClient.ReadCoils(modbusStartReg, modbusRegCount);// Read Coils (0x01)
+                                       // Logger.Info("MainParamaterForm/LoadModbusData| boolsRegister: " + boolsRegister.ToString());
+                                       // break;
+                                    //case 2:
+                                       // boolsRegister = modbusClient.ReadDiscreteInputs(modbusStartReg, modbusRegCount);// Read Discrete Inputs (0x02)
+                                      //  break;
+                                    case 3:
+                                        //registers = modbusClient.ReadHoldingRegisters(modbusStartReg, modbusRegCount);    //uncomment
+                                        //int[] serialNumberRaw = modbusClient.ReadHoldingRegisters(registerNumber, data);  //uncomment
+                                        //registers = arr;
+                                        //int[] serialNumberRaw = registers;
+
+
+
+                                        //hexString = string.Join("", Array.ConvertAll(serialNumberRaw, val => val.ToString("X")));   //uncomment
+                                        //Logger.Info("MainParamaterForm/LoadModbusData| hexString: " + hexString.ToString());
+
+                                        //serialNumberString = ConvertHexStringToAscii(hexString);    //uncomment
+                                        Logger.Info("MainParamaterForm/LoadModbusData| serialNumberString: " + serialNumberString.ToString());
+                                        #region StaticDataByAQIB
+                                        rnd = new Random();
+                                        voltage = rnd.Next(0, 1000) * 0.1;
+                                        current = (rnd.Next(0, 1000) - 30000) * 0.1;
+                                        power = (rnd.Next(0, 1000));
+                                        soc = (rnd.Next(0, 1000)) * 0.1;
+                                        ah = (rnd.Next(0, 1000)) * 0.1;
+                                        temp = (rnd.Next(0, 1000)) - 40;
+                                        cell1 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell2 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell3 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell4 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell5 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell6 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell7 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell8 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell9 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell10 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell11 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell12 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell13 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell14 = (rnd.Next(0, 1000)) * 0.001;
+                                        cell15 = (rnd.Next(0, 1000)) * 0.001;
+
+                                        fault1 = (rnd.Next(1, 1000)) * 0.009;
+                                        fault2 = (rnd.Next(2, 1000)) * 0.009;
+                                        fault3 = (rnd.Next(3, 1000)) * 0.009;
+                                        fault4 = (rnd.Next(4, 1000)) * 0.009;
+                                        #endregion
+
+                                        #region DynamicData
+
+                                        maxCell = FindMax(cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10, cell11, cell12, cell13, cell14, cell15);
+                                        minCell = FindMin(cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10, cell11, cell12, cell13, cell14, cell15);
+                                        diffCell = Math.Abs(maxCell - minCell);
+                                        #endregion
+
+                                        #region CMOS & DMOS reading
+                                        string mos = (12) + "/" + (20);
+
+                                        #endregion
+
+                                        #region dynamicToGrid
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = serialNumberString;
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(voltage, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(current, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(power, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(soc, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(ah, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(temp, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell1, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell2, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell3, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell4, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell5, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell6, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell7, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell8, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell9, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell10, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell11, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell12, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell13, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell14, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(cell15, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = fault1;
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = fault2;
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = fault3;
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = fault4;
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(maxCell, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(minCell, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = Math.Round(diffCell, 2);
+                                        dgvCellLevel.Rows[z++].Cells[batteryIndex].Value = mos;
+                                        var w = dgvCellLevel.Rows[23].Cells[batteryIndex].Value;
+                                        int c = Convert.ToInt32(dgvCellLevel.Rows[23].Cells[batteryIndex].Value);//int.Parse(w.ToString());
+                                        #endregion
+
+                                        #region FAULTS / ALARMS
+                                        z = 0;//fault 2
+                                        #endregion
+
+                                        staticDt = MainParamatersFormPartial.ConvertDataGridViewToDataTable(dgvCellLevel);
+                                        Logger.Info("MainParamaterForm/LoadModbusData| staticDt " + staticDt.ToString());
+                                        fnpublic();
+                                        break;
+                                    //case 4:
+                                        //registers = modbusClient.ReadInputRegisters(modbusStartReg, modbusRegCount);// Read Input Registers (0x04)
+                                        //Logger.Info("MainParamaterForm/LoadModbusData| registers " + registers.ToString());
+                                        //break;
+                                    //case 6:
+                                        //modbusClient.WriteSingleRegister(registerNumber, data);
+                                        //Logger.Info("MainParamaterForm/LoadModbusData| registerNumber " + registerNumber.ToString() + " data: " + data.ToString());
+                                        //Logger.Info("MainParamaterForm/LoadModbusData| registers " + modbusClient.ToString());
+                                        //break;
+                                    //case 0x50:
+                                        //modbusClient.Disconnect();
+                                        //Logger.Info("MainParamaterForm/LoadModbusData| modbusClient.Disconnect() " + modbusClient.ToString());
+                                        //
+                                        //InitializeSerialPort();
+                                        //Logger.Info("MainParamaterForm/LoadModbusData| InitializeSerialPort()");
+                                        //string FixedFrameID = "A5401908";
+                                        //Logger.Info("MainParamaterForm/LoadModbusData|  FixedFrameID");
+                                        //short value4 = (short)registerNumber;
+                                        //Logger.Info("MainParamaterForm/LoadModbusData|  value4:" + value4.ToString());
+                                        //short value3 = (short)registerNumber;
+                                        //Logger.Info("MainParamaterForm/LoadModbusData|  value3:" + value3.ToString());
+                                        //short value2 = (short)data;
+                                        //Logger.Info("MainParamaterForm/LoadModbusData|  value2:" + value2.ToString());
+                                        //short value1 = (short)data;
+                                        //Logger.Info("MainParamaterForm/LoadModbusData|  value2:" + value1.ToString());
+                                        //byte[] canData = new byte[8];
+                                        //Array.Copy(SwapBytes(BitConverter.GetBytes(value1)), 0, canData, 0, 2);
+                                        //Array.Copy(SwapBytes(BitConverter.GetBytes(value2)), 0, canData, 2, 2);
+                                        //Array.Copy(SwapBytes(BitConverter.GetBytes(value3)), 0, canData, 4, 2);
+                                        //Array.Copy(SwapBytes(BitConverter.GetBytes(value4)), 0, canData, 6, 2);
+                                        //Logger.Info("MainParamaterForm/LoadModbusData| Array.Copy");
+                                        //// Create the CAN packet
+                                        //byte[] canPacket = CreateCANPacket(FixedFrameID, canData);
+                                        //
+                                        //// Display the resulting CAN packet
+                                        ////canPkt.Text = "Generated CAN Packet: " + BitConverter.ToString(canPacket).Replace("-", "");
+                                        //SendCANPacket(canPacket);
+                                        //string tmpp = BitConverter.ToString(canPacket).Replace("-", string.Empty);
+                                        //Logger.Info("MainParamaterForm/LoadModbusData|  canPacket:" + tmpp);
+                                    //case 98://load setting page data points
+                                    //    registers = modbusClient.ReadHoldingRegisters(registerNumber, data);
+                                    //    Logger.Info("MainParamaterForm/LoadModbusData|  registers:" + registers.ToString());
+                                    //    StaticModelValues.register_Settings = registers;
+                                    //    break;
+                                    //case 99://load serial number
+                                    //    registers = modbusClient.ReadHoldingRegisters(registerNumber, data);
+                                    //    Logger.Info("MainParamaterForm/LoadModbusData|  registers:" + registers.ToString());
+                                    //    StaticModelValues.register_Settings = registers;
+                                    //    hexString = string.Join("", Array.ConvertAll(registers, val => val.ToString("X")));
+                                    //    serialNumberString = ConvertHexStringToAscii(hexString);
+                                    //    Logger.Info("MainParamaterForm/LoadModbusData|  serialNumberString:" + serialNumberString.ToString());
+                                    //    break;
+                                    //case 100://values writing function from settings page
+                                    //    modbusClient.WriteSingleRegister(registerNumber, data);
+                                    //    Logger.Info("MainParamaterForm/LoadModbusData|  modbusClient:" + modbusClient.ToString());
+                                    //    registers = modbusClient.ReadHoldingRegisters(registerNumber, 1);// Read Holding Registers (0x03)
+                                    //    Logger.Info("MainParamaterForm/LoadModbusData|  modbusClient:" + registers.ToString());
+                                    //    StaticModelValues.tbLowCellVolt = registers[0];
+                                    //    Logger.Info("MainParamaterForm/LoadModbusData|  registers[0]:" + registers[0].ToString());
+                                    //    break;
+                                    default:
+                                        Logger.Info("MainParamaterForm/LoadModbusData|  Unsupported function code.");
+                                        throw new InvalidOperationException("Unsupported function code.");
+
+                                }
+
+                                z = 0;
+                                infoMessages.Text = ("Reading Successful");
+
+                                avgcell = ((cell1 + cell2 + cell3 + cell4 + cell5 + cell6 + cell7 + cell8 + cell9 + cell10 + cell11 + cell12 + cell13 + cell14) / 14);
+                                labelVolt.Text = voltage.ToString("0.0");
+                                labelCurrent.Text = current.ToString("0.0");
+                                labelPower.Text = power.ToString("0.0");
+                                labelTemp.Text = temp.ToString("0.0");
+                                labelSoc.Text = soc.ToString("0.0");
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.Error("MainParamaterForm/LoadModbusData|  Exception:" + ex.Message.ToString());
+                                int[] tmp = { 0, 0 };
+                                infoMessages.BackColor = System.Drawing.Color.Red;   //uncomment
+                                infoMessages.ForeColor = System.Drawing.Color.White;
+                                infoMessages.Text = ("Error reading Modbus data: " + ex.Message);
+                                StaticModelValues.register_Settings = tmp;
+                                for (z = 0; z <= 18; z++)
+                                    dgvCellLevel.Rows[z].Cells[batteryIndex].Value = "-";
+                                labelVolt.Text = "-";
+                                labelCurrent.Text = "-";
+                                labelPower.Text = "-";
+                                labelTemp.Text = "-";
+
+                                labelSoc.Text = "-";
+                            }
+                            finally   //uncomment
+                            {
+                                //if (modbusClient.Connected)
+                                //{
+                                //    modbusClient.Disconnect(); // Disconnect from Modbus server
+                                //    statusConnection.Text = "Disconnected";
+                                //}
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error("MainParamaterForm/LoadModbusData|  Outer Exception:" + ex.Message.ToString());
+                            //skip if no slave found
+                        }
+                        readReady = false;
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("MainParamaterForm/LoadModbusData|  Main Exception:" + ex.Message.ToString());
+                JIMessageBox.ErrorMessage(ex.Message);
+            }
+
+            return allLists;
+        }
+
+
+
         static double FindMax(params double[] numbers)
         {
             return numbers.Max();
@@ -1262,7 +1607,7 @@ namespace ENCAPv3.UI
                 MessageBox.Show("Error reading: " + ex.Message);
                 serialPort.Close();
             }
-            
+
 
         }
 

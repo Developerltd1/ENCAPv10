@@ -78,7 +78,6 @@ namespace BusinessLogic
         }
         private void BulkInsertData(DataTable dataTable)
         {
-            // string ConnectionString = @"Data Source = (LocalDB)\MSSQLLocalDB;AttachDbFilename = " + System.IO.Path.GetFullPath("ENCAPdb.mdf") + "; Integrated Security = True";  //System.Configuration.ConfigurationManager.ConnectionStrings["DbConnectionString"].ToString();
             using (SqlConnection connection = new SqlConnection(new DbConnection().connectionString))
             {
                 connection.Open();
@@ -204,203 +203,103 @@ namespace BusinessLogic
                     cmd.Dispose();
             }
         }
-        public async Task<List<List<StorePoint>>> GetStorePoints(DateTime startDate, DateTime endDate)
+        public async Task<List<ChartModel>> GetStorePoints(DateTime startDate, DateTime endDate, bool includeVoltage, bool includeCurrents, bool includePower, bool includeSOC, bool includeTemp, bool selectAll)
         {
-            List<List<StorePoint>> allList = new List<List<StorePoint>>();
-            List<StorePoint> dateList = new List<StorePoint>();
-            List<StorePoint> voltageList = new List<StorePoint>();
-            List<StorePoint> currentList = new List<StorePoint>();
-            List<StorePoint> powerList = new List<StorePoint>();
-            List<StorePoint> socList = new List<StorePoint>();
-            List<StorePoint> capacityList = new List<StorePoint>();
-            List<StorePoint> temperatureList = new List<StorePoint>();
-
-            // Define the connection string (adjust the values to match your environment)
-            //string connectionString = connectionString;
-
-            // Create a new DataTable to hold the results
-            DataTable dataTable = new DataTable();
-
-            // Create the SqlConnection, SqlCommand, and SqlDataAdapter objects
+            List<ChartModel> allList = new List<ChartModel>();
             using (SqlConnection connection = new SqlConnection(new DbConnection().connectionString))
             {
-                using (SqlCommand command = new SqlCommand("usp_SelectStorePoints1", connection))
+                using (SqlCommand command = new SqlCommand("usp_MainParametersCharts", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-
-                    // Add parameters to the SqlCommand
                     command.Parameters.AddWithValue("@StartDate", startDate);
                     command.Parameters.AddWithValue("@EndDate", endDate);
+                    command.Parameters.AddWithValue("@IncludeVoltage", includeVoltage ? 1 : 0);
+                    command.Parameters.AddWithValue("@IncludeCurrents", includeCurrents ? 1 : 0);
+                    command.Parameters.AddWithValue("@IncludePower", includePower ? 1 : 0);
+                    command.Parameters.AddWithValue("@IncludeSOC", includeSOC ? 1 : 0);
+                    command.Parameters.AddWithValue("@IncludeTemp", includeTemp ? 1 : 0);
+                    command.Parameters.AddWithValue("@SelectAll", selectAll ? 1 : 0);
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        try
+                        {
+                            DataTable originalTable = new DataTable();
+                            await connection.OpenAsync();
+                            await Task.Run(() => adapter.Fill(originalTable));
+
+                            #region AssignToList
+                            // Read data dynamically, checking if the column exists in the DataTable
+                            foreach (DataRow row in originalTable.Rows)
+                            {
+                                var modelChart = new ChartModel();
+
+                                if (originalTable.Columns.Contains("Voltage"))
+                                    modelChart.Voltage = row["Voltage"] != DBNull.Value ? (double?)Convert.ToDouble(row["Voltage"]) : null;
+
+                                if (originalTable.Columns.Contains("Currents"))
+                                    modelChart.Currents = row["Currents"] != DBNull.Value ? (double?)Convert.ToDouble(row["Currents"]) : null;
+
+                                if (originalTable.Columns.Contains("Power"))
+                                    modelChart.Power = row["Power"] != DBNull.Value ? (double?)Convert.ToDouble(row["Power"]) : null;
+
+                                if (originalTable.Columns.Contains("SOC"))
+                                    modelChart.SOC = row["SOC"] != DBNull.Value ? (double?)Convert.ToDouble(row["SOC"]) : null;
+
+                                if (originalTable.Columns.Contains("Temp"))
+                                    modelChart.Temp = row["Temp"] != DBNull.Value ? (double?)Convert.ToDouble(row["Temp"]) : null;
+
+                                if (originalTable.Columns.Contains("DateCheck"))
+                                    modelChart.TimeStamp = row["DateCheck"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["DateCheck"]) : null;
+
+                                allList.Add(modelChart);
+                            }
+                            #endregion
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Exception from database when retrieving report list: " + ex.Message);
+                        }
+                    }
+                }
+            }
+            return allList;
+        }
 
 
-
-                    // Create a SqlDataAdapter to fill the DataTable
+        public async Task<DataTable> GetAlarmDataFrmDb(DateTime startDate, DateTime endDate)
+        {
+            List<AlarmModel> allList = new List<AlarmModel>();
+            DataTable dataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(new DbConnection().connectionString))
+            {
+                using (SqlCommand command = new SqlCommand("usp_GetAlarmDataFrmDb", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@StartDate", startDate);
+                    command.Parameters.AddWithValue("@EndDate", endDate);
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
                         var s = startDate.ToString();
                         try
                         {
-                            
                             DataSet ds = new DataSet();
-                            //connection.Open();
                             await connection.OpenAsync();
-                            //adapter.Fill(ds);
                             await Task.Run(() => adapter.Fill(ds));
-                            #region Parelal
-                            DataTable originalTable = ds.Tables[0];//new DataTable();
-                            // Assuming originalTable is already populated with your data
-
-                            // Create a new DataTable with the required structure
-                            DataTable newTable = new DataTable();
-                            newTable.Columns.Add("Parameter", typeof(string));
-                            newTable.Columns.Add("DateCheck", typeof(string));
-                            newTable.Columns.Add("Battery", typeof(string)); // You might want to include Battery column if needed
-                            //newTable.Columns.Add("SlaveId", typeof(string));
-
-
-                            foreach (DataRow row in originalTable.Rows)
-                            {
-                                string parameter = row["Parameter"].ToString();
-                                string DateCheck = row["DateCheck"].ToString();
-                                // Loop through Battery1 to Battery20
-                                for (int i = 1; i <= 20; i++)
-                                {
-                                    string batteryColumnName = $"Battery{i}";
-                                    //string slaveIdColumnName = $"SlaveId{i}";
-
-                                    // Check if the Battery column has a value
-                                    if (!string.IsNullOrEmpty(row[batteryColumnName]?.ToString()))
-                                    {
-                                        // Create a new row in the new table
-                                        DataRow newRow = newTable.NewRow();
-                                        newRow["Parameter"] = parameter;
-                                        newRow["DateCheck"] = DateCheck;
-                                        newRow["Battery"] = row[batteryColumnName];
-                                        //newRow["SlaveId"] = row[slaveIdColumnName];
-
-                                        // Add the new row to the new table
-                                        newTable.Rows.Add(newRow);
-                                    }
-                                }
-                            }
-
-                            // Now newTable contains the data as per your requirements
-
-                            #endregion
-
-
-
-
+                            dataTable = ds.Tables[0];
                             #region AssignToList
-                            // Read Voltage (V) data
-                            foreach (DataRow row in ds.Tables[0].Rows)
-                            {
-                                voltageList.Add(new StorePoint
-                                {
-                                    Parameter = row["Parameter"] != DBNull.Value ? row["Parameter"].ToString() : null,
-                                    Battery1 = row["Battery1"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery1"]) : null,
-                                    Battery2 = row["Battery2"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery2"]) : null,
-                                    Battery3 = row["Battery3"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery3"]) : null,
-                                    Battery4 = row["Battery4"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery4"]) : null,
-                                    Battery5 = row["Battery5"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery5"]) : null,
-                                    TimeStamp = row["DateCheck"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["DateCheck"]) : null
-                                });
-
-                                dateList.Add(new StorePoint
-                                {
-                                    Parameter = row["Parameter"] != DBNull.Value ? row["Parameter"].ToString() : null,
-                                    Battery1 = row["Battery1"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery1"]) : null,
-                                    Battery2 = row["Battery2"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery2"]) : null,
-                                    Battery3 = row["Battery3"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery3"]) : null,
-                                    Battery4 = row["Battery4"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery4"]) : null,
-                                    Battery5 = row["Battery5"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery5"]) : null,
-                                    TimeStamp = row["DateCheck"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["DateCheck"]) : null
-                                });
-                            }
-
-                            // Read Current (Amps) data
-                            foreach (DataRow row in ds.Tables[1].Rows)
-                            {
-                                currentList.Add(new StorePoint
-                                {
-                                    Parameter = row["Parameter"] != DBNull.Value ? row["Parameter"].ToString() : null,
-                                    Battery1 = row["Battery1"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery1"]) : null,
-                                    Battery2 = row["Battery2"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery2"]) : null,
-                                    Battery3 = row["Battery3"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery3"]) : null,
-                                    Battery4 = row["Battery4"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery4"]) : null,
-                                    Battery5 = row["Battery5"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery5"]) : null,
-                                    TimeStamp = row["DateCheck"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["DateCheck"]) : null
-                                });
-                            }
-
-                            // Read Power (kW) data
-                            foreach (DataRow row in ds.Tables[2].Rows)
-                            {
-                                powerList.Add(new StorePoint
-                                {
-                                    Parameter = row["Parameter"] != DBNull.Value ? row["Parameter"].ToString() : null,
-                                    Battery1 = row["Battery1"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery1"]) : null,
-                                    Battery2 = row["Battery2"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery2"]) : null,
-                                    Battery3 = row["Battery3"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery3"]) : null,
-                                    Battery4 = row["Battery4"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery4"]) : null,
-                                    Battery5 = row["Battery5"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery5"]) : null,
-                                    TimeStamp = row["DateCheck"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["DateCheck"]) : null
-                                });
-                            }
-
-                            // Read SOC data
-                            foreach (DataRow row in ds.Tables[3].Rows)
-                            {
-                                socList.Add(new StorePoint
-                                {
-                                    Parameter = row["Parameter"] != DBNull.Value ? row["Parameter"].ToString() : null,
-                                    Battery1 = row["Battery1"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery1"]) : null,
-                                    Battery2 = row["Battery2"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery2"]) : null,
-                                    Battery3 = row["Battery3"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery3"]) : null,
-                                    Battery4 = row["Battery4"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery4"]) : null,
-                                    Battery5 = row["Battery5"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery5"]) : null,
-                                    TimeStamp = row["DateCheck"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["DateCheck"]) : null
-                                });
-                            }
-
-                            // Read Total Remaining Capacity(Ah) data
-                            foreach (DataRow row in ds.Tables[4].Rows)
-                            {
-                                capacityList.Add(new StorePoint
-                                {
-                                    Parameter = row["Parameter"] != DBNull.Value ? row["Parameter"].ToString() : null,
-                                    Battery1 = row["Battery1"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery1"]) : null,
-                                    Battery2 = row["Battery2"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery2"]) : null,
-                                    Battery3 = row["Battery3"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery3"]) : null,
-                                    Battery4 = row["Battery4"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery4"]) : null,
-                                    Battery5 = row["Battery5"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery5"]) : null,
-                                    TimeStamp = row["DateCheck"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["DateCheck"]) : null
-                                });
-                            }
-
-                            // Read Temperature (C) data
-                            foreach (DataRow row in ds.Tables[5].Rows)
-                            {
-                                temperatureList.Add(new StorePoint
-                                {
-                                    Parameter = row["Parameter"] != DBNull.Value ? row["Parameter"].ToString() : null,
-                                    Battery1 = row["Battery1"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery1"]) : null,
-                                    Battery2 = row["Battery2"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery2"]) : null,
-                                    Battery3 = row["Battery3"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery3"]) : null,
-                                    Battery4 = row["Battery4"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery4"]) : null,
-                                    Battery5 = row["Battery5"] != DBNull.Value ? (double?)Convert.ToDouble(row["Battery5"]) : null,
-                                    TimeStamp = row["DateCheck"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["DateCheck"]) : null
-                                });
-                            }
+                            //foreach (DataRow row in ds.Tables[0].Rows)
+                            //{
+                            //    var modelChart = new AlarmModel
+                            //    {
+                            //        BatteryId = row["BatteryId"] != DBNull.Value ? (Int32?)Convert.ToInt32(row["BatteryId"]) : null,
+                            //        Alarm = row["Alarm"] != DBNull.Value ? (string?)Convert.ToString(row["Alarm"]) : null,
+                            //        OccurrenceTime = row["OccurrenceTime"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["OccurrenceTime"]) : null
+                            //        TimeStamp = row["TimeStamp"] != DBNull.Value ? (DateTime?)Convert.ToDateTime(row["TimeStamp"]) : null
+                            //    };
+                            //    allList.Add(modelChart);
+                            //}
                             #endregion
-                            // Return the populated DataTable
-                            allList.Add(voltageList);
-                            allList.Add(currentList);
-                            allList.Add(powerList);
-                            allList.Add(socList);
-                            allList.Add(capacityList);
-                            allList.Add(dateList);
-                            allList.Add(temperatureList);
                         }
                         catch (Exception ex)
                         {
@@ -409,14 +308,12 @@ namespace BusinessLogic
                     }
                 }
             }
-
-
-            return allList;
+            return dataTable;
         }
-        public async Task<DataTable> GetDataForCSV(DateTime startDate, DateTime endDate, CheckBox cbSelectAll, CheckBox cbActivePower, CheckBox cbSOC, CheckBox cbPowerFactor, CheckBox cbVoltage, CheckBox cbCurrent)
+        public async Task<DataTable> GetDataForCSV(DateTime startDate, DateTime endDate, CheckBox cbVoltage, CheckBox cbCurrent, CheckBox cbPower, CheckBox cbSOC,  CheckBox cbTemp, CheckBox cbSelectAll)
         {
             DataTable transposedDataTable = null;
-            DataTable mergeDataTable = null; 
+            DataTable mergeDataTable = null;
             using (SqlConnection connection = new SqlConnection(new DbConnection().connectionString))
             {
                 using (SqlCommand command = new SqlCommand("usp_GetRdlcReportData", connection))
@@ -428,12 +325,9 @@ namespace BusinessLogic
                     command.Parameters.AddWithValue("@StartDate", startDate);
                     command.Parameters.AddWithValue("@EndDate", endDate);
                     command.Parameters.AddWithValue("@SelectAll", cbSelectAll.Checked ? 1 : 0);
-                    command.Parameters.AddWithValue("@IncludeTotalRemainingCapacity", cbActivePower.Checked ? 1 : 0);
                     command.Parameters.AddWithValue("@IncludeSOC", cbSOC.Checked ? 1 : 0);
-                    command.Parameters.AddWithValue("@IncludePower", cbPowerFactor.Checked ? 1 : 0);  //cbPowerFactor
                     command.Parameters.AddWithValue("@IncludeVoltage", cbVoltage.Checked ? 1 : 0);
                     command.Parameters.AddWithValue("@IncludeCurrent", cbCurrent.Checked ? 1 : 0);
-
 
                     // Create a SqlDataAdapter to fill the DataTable
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
@@ -446,7 +340,7 @@ namespace BusinessLogic
                             await connection.OpenAsync();
                             DataTable originalTable = new DataTable();
                             adapter.Fill(originalTable);
-
+                           
                             #region Transpose
                             // Assuming you have an existing DataTable called "originalDataTable"
                             transposedDataTable = new DataTable();
@@ -458,16 +352,16 @@ namespace BusinessLogic
                             foreach (DataRow row in originalTable.Rows)
                             {
                                 string parameter = row["Parameter"].ToString();
-                                if (parameter == "Serial")
-                                {
-                                }
-                                else
-                                {
+                                //if (parameter == "Serial")
+                                //{
+                                //}
+                                //else
+                                //{
                                     if (!transposedDataTable.Columns.Contains(parameter)) // Check if column already exists
                                     {
                                         transposedDataTable.Columns.Add(parameter);
                                     }
-                                }
+                                //}
                             }
                             // Assign "Battery1" value to the new row
                             foreach (DataRow row in originalTable.Rows) // Iterate over each row
@@ -580,7 +474,7 @@ namespace BusinessLogic
                             }
                             #endregion
                             #region Merge
-                             mergeDataTable = MergeDataTable(transposedDataTable);
+                            mergeDataTable = MergeDataTable(transposedDataTable);
                             #endregion
                         }
                         catch (Exception ex)
@@ -683,10 +577,10 @@ namespace BusinessLogic
                     using (SqlCommand command = new SqlCommand("usp_GetRdlcReportData", connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
+                        command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@StartDate", startDate);
                         command.Parameters.AddWithValue("@EndDate", endDate);
                         command.Parameters.AddWithValue("@SelectAll", cbSelectAll.Checked ? 1 : 0);
-
                         command.Parameters.AddWithValue("@IncludeTotalRemainingCapacity", cbActivePower.Checked ? 1 : 0);
                         command.Parameters.AddWithValue("@IncludeSOC", cbSOC.Checked ? 1 : 0);
                         command.Parameters.AddWithValue("@IncludePower", cbPowerFactor.Checked ? 1 : 0);  //cbPowerFactor
@@ -757,5 +651,62 @@ namespace BusinessLogic
 
             return filteredTable;
         }
+
+        public void SaveMainParamatersToDatabase(decimal Voltage, decimal Current, decimal Power, decimal SOC, decimal Temprature)
+        {
+            try
+            {
+                string query = "INSERT INTO tblMainParameters (Voltage, Currents, Power, SOC, Temp) VALUES (@Voltage, @Current, @Power, @SOC, @Temperature)";
+                using (SqlConnection connection = new SqlConnection(new DbConnection().connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@Voltage", Voltage);
+                        cmd.Parameters.AddWithValue("@Current", Current);
+                        cmd.Parameters.AddWithValue("@Power", Power);
+                        cmd.Parameters.AddWithValue("@SOC", SOC);
+                        cmd.Parameters.AddWithValue("@Temperature", Temprature);
+
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception From Database InsertionTime MainParamaters: " + ex.Message);
+            }
+        }
+        public void SaveAlarmGridToDatabase(DataTable dataTableAlarm)
+        {
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(new DbConnection().connectionString))
+                {
+                    connection.Open();
+
+                    using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection))
+                    {
+                        // Set the destination table name
+                        bulkCopy.DestinationTableName = "tblAlarm";
+
+                        // Map DataTable columns to database columns if column names are different
+                        bulkCopy.ColumnMappings.Add("ID", "BatteryId");
+                        bulkCopy.ColumnMappings.Add("Alarm", "Alarm");
+                        bulkCopy.ColumnMappings.Add("OccurrenceTime", "OccurrenceTime");
+
+                        // Write from the DataTable to the SQL Server
+                        bulkCopy.WriteToServer(dataTableAlarm);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception From Database InsertionTime MainParamaters: " + ex.Message);
+            }
+        }
+
+
+
     }
 }

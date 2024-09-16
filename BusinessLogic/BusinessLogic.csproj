@@ -64,6 +64,7 @@
     <Compile Include="MainLogicClass.cs" />
     <Compile Include="Model\Alarm.cs" />
     <Compile Include="Model\BatteryData.cs" />
+    <Compile Include="Model\ChartModel.cs" />
     <Compile Include="Model\LoginModel.cs" />
     <Compile Include="Model\StaticModel.cs" />
     <Compile Include="Model\StaticModelValues.cs" />

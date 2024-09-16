@@ -128,14 +128,7 @@ namespace ENCAPv3.UI
 
 
         //FUNCATIONS
-        public void widthtoSidePanel()
-        {
-            pnBtnMenu.Width = sidebarPanel.Width;
-            pnBtnSetting.Width = sidebarPanel.Width;
-            pnBtnAboutUs.Width = sidebarPanel.Width;
-            pnBtnLogout.Width = sidebarPanel.Width;
-            MenuContainer.Width = sidebarPanel.Width;
-        }
+        
 
         private void pnBtnAboutUs_Click(object sender, EventArgs e)
         {
@@ -186,7 +179,7 @@ namespace ENCAPv3.UI
             {
 
                 mainParamatersForm.Activate();
-                await  mainParamatersForm.UpdateSettingFormTextbox();
+                //await  mainParamatersForm.UpdateSettingFormTextbox();
                 await Task.Yield();
             }
             NavColor("pnBtnMenu");
@@ -212,7 +205,7 @@ namespace ENCAPv3.UI
             NavColor("pnBtnDashboard");
 
         }
-        private void pnBtnDataExport_Click(object sender, EventArgs e)
+        private  void pnBtnDataExport_Click(object sender, EventArgs e)
         {
            
             if (exportData == null)
@@ -225,6 +218,7 @@ namespace ENCAPv3.UI
             }
             else
             {
+                exportData.ExportData_Load(null,null);
                 exportData.Activate();
             }
 

@@ -34,7 +34,7 @@ namespace ENCAPv3.UI
 
 
 
-        private async  void ExportData_Load(object sender, EventArgs e)
+        public async  void ExportData_Load(object sender, EventArgs e)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace ENCAPv3.UI
                await StartEndDateReport(datePickerStartDate.Value, datePickerEndDate.Value);
                 InitializeChart();
 
-                new ChartSet().ExportData_Clear(chartExportData, cbSelectAll, cbActivePower, cbSOC, cbPowerFactor, cbVoltage, cbCurrent);//, cbTemprature);
+                new ChartSet().ExportData_Clear(chartExportData, cbSelectAll, cbSOC, cbPower, cbVoltage, cbCurrent);
                 cbSelectAll.Checked = true;
             }
             catch (Exception ex)
@@ -131,67 +131,52 @@ namespace ENCAPv3.UI
                     return;
                 }
                 //Get frm Db
-                List<List<StorePoint>> allList = new List<List<StorePoint>>();
-                allList = await new MainLogicClass().GetStorePoints(startDate, endDate); //Get From DB
-                                                                                   // DataTable dt1 = new MainLogicClass().Transpose(dt);  //Column to Row
-                if (cbSelectAll.Checked)
+                List<ChartModel> LstChartRecordFromDb = new List<ChartModel>();
+
+                LstChartRecordFromDb = await new MainLogicClass().GetStorePoints(startDate, endDate, cbVoltage.Checked,cbCurrent.Checked, cbPower.Checked, cbSOC.Checked, cbTemprature.Checked, cbSelectAll.Checked); //Get From DB
+
+                //  listForCSV = allList;//hassanCode
+                #region ChartList
+                 List<LiveCharts.ChartValues<double>> allLists = new List<LiveCharts.ChartValues<double>>();
+                ChartValues<double> voltageList = new ChartValues<double>();
+                ChartValues<double> currentList = new ChartValues<double>();
+                ChartValues<double> powerList = new ChartValues<double>();
+                ChartValues<double> socList = new ChartValues<double>();
+                ChartValues<double> tempList = new ChartValues<double>();
+
+                if (LstChartRecordFromDb.Count > 0)
                 {
+                    foreach (var item in LstChartRecordFromDb)
+                    {
+                        voltageList.Add(item.Voltage ?? 0);  // Default to 0 if null
+                        currentList.Add(item.Currents ?? 0);
+                        powerList.Add(item.Power ?? 0);
+                        socList.Add(item.SOC ?? 0);
+                        tempList.Add(item.Temp ?? 0);
+                    }
+
+                    // Create the main list that holds all data series
+                    allLists.Add(voltageList);  // Add Voltage series
+                    allLists.Add(currentList);  // Add Currents series
+                    allLists.Add(powerList);    // Add Power series
+                    allLists.Add(socList);      // Add SOC series
+                    allLists.Add(tempList);     // Add Temperature series
+                                                // Define X-axis labels (dates)
+
+                    List<string> xAxisLabels = LstChartRecordFromDb
+                        .Where(r => r.TimeStamp.HasValue)
+                        .Select(r => r.TimeStamp.Value.ToString("dd/MM/yyyy HH:mm:ss"))
+                        .ToList();
+                    new ChartSet().chartGT3(allLists, chartExportData, xAxisLabels);
                 }
                 else
                 {
-                    if (cbVoltage.Checked == false)
-                    {
-                        allList[0] = new List<StorePoint>();
-
-                    }
-                    if (cbCurrent.Checked == false)
-                    {
-                        allList[1] = new List<StorePoint>();
-                    }
-                    if (cbPowerFactor.Checked == false)
-                    {
-                        allList[2] = new List<StorePoint>();
-                    }
-                    if (cbSOC.Checked == false)
-                    {
-                        allList[3] = new List<StorePoint>();
-                    }
-                    if (cbActivePower.Checked == false)   // Total Remaining Capacity(Ah)
-                    {
-                        allList[4] = new List<StorePoint>();
-                    }
-                    if (cbTemprature.Checked == false)
-                    {
-                        allList[5] = new List<StorePoint>();
-                    }
-                    if (allList[0].Count == 0 && allList[1].Count == 0 && allList[2].Count == 0 && allList[3].Count == 0 && allList[4].Count == 0 && allList[5].Count == 0)
-                    {
-                        allList = new List<List<StorePoint>>();
-                        allList.Clear();
-                    }
-
+                    List<string> xAxisLabels = LstChartRecordFromDb
+                        .Where(r => r.TimeStamp.HasValue)
+                        .Select(r => r.TimeStamp.Value.ToString("dd/MM/yyyy HH:mm:ss"))
+                        .ToList();
+                    new ChartSet().chartGT3(allLists, chartExportData, xAxisLabels);
                 }
-                listForCSV = allList;//CSVList
-                #region ChartList
-
-                // Convert allList to allLists
-                List<LiveCharts.ChartValues<double>> allLists = new List<LiveCharts.ChartValues<double>>();
-                if (allList.Count > 0)
-                {
-                    foreach (var list in allList)
-                    {
-                        ChartValues<double> chartValues = new ChartValues<double>();
-
-                        foreach (var item in list)
-                        {
-                            chartValues.Add((double)item.Battery1.GetValueOrDefault());
-                        }
-                        allLists.Add(chartValues);
-                    }
-                    new ChartSet().chartGT3(allLists, chartExportData, allList);
-
-                }
-                Console.WriteLine("Voltage (V) Data:");
                 #endregion
             }
             catch (Exception ex)
@@ -209,78 +194,20 @@ namespace ENCAPv3.UI
 
         private void btnPDF_Click(object sender, EventArgs e)
         {
-            DataTable dt = new MainLogicClass().GetRdlcReportData(datePickerStartDate.Value, datePickerEndDate.Value, cbSelectAll, cbSOC, cbPowerFactor, cbVoltage,
-            cbCurrent, cbActivePower);
-
-            reportViewer1.LocalReport.DataSources.Clear();
-            reportViewer1.LocalReport.ReportPath = "Reports/Report1.rdlc";
-            if (dt.Rows.Count <= 0)
-            {
-                JIMessageBox.WarningMessage("No Record Found");
-                reportViewer1.LocalReport.DataSources.Clear();
-                reportViewer1.RefreshReport();
-                return;
-            }
-
-            ReportDataSource RdsAll = new ReportDataSource("DataSetAll", dt);
-            reportViewer1.LocalReport.DataSources.Add(RdsAll);
-            reportViewer1.RefreshReport();
-
 
         }
-        public async Task reportFn1()
-        {
-            try
-            {
-                //var lst = ExportData.listForCSV;
-                var lst = await new MainLogicClass().GetStorePoints(datePickerStartDate.Value, datePickerEndDate.Value); //Get From DB
-
-                if (cbSelectAll.Checked)
-                {
-                }
-                else
-                {
-                    if (cbVoltage.Checked == false)
-                    {
-                        lst[0] = new List<StorePoint>();
-
-                    }
-                    if (cbCurrent.Checked == false)
-                    {
-                        lst[1] = new List<StorePoint>();
-                    }
-                    if (cbPowerFactor.Checked == false)
-                    {
-                        lst[2] = new List<StorePoint>();
-                    }
-                    if (cbSOC.Checked == false)
-                    {
-                        lst[3] = new List<StorePoint>();
-                    }
-                    if (cbActivePower.Checked == false)   // Total Remaining Capacity(Ah)
-                    {
-                        lst[4] = new List<StorePoint>();
-                    }
-                    //if (lst[0].Count == 0 && lst[1].Count == 0 && lst[2].Count == 0 && lst[3].Count == 0 && lst[4].Count == 0 && lst[5].Count == 0)
-                    {
-                        lst = new List<List<StorePoint>>();
-                        lst.Clear();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                JIMessageBox.ErrorMessage(ex.Message);
-            }
-        }
-
+        
         private async void btnExportCSV_Click(object sender, EventArgs e)
         {
             btnExportCSV.Enabled = false; // Disable button to prevent multiple clicks
             try
             {
+                if (cbVoltage.Checked == false && cbCurrent.Checked == false &&  cbPower.Checked == false && cbSOC.Checked == false && cbTemprature.Checked == false && cbSelectAll.Checked == false)
+                {
+                    return;
+                }
                 DataTable dt = new DataTable();
-                dt = await new MainLogicClass().GetDataForCSV(datePickerStartDate.Value, datePickerEndDate.Value, cbSelectAll, cbSOC, cbPowerFactor, cbVoltage, cbCurrent, cbActivePower);
+                dt = await new MainLogicClass().GetDataForCSV(datePickerStartDate.Value, datePickerEndDate.Value, cbVoltage, cbCurrent, cbPower, cbSOC, cbTemprature, cbSelectAll);
                 if (dt.Rows.Count > 0)
                 {
                     ExportToCsv(dt, datePickerStartDate.Value, datePickerEndDate.Value);
@@ -343,6 +270,65 @@ namespace ENCAPv3.UI
 
                     MessageBox.Show("Data exported successfully to " + filePath, "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
+            }
+        }
+        public async Task ExportToAlarmCsv(DataTable dataTable, DateTime startDate, DateTime endDate)
+        {
+            // Initialize SaveFileDialog
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                // Set the default filename to the current date and time
+                saveFileDialog.FileName = "AlarmReport__"+startDate.ToString("yyyy-MM-dd HH-mm-ss tt") + "__" + endDate.ToString("yyyy-MM-dd HH-mm-ss tt") + ".csv";
+                saveFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+                saveFileDialog.Title = "Save CSV File";
+
+                // Show the dialog and get the result
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Get the file path from the dialog
+                    string filePath = saveFileDialog.FileName;
+
+                    // Export the DataTable to the selected file path
+                    using (StreamWriter writer = new StreamWriter(filePath, false, Encoding.UTF8))
+                    {
+                        // Write the headers
+                        for (int i = 0; i < dataTable.Columns.Count; i++)
+                        {
+                            await writer.WriteAsync(dataTable.Columns[i].ColumnName);
+                            if (i < dataTable.Columns.Count - 1)
+                                await writer.WriteAsync(",");
+                        }
+                        await writer.WriteLineAsync();
+
+                        // Write the data rows
+                        foreach (DataRow row in dataTable.Rows)
+                        {
+                            for (int i = 0; i < dataTable.Columns.Count; i++)
+                            {
+                                writer.Write(row[i].ToString());
+                                if (i < dataTable.Columns.Count - 1)
+                                    await writer.WriteAsync(",");
+                            }
+                            await writer.WriteLineAsync();
+                        }
+                    }
+
+                    MessageBox.Show("Alarm Data exported successfully to " + filePath, "Export Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private async void btnAlarmReport_Click(object sender, EventArgs e)
+        {
+            DataTable dt = new DataTable();
+            dt = await new MainLogicClass().GetAlarmDataFrmDb(datePickerStartDate.Value, datePickerEndDate.Value);
+            if (dt.Rows.Count > 0)
+            {
+                ExportToAlarmCsv(dt, datePickerStartDate.Value, datePickerEndDate.Value);
+            }
+            else
+            {
+                JIMessageBox.WarningMessage("No Record Found");
             }
         }
     }

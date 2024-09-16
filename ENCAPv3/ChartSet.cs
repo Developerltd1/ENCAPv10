@@ -14,40 +14,103 @@ namespace ENCAPv3
 {
     public class ChartSet
     {
-        public void ExportData_Clear(LiveCharts.WinForms.CartesianChart chart, CheckBox selectall, CheckBox ttlRemaining,
-             CheckBox soc, CheckBox powerfact, CheckBox volt, CheckBox crnt)//, CheckBox temp)
+        public void ExportData_Clear(LiveCharts.WinForms.CartesianChart chart, CheckBox selectall,  CheckBox soc, CheckBox powerfact, CheckBox volt, CheckBox crnt)//, CheckBox temp)
         {
             chart.Series.Clear();
             selectall.Checked = false;
-            ttlRemaining.Checked = false;
             soc.Checked = false;
             volt.Checked = false;
             crnt.Checked = false;
             //temp.Checked = false;
         }
-
-        public void chartGT3(List<ChartValues<double>> allList, LiveCharts.WinForms.CartesianChart cartesianChart1)//, List<string> XAxisValue)
+        public void chartGT3(List<ChartValues<double>> allList, LiveCharts.WinForms.CartesianChart cartesianChart1)
         {
-            //cartesianChart1.AxisX.Clear();
-            //cartesianChart1.AxisY.Clear();
+           // cartesianChart1.AxisX.Clear();
+           // cartesianChart1.AxisY.Clear();
             // Update X Axis labels
             //cartesianChart1.AxisX[0].Labels = XAxisValue;
             if (allList.Count > 0)
             {
+                SolidColorBrush VoltageColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(54, 172, 9));
+                SolidColorBrush CurrentColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 160, 0));
+                SolidColorBrush PowerColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(18, 7, 95));
+                SolidColorBrush SocColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(76, 44, 83));
+                SolidColorBrush TempColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 1));
+
+               //cartesianChart1.Zoom = ZoomingOptions.X;
+               //cartesianChart1.DisableAnimations = true;
+               //cartesianChart1.Hoverable = false;
+                //cartesianChart1.AxisX.Clear();
+                //cartesianChart1.AxisY.Clear();
+                //cartesianChart1.Series.Clear();
 
 
+                // Update or add series for each parameter
+                UpdateOrAddSeries(cartesianChart1.Series, 0, allList[0], "Voltage (V)", 1, VoltageColor);
+                UpdateOrAddSeries(cartesianChart1.Series, 1, allList[1], "Current (Amps)", 2, CurrentColor);
+                UpdateOrAddSeries(cartesianChart1.Series, 2, allList[2], "Power (kW)", 3, PowerColor);
+                UpdateOrAddSeries(cartesianChart1.Series, 3, allList[3], "SOC", 4, SocColor);
+                UpdateOrAddSeries(cartesianChart1.Series, 4, allList[4], "Temperature (C)", 6, TempColor);
 
-                SolidColorBrush VoltageColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 0));
-                SolidColorBrush CurrentColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 254, 0));
-                SolidColorBrush PowerColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(214, 252, 244));
-                // Update or add series data for Voltage
-                UpdateOrAddSeries(cartesianChart1.Series, 0, allList[0], "Voltage", 1, VoltageColor);
+               
 
-                // Update or add series data for Current
-                UpdateOrAddSeries(cartesianChart1.Series, 1, allList[1], "Current", 3, CurrentColor);
+                // Configure the Y-axis (Values)
+                //cartesianChart1.AxisY.Add(new Axis
+                //{
+                //    Title = "Value",
+                //    LabelFormatter = value => value.ToString("N")
+                //});
+            }
 
-                // Update or add series data for Power
-                UpdateOrAddSeries(cartesianChart1.Series, 2, allList[2], "Power", 2, PowerColor);
+
+        }
+
+        public void chartGT3(List<ChartValues<double>> allList, LiveCharts.WinForms.CartesianChart cartesianChart1, List<string> xAxisLabels)
+        {
+            if(allList.Count <= 0)
+            {
+                cartesianChart1.Series.Clear();
+            }
+            cartesianChart1.AxisX.Clear();
+            cartesianChart1.AxisY.Clear();
+            // Update X Axis labels
+            //cartesianChart1.AxisX[0].Labels = XAxisValue;
+            if (allList.Count > 0)
+            {
+                SolidColorBrush VoltageColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(54, 172, 9));
+                SolidColorBrush CurrentColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 160, 0));
+                SolidColorBrush PowerColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(18, 7, 95));
+                SolidColorBrush SocColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(76, 44, 83));
+                SolidColorBrush TempColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 0, 1));
+
+                cartesianChart1.Zoom = ZoomingOptions.X;
+                cartesianChart1.DisableAnimations = true;
+                cartesianChart1.Hoverable = false;
+                //cartesianChart1.AxisX.Clear();
+                //cartesianChart1.AxisY.Clear();
+                //cartesianChart1.Series.Clear();
+
+                // Update or add series for each parameter
+                UpdateOrAddSeries(cartesianChart1.Series, 0, allList[0], "Voltage (V)", 1, VoltageColor);
+                UpdateOrAddSeries(cartesianChart1.Series, 1, allList[1], "Current (Amps)", 2, CurrentColor);
+                UpdateOrAddSeries(cartesianChart1.Series, 2, allList[2], "Power (kW)", 3, PowerColor);
+                UpdateOrAddSeries(cartesianChart1.Series, 3, allList[3], "SOC", 4, SocColor);
+                UpdateOrAddSeries(cartesianChart1.Series, 4, allList[4], "Temperature (C)", 6, TempColor);
+
+                // Configure the X-axis (Date)
+                cartesianChart1.AxisX.Add(new Axis
+                {
+                    Title = "Date",
+                    Labels = xAxisLabels,
+                    LabelsRotation = 0
+                });
+
+                // Configure the Y-axis (Values)
+                cartesianChart1.AxisY.Add(new Axis
+                {
+                    Title = "Value",
+                    LabelFormatter = value => value.ToString("N")
+                });
             }
 
 
@@ -67,7 +130,7 @@ namespace ENCAPv3
             cartesianChart.AxisX.Clear();
             cartesianChart.AxisY.Clear();
             cartesianChart.Series.Clear();
-            //
+            
 
             // Update X Axis labels
             //cartesianChart1.AxisX[0].Labels = XAxisValue;
@@ -125,7 +188,7 @@ namespace ENCAPv3
             {
                 Title = "Date",
                 Labels = dateLabels,
-                LabelsRotation = 15
+                LabelsRotation =0
             });
 
             // Configure the y-axis as numerical
@@ -171,7 +234,7 @@ namespace ENCAPv3
                     Title = title,
                     Values = new ChartValues<double>(newData),
                     StrokeThickness = strokeThickness,
-                    Stroke = pointForeground,//new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(255, 226, 0)),
+                    Stroke = pointForeground,
                     Fill = System.Windows.Media.Brushes.Transparent,
                     PointGeometrySize = 10,
                     PointForeground = pointForeground

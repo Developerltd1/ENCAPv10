@@ -44,8 +44,6 @@ namespace ENCAPv3.UI
             this.pnBtnSetting = new FontAwesome.Sharp.IconButton();
             this.pnBtnDataExport = new FontAwesome.Sharp.IconButton();
             this.pnBtnAboutUs = new FontAwesome.Sharp.IconButton();
-            this.pnBtnLogout = new FontAwesome.Sharp.IconButton();
-            this.MenuContainer = new FontAwesome.Sharp.IconButton();
             this.SidebarTransaction = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.btnHam)).BeginInit();
@@ -161,8 +159,6 @@ namespace ENCAPv3.UI
             this.sidebarPanel.Controls.Add(this.pnBtnSetting);
             this.sidebarPanel.Controls.Add(this.pnBtnDataExport);
             this.sidebarPanel.Controls.Add(this.pnBtnAboutUs);
-            this.sidebarPanel.Controls.Add(this.pnBtnLogout);
-            this.sidebarPanel.Controls.Add(this.MenuContainer);
             this.sidebarPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.sidebarPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.sidebarPanel.Location = new System.Drawing.Point(0, 40);
@@ -277,48 +273,6 @@ namespace ENCAPv3.UI
             this.pnBtnAboutUs.Visible = false;
             this.pnBtnAboutUs.Click += new System.EventHandler(this.pnBtnAboutUs_Click);
             // 
-            // pnBtnLogout
-            // 
-            this.pnBtnLogout.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(59)))), ((int)(((byte)(57)))));
-            this.pnBtnLogout.FlatAppearance.BorderSize = 0;
-            this.pnBtnLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.pnBtnLogout.ForeColor = System.Drawing.Color.White;
-            this.pnBtnLogout.IconChar = FontAwesome.Sharp.IconChar.Lock;
-            this.pnBtnLogout.IconColor = System.Drawing.Color.White;
-            this.pnBtnLogout.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.pnBtnLogout.IconSize = 32;
-            this.pnBtnLogout.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.pnBtnLogout.Location = new System.Drawing.Point(2, 262);
-            this.pnBtnLogout.Margin = new System.Windows.Forms.Padding(2);
-            this.pnBtnLogout.Name = "pnBtnLogout";
-            this.pnBtnLogout.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.pnBtnLogout.Size = new System.Drawing.Size(179, 48);
-            this.pnBtnLogout.TabIndex = 13;
-            this.pnBtnLogout.Text = "Logout";
-            this.pnBtnLogout.UseVisualStyleBackColor = false;
-            this.pnBtnLogout.Click += new System.EventHandler(this.pnBtnLogout_Click);
-            // 
-            // MenuContainer
-            // 
-            this.MenuContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(59)))), ((int)(((byte)(57)))));
-            this.MenuContainer.FlatAppearance.BorderSize = 0;
-            this.MenuContainer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.MenuContainer.ForeColor = System.Drawing.Color.White;
-            this.MenuContainer.IconChar = FontAwesome.Sharp.IconChar.Dashboard;
-            this.MenuContainer.IconColor = System.Drawing.Color.White;
-            this.MenuContainer.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.MenuContainer.IconSize = 32;
-            this.MenuContainer.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.MenuContainer.Location = new System.Drawing.Point(2, 314);
-            this.MenuContainer.Margin = new System.Windows.Forms.Padding(2);
-            this.MenuContainer.Name = "MenuContainer";
-            this.MenuContainer.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
-            this.MenuContainer.Size = new System.Drawing.Size(179, 48);
-            this.MenuContainer.TabIndex = 14;
-            this.MenuContainer.Text = "Menu Con";
-            this.MenuContainer.UseVisualStyleBackColor = false;
-            this.MenuContainer.Visible = false;
-            // 
             // SidebarTransaction
             // 
             this.SidebarTransaction.Interval = 10;
@@ -357,9 +311,7 @@ namespace ENCAPv3.UI
         private FontAwesome.Sharp.IconButton pnBtnMenu;
         private FontAwesome.Sharp.IconButton pnBtnSetting;
         private FontAwesome.Sharp.IconButton pnBtnAboutUs;
-        private FontAwesome.Sharp.IconButton pnBtnLogout;
         private System.Windows.Forms.Timer SidebarTransaction;
-        private FontAwesome.Sharp.IconButton MenuContainer;
         private FontAwesome.Sharp.IconButton pnBtnDashboard;
         private MetroSet_UI.Controls.MetroSetControlBox metroSetControlBox1;
         private FontAwesome.Sharp.IconButton pnBtnDataExport;

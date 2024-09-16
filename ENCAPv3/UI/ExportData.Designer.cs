@@ -40,14 +40,13 @@ namespace ENCAPv3.UI
             this.datePickerStartDate = new System.Windows.Forms.DateTimePicker();
             this.panel2 = new System.Windows.Forms.Panel();
             this.cbTemprature = new System.Windows.Forms.CheckBox();
-            this.btnPDF = new FontAwesome.Sharp.IconButton();
+            this.btnAlarmReport = new FontAwesome.Sharp.IconButton();
             this.btnExportCSV = new FontAwesome.Sharp.IconButton();
             this.cbSelectAll = new System.Windows.Forms.CheckBox();
             this.cbCurrent = new System.Windows.Forms.CheckBox();
             this.cbVoltage = new System.Windows.Forms.CheckBox();
-            this.cbPowerFactor = new System.Windows.Forms.CheckBox();
+            this.cbPower = new System.Windows.Forms.CheckBox();
             this.cbSOC = new System.Windows.Forms.CheckBox();
-            this.cbActivePower = new System.Windows.Forms.CheckBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.reportViewer1 = new Microsoft.Reporting.WinForms.ReportViewer();
             this.chartExportData = new LiveCharts.WinForms.CartesianChart();
@@ -145,14 +144,13 @@ namespace ENCAPv3.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(59)))), ((int)(((byte)(57)))));
             this.panel2.Controls.Add(this.cbTemprature);
-            this.panel2.Controls.Add(this.btnPDF);
+            this.panel2.Controls.Add(this.btnAlarmReport);
             this.panel2.Controls.Add(this.btnExportCSV);
             this.panel2.Controls.Add(this.cbSelectAll);
             this.panel2.Controls.Add(this.cbCurrent);
             this.panel2.Controls.Add(this.cbVoltage);
-            this.panel2.Controls.Add(this.cbPowerFactor);
+            this.panel2.Controls.Add(this.cbPower);
             this.panel2.Controls.Add(this.cbSOC);
-            this.panel2.Controls.Add(this.cbActivePower);
             this.panel2.Location = new System.Drawing.Point(1, 77);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
@@ -165,35 +163,34 @@ namespace ENCAPv3.UI
             this.cbTemprature.AutoSize = true;
             this.cbTemprature.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbTemprature.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.cbTemprature.Location = new System.Drawing.Point(268, 16);
+            this.cbTemprature.Location = new System.Drawing.Point(426, 15);
             this.cbTemprature.Name = "cbTemprature";
-            this.cbTemprature.Size = new System.Drawing.Size(101, 21);
+            this.cbTemprature.Size = new System.Drawing.Size(109, 21);
             this.cbTemprature.TabIndex = 56;
-            this.cbTemprature.Text = "Temprature";
+            this.cbTemprature.Text = "Temperature";
             this.cbTemprature.UseVisualStyleBackColor = true;
             this.cbTemprature.CheckedChanged += new System.EventHandler(this.ChkBox_CheckedChanged);
             // 
-            // btnPDF
+            // btnAlarmReport
             // 
-            this.btnPDF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPDF.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(192)))), ((int)(((byte)(139)))));
-            this.btnPDF.FlatAppearance.BorderSize = 0;
-            this.btnPDF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnPDF.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnPDF.ForeColor = System.Drawing.Color.White;
-            this.btnPDF.IconChar = FontAwesome.Sharp.IconChar.None;
-            this.btnPDF.IconColor = System.Drawing.Color.White;
-            this.btnPDF.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.btnPDF.IconSize = 32;
-            this.btnPDF.Location = new System.Drawing.Point(776, 4);
-            this.btnPDF.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnPDF.Name = "btnPDF";
-            this.btnPDF.Size = new System.Drawing.Size(164, 46);
-            this.btnPDF.TabIndex = 51;
-            this.btnPDF.Text = "Report";
-            this.btnPDF.UseVisualStyleBackColor = false;
-            this.btnPDF.Visible = false;
-            this.btnPDF.Click += new System.EventHandler(this.btnPDF_Click);
+            this.btnAlarmReport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAlarmReport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(192)))), ((int)(((byte)(139)))));
+            this.btnAlarmReport.FlatAppearance.BorderSize = 0;
+            this.btnAlarmReport.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAlarmReport.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAlarmReport.ForeColor = System.Drawing.Color.White;
+            this.btnAlarmReport.IconChar = FontAwesome.Sharp.IconChar.None;
+            this.btnAlarmReport.IconColor = System.Drawing.Color.White;
+            this.btnAlarmReport.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnAlarmReport.IconSize = 32;
+            this.btnAlarmReport.Location = new System.Drawing.Point(989, 3);
+            this.btnAlarmReport.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnAlarmReport.Name = "btnAlarmReport";
+            this.btnAlarmReport.Size = new System.Drawing.Size(128, 46);
+            this.btnAlarmReport.TabIndex = 51;
+            this.btnAlarmReport.Text = "Alarm Report";
+            this.btnAlarmReport.UseVisualStyleBackColor = false;
+            this.btnAlarmReport.Click += new System.EventHandler(this.btnAlarmReport_Click);
             // 
             // btnExportCSV
             // 
@@ -207,7 +204,7 @@ namespace ENCAPv3.UI
             this.btnExportCSV.IconColor = System.Drawing.Color.White;
             this.btnExportCSV.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.btnExportCSV.IconSize = 32;
-            this.btnExportCSV.Location = new System.Drawing.Point(953, 4);
+            this.btnExportCSV.Location = new System.Drawing.Point(815, 3);
             this.btnExportCSV.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnExportCSV.Name = "btnExportCSV";
             this.btnExportCSV.Size = new System.Drawing.Size(168, 46);
@@ -236,7 +233,7 @@ namespace ENCAPv3.UI
             this.cbCurrent.AutoSize = true;
             this.cbCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbCurrent.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.cbCurrent.Location = new System.Drawing.Point(674, 16);
+            this.cbCurrent.Location = new System.Drawing.Point(212, 15);
             this.cbCurrent.Name = "cbCurrent";
             this.cbCurrent.Size = new System.Drawing.Size(74, 21);
             this.cbCurrent.TabIndex = 45;
@@ -250,7 +247,7 @@ namespace ENCAPv3.UI
             this.cbVoltage.AutoSize = true;
             this.cbVoltage.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbVoltage.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.cbVoltage.Location = new System.Drawing.Point(573, 16);
+            this.cbVoltage.Location = new System.Drawing.Point(130, 15);
             this.cbVoltage.Name = "cbVoltage";
             this.cbVoltage.Size = new System.Drawing.Size(75, 21);
             this.cbVoltage.TabIndex = 44;
@@ -258,19 +255,19 @@ namespace ENCAPv3.UI
             this.cbVoltage.UseVisualStyleBackColor = true;
             this.cbVoltage.CheckedChanged += new System.EventHandler(this.ChkBox_CheckedChanged);
             // 
-            // cbPowerFactor
+            // cbPower
             // 
-            this.cbPowerFactor.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.cbPowerFactor.AutoSize = true;
-            this.cbPowerFactor.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbPowerFactor.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.cbPowerFactor.Location = new System.Drawing.Point(457, 16);
-            this.cbPowerFactor.Name = "cbPowerFactor";
-            this.cbPowerFactor.Size = new System.Drawing.Size(110, 21);
-            this.cbPowerFactor.TabIndex = 43;
-            this.cbPowerFactor.Text = "Power Factor";
-            this.cbPowerFactor.UseVisualStyleBackColor = true;
-            this.cbPowerFactor.CheckedChanged += new System.EventHandler(this.ChkBox_CheckedChanged);
+            this.cbPower.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.cbPower.AutoSize = true;
+            this.cbPower.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbPower.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.cbPower.Location = new System.Drawing.Point(292, 15);
+            this.cbPower.Name = "cbPower";
+            this.cbPower.Size = new System.Drawing.Size(66, 21);
+            this.cbPower.TabIndex = 43;
+            this.cbPower.Text = "Power";
+            this.cbPower.UseVisualStyleBackColor = true;
+            this.cbPower.CheckedChanged += new System.EventHandler(this.ChkBox_CheckedChanged);
             // 
             // cbSOC
             // 
@@ -278,27 +275,13 @@ namespace ENCAPv3.UI
             this.cbSOC.AutoSize = true;
             this.cbSOC.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbSOC.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.cbSOC.Location = new System.Drawing.Point(383, 16);
+            this.cbSOC.Location = new System.Drawing.Point(364, 15);
             this.cbSOC.Name = "cbSOC";
             this.cbSOC.Size = new System.Drawing.Size(56, 21);
             this.cbSOC.TabIndex = 42;
             this.cbSOC.Text = "SOC";
             this.cbSOC.UseVisualStyleBackColor = true;
             this.cbSOC.CheckedChanged += new System.EventHandler(this.ChkBox_CheckedChanged);
-            // 
-            // cbActivePower
-            // 
-            this.cbActivePower.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.cbActivePower.AutoSize = true;
-            this.cbActivePower.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cbActivePower.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.cbActivePower.Location = new System.Drawing.Point(129, 16);
-            this.cbActivePower.Name = "cbActivePower";
-            this.cbActivePower.Size = new System.Drawing.Size(131, 21);
-            this.cbActivePower.TabIndex = 41;
-            this.cbActivePower.Text = "TR Capacity(Ah)";
-            this.cbActivePower.UseVisualStyleBackColor = true;
-            this.cbActivePower.CheckedChanged += new System.EventHandler(this.ChkBox_CheckedChanged);
             // 
             // panel5
             // 
@@ -381,12 +364,11 @@ namespace ENCAPv3.UI
         private System.Windows.Forms.CheckBox cbSelectAll;
         private System.Windows.Forms.CheckBox cbCurrent;
         private System.Windows.Forms.CheckBox cbVoltage;
-        private System.Windows.Forms.CheckBox cbPowerFactor;
+        private System.Windows.Forms.CheckBox cbPower;
         private System.Windows.Forms.CheckBox cbSOC;
-        private System.Windows.Forms.CheckBox cbActivePower;
         private System.Windows.Forms.Panel panel5;
         private LiveCharts.WinForms.CartesianChart chartExportData;
-        private FontAwesome.Sharp.IconButton btnPDF;
+        private FontAwesome.Sharp.IconButton btnAlarmReport;
         private Microsoft.Reporting.WinForms.ReportViewer reportViewer1;
         private System.Windows.Forms.BindingSource storePointBindingSource;
         private System.Windows.Forms.BindingSource dataTable1BindingSource;

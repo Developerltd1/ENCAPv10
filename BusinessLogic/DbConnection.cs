@@ -15,6 +15,7 @@ namespace BusinessLogic
         //AqibMachine
         // public static string connectionString = @"Data Source =.; Initial Catalog = D:\COMPANY\APPSPARQTECH\0.ALL_ASSETS\SUPPORTEDPROJECTS\SERIES\MODIFICATIONSERIES\ENCAPV3 - CHART LINE ISSUE\ENCAPV3\ENCAPDB.MDF; Integrated Security = True";
         //public  string connectionString = ConfigurationManager.ConnectionStrings["ENCAPdb"].ConnectionString;
+
         public string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ENCAPdb"].ToString();
     }
 }
