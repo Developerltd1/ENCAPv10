@@ -234,7 +234,7 @@ namespace ENCAPv3.UI
             int functionCode = 3;// Convert.ToInt32(comboBoxFunctionCode.SelectedIndex) + 1;
             if (MainParamatersForm.isPollSelected)
             {
-                List<ChartValues<double>> ll = new MainParamatersForm().LoadModbusData(1,functionCode, 0, 0); // Load data function remains the same
+                List<ChartValues<double>> ll = await new MainParamatersForm().LoadModbusDataAsync(1,functionCode, 0, 0); // Load data function remains the same
                 LoadModbusData(functionCode);                                                                   //AQIB
                 DataTable ddt = MainParamatersForm.staticDt;
 

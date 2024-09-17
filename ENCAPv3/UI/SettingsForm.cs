@@ -195,13 +195,13 @@ namespace ENCAPv3.UI
         }
 
 
-        private void btnHighAndLowSumVolt_Click(object sender, EventArgs e)
+        private async  void btnHighAndLowSumVolt_Click(object sender, EventArgs e)
         {
             StaticModelValues.tbHighCurrCharge = tbHighCurrCharge.Text.ToDouble();
-            new MainParamatersForm().LoadModbusData(slaveID, WRITE_DATA, HIGH_CURR_CHARGE, Convert.ToInt32(StaticModelValues.tbHighCurrCharge));
+            await new MainParamatersForm().LoadModbusDataAsync(slaveID, WRITE_DATA, HIGH_CURR_CHARGE, Convert.ToInt32(StaticModelValues.tbHighCurrCharge));
 
             StaticModelValues.tbHighCurrDischarge = tbHighCurrDischarge.Text.ToDouble();
-            new MainParamatersForm().LoadModbusData(slaveID, WRITE_DATA, HIGH_CURR_DISCHAR, Convert.ToInt32(StaticModelValues.tbHighCurrDischarge));
+            await new MainParamatersForm().LoadModbusDataAsync(slaveID, WRITE_DATA, HIGH_CURR_DISCHAR, Convert.ToInt32(StaticModelValues.tbHighCurrDischarge));
 
             //Get
             _settingsModel.tbLowSumVolt = tbLowSumVolt.Text.ToDouble();
@@ -211,13 +211,13 @@ namespace ENCAPv3.UI
             tbHighSumVolt.Text = _settingsModel.tbHighSumVolt.ToString();
         }
 
-        private void btnHighCurrentCharAndDic_Click(object sender, EventArgs e)
+        private async void btnHighCurrentCharAndDic_Click(object sender, EventArgs e)
         {
             StaticModelValues.tbHighCurrCharge = tbHighCurrCharge.Text.ToDouble();
-            new MainParamatersForm().LoadModbusData(slaveID, WRITE_DATA, HIGH_CURR_CHARGE, Convert.ToInt32(StaticModelValues.tbHighCurrCharge));
+            await new MainParamatersForm().LoadModbusDataAsync(slaveID, WRITE_DATA, HIGH_CURR_CHARGE, Convert.ToInt32(StaticModelValues.tbHighCurrCharge));
 
             StaticModelValues.tbHighCurrDischarge = tbHighCurrDischarge.Text.ToDouble();
-            new MainParamatersForm().LoadModbusData(slaveID, WRITE_DATA, HIGH_CURR_DISCHAR, Convert.ToInt32(StaticModelValues.tbHighCurrDischarge));
+            await new MainParamatersForm().LoadModbusDataAsync(slaveID, WRITE_DATA, HIGH_CURR_DISCHAR, Convert.ToInt32(StaticModelValues.tbHighCurrDischarge));
 
             //Get
             _settingsModel.tbHighCurrCharge = tbHighCurrCharge.Text.ToDouble();
@@ -228,13 +228,13 @@ namespace ENCAPv3.UI
 
         }
 
-        private void btnHighTempCharAndDic_Click(object sender, EventArgs e)
+        private async void btnHighTempCharAndDic_Click(object sender, EventArgs e)
         {
             StaticModelValues.tbHighTempDischarge = tbHighTempDischarge.Text.ToDouble();
-            new MainParamatersForm().LoadModbusData(slaveID, WRITE_DATA, HIGH_TEMP_DISCHARGE, Convert.ToInt32(StaticModelValues.tbHighTempDischarge));
+            await new MainParamatersForm().LoadModbusDataAsync(slaveID, WRITE_DATA, HIGH_TEMP_DISCHARGE, Convert.ToInt32(StaticModelValues.tbHighTempDischarge));
 
             StaticModelValues.tbHighTempCharge = tbHighTempCharge.Text.ToDouble();
-            new MainParamatersForm().LoadModbusData(slaveID, WRITE_DATA, HIGH_TEMP_CHARGE, Convert.ToInt32(StaticModelValues.tbHighTempCharge));
+            await new MainParamatersForm().LoadModbusDataAsync(slaveID, WRITE_DATA, HIGH_TEMP_CHARGE, Convert.ToInt32(StaticModelValues.tbHighTempCharge));
 
             //Get
             _settingsModel.tbHighTempCharge = tbHighTempCharge.Text.ToDouble();
@@ -305,7 +305,7 @@ namespace ENCAPv3.UI
         {
             loadData();
         }
-        private void loadData()
+        private async void loadData()
         {
             UInt16 temp;
             //StaticModelValues.ForTestVar = Convert.ToDouble(tbHighCellVolt.Text);  //AQIB CODE
@@ -318,7 +318,7 @@ namespace ENCAPv3.UI
             {
                 Logger.Info("SettingForm/loadData initialized");
                 string hexString = null;
-                new MainParamatersForm().LoadModbusData(slaveID, SERIAL_READ, 0xB9, 11);
+                await new MainParamatersForm().LoadModbusDataAsync(slaveID, SERIAL_READ, 0xB9, 11);
                 Logger.Info("SettingForm/loadData LoadModbusData| slaveID: " + slaveID.ToString() + " SERIAL_READ: "+ SERIAL_READ.ToString()+ "0xB9 : 11");
                 try
                 {
@@ -334,7 +334,7 @@ namespace ENCAPv3.UI
                 Logger.Info("SettingForm/loadData| asciiString: " + asciiString.ToString());
 
 
-                new MainParamatersForm().LoadModbusData(slaveID, SETPOINTS_READ, 0x81, 30);
+                await new MainParamatersForm().LoadModbusDataAsync(slaveID, SETPOINTS_READ, 0x81, 30);
                 Logger.Info("SettingForm/loadData LoadModbusData" );
                 #region AqibCodeStatic
                 ////////////////////tbLowCellVolt.Text = ((UInt16)StaticModelValues.register_Settings[13]).ToString();
@@ -439,10 +439,10 @@ namespace ENCAPv3.UI
         }
 
 
-        private void iconButton2_Click(object sender, EventArgs e)
+        private async void iconButton2_Click(object sender, EventArgs e)
         {
             StaticModelValues.tbCellRatedVoltage = tbCellRatedVoltage.Text.ToDouble();
-            new MainParamatersForm().LoadModbusData(slaveID, WRITE_DATA, CELL_RATED_VOLTAGE, Convert.ToInt32(StaticModelValues.tbCellRatedVoltage));
+            await new MainParamatersForm().LoadModbusDataAsync(slaveID, WRITE_DATA, CELL_RATED_VOLTAGE, Convert.ToInt32(StaticModelValues.tbCellRatedVoltage));
 
         }
 
@@ -543,9 +543,9 @@ namespace ENCAPv3.UI
 
         #region CANBUS writing section
 
-        private void btnhighAndLowCellVolt_Click(object sender, EventArgs e)
+        private async void btnhighAndLowCellVolt_Click(object sender, EventArgs e)
         {
-            new MainParamatersForm().LoadModbusData(slaveID, CAN_PKT, Convert.ToInt16(tbLowCellVolt.Text), Convert.ToInt16(tbHighCellVolt.Text));
+            await new MainParamatersForm().LoadModbusDataAsync(slaveID, CAN_PKT, Convert.ToInt16(tbLowCellVolt.Text), Convert.ToInt16(tbHighCellVolt.Text));
             #region testing code
             /* try
              {
@@ -577,9 +577,9 @@ namespace ENCAPv3.UI
              }*/
             #endregion
         }
-        private void iconButton3_Click(object sender, EventArgs e)
+        private async void iconButton3_Click(object sender, EventArgs e)
         {
-            new MainParamatersForm().LoadModbusData(slaveID, CAN_PKT, Convert.ToInt16(tbSleepTime.Text), Convert.ToInt16(tbHighCellVolt.Text));
+            await new MainParamatersForm().LoadModbusDataAsync(slaveID, CAN_PKT, Convert.ToInt16(tbSleepTime.Text), Convert.ToInt16(tbHighCellVolt.Text));
 
         }
 
@@ -640,7 +640,7 @@ namespace ENCAPv3.UI
 
 
 
-        private void reload_Click(object sender, EventArgs e)
+        private async void reload_Click(object sender, EventArgs e)
         {
             try
             {
@@ -655,7 +655,7 @@ namespace ENCAPv3.UI
                     progressBar1.Refresh();
                     #endregion
                     string hexString = null;
-                    new MainParamatersForm().LoadModbusData(i, SERIAL_READ, 0xB9, 11);
+                    await new MainParamatersForm().LoadModbusDataAsync(i, SERIAL_READ, 0xB9, 11);
                     Logger.Info("SettingForm/reload_Click new MainParamatersForm().LoadModbusData(i, SERIAL_READ, 0xB9, 11): "+i + ": "+ SERIAL_READ);
                     try
                     {

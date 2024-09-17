@@ -795,7 +795,7 @@ namespace ENCAPv3.UI
         static List<ChartValues<double>> allLists = new List<ChartValues<double>>();
         //List<string> XAxisValue = new List<string>() { "Voltage (V)", "Current (Amps)", "Power (kW)", "SOC Power" };
         public static bool isPollSelected = false;
-        public void PollingTimer_Tick(object sender, EventArgs e)
+        public async void   PollingTimer_Tick(object sender, EventArgs e)
         {
             ushort temp;
             readReady = false;
@@ -811,8 +811,9 @@ namespace ENCAPv3.UI
                     slaveID = 1;
 
                 }
-                LoadModbusData(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);   //HassanCode
-                                                                            // await LoadModbusDataTestingByAqib(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);
+                //LoadModbusData(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);   //HassanCode
+                await LoadModbusDataAsync(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);   //HassanCode
+                //  await LoadModbusDataTestingByAqib(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);  //AQIBSTAIC
                 slaveID++;
 
                 string[] avgVoltage = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
@@ -964,7 +965,7 @@ namespace ENCAPv3.UI
 
 
         Random rnd;
-        public List<ChartValues<double>> LoadModbusData(Int32 batteryIndex, int functionCode, int registerNumber, int data)
+        public List<ChartValues<double>> LoadModbusDataOld(Int32 batteryIndex, int functionCode, int registerNumber, int data)
         {
             string serialNumberString = "-";
             try
@@ -1326,7 +1327,8 @@ namespace ENCAPv3.UI
                         Logger.Info("MainParamaterForm/LoadModbusData| slaveId1: " + StaticModelValues.slaveId1.ToString());
                         try
                         {
-                            await InitializeModbusClientAsync();
+                            //await InitializeModbusClientAsync();
+                            InitializeModbusClient();
                             UpdateStatusConnection("Connected");
                             try
                             {
@@ -1343,15 +1345,15 @@ namespace ENCAPv3.UI
                                         break;
                                     case 3:
 
-                                        //await Task.Delay(500); // Remove this and replace with actual async call
-                                        //registers = modbusClient.ReadHoldingRegisters(modbusStartReg, modbusRegCount);
-                                        registers = await Task.Run(() => modbusClient.ReadHoldingRegisters(modbusStartReg, modbusRegCount));
+                                       // await Task.Delay(500); // Remove this and replace with actual async call
+                                        registers = modbusClient.ReadHoldingRegisters(modbusStartReg, modbusRegCount);
+                                       // registers = await Task.Run(() => modbusClient.ReadHoldingRegisters(modbusStartReg, modbusRegCount));
 
                                         Logger.Info("MainParamaterForm/LoadModbusData| boolsRegister: " + boolsRegister.ToString());
 
-                                        // await Task.Delay(500); // Remove this and replace with actual async call
-                                        // int[] serialNumberRaw = modbusClient.ReadHoldingRegisters(registerNumber, data);
-                                        int[] serialNumberRaw = await Task.Run(() => modbusClient.ReadHoldingRegisters(modbusStartReg, modbusRegCount));
+                                       // await Task.Delay(500); // Remove this and replace with actual async call
+                                        int[] serialNumberRaw = modbusClient.ReadHoldingRegisters(registerNumber, data);
+                                       // int[] serialNumberRaw = await Task.Run(() => modbusClient.ReadHoldingRegisters(modbusStartReg, modbusRegCount));
 
                                         Logger.Info("MainParamaterForm/LoadModbusData| serialNumberRaw.Count: " + serialNumberRaw.Count().ToString());
 
@@ -1908,14 +1910,14 @@ namespace ENCAPv3.UI
                 chartValues.RemoveAt(0); // Remove the oldest entry
             }
         }
-        private void iconButton1_Click(object sender, EventArgs e)
+        private async void iconButton1_Click(object sender, EventArgs e)
         {
             if (commType.Text == "MODBUS")   //uncomment
             {
                 try
                 {
                     DataTable dt = SetupDataGridView();  //GetPatamatersHeader
-                    allLists = LoadModbusData(1, 3, 0, 0);
+                    allLists =await  LoadModbusDataAsync(1, 3, 0, 0);
                     #region DataTable
                     DataTable dataTable = new DataTable();
                     // Add columns to the DataTable
