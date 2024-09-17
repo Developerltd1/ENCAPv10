@@ -652,7 +652,7 @@ namespace BusinessLogic
             return filteredTable;
         }
 
-        public void SaveMainParamatersToDatabase(decimal Voltage, decimal Current, decimal Power, decimal SOC, decimal Temprature)
+        public void SaveMainParamatersToDatabase(decimal? Voltage, decimal? Current, decimal? Power, decimal? SOC, decimal? Temprature)
         {
             try
             {
@@ -661,11 +661,13 @@ namespace BusinessLogic
                 {
                     using (SqlCommand cmd = new SqlCommand(query, connection))
                     {
-                        cmd.Parameters.AddWithValue("@Voltage", Voltage);
-                        cmd.Parameters.AddWithValue("@Current", Current);
-                        cmd.Parameters.AddWithValue("@Power", Power);
-                        cmd.Parameters.AddWithValue("@SOC", SOC);
-                        cmd.Parameters.AddWithValue("@Temperature", Temprature);
+                        // Assign DBNull.Value if the parameter is null
+                        cmd.Parameters.AddWithValue("@Voltage", Voltage.HasValue ? (object)Voltage.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Current", Current.HasValue ? (object)Current.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Power", Power.HasValue ? (object)Power.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@SOC", SOC.HasValue ? (object)SOC.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@Temperature", Temprature.HasValue ? (object)Temprature.Value : DBNull.Value);
+
 
                         connection.Open();
                         cmd.ExecuteNonQuery();

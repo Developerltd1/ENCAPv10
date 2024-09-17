@@ -1,4 +1,5 @@
-﻿    using System;
+﻿using BusinessLogic;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -38,6 +39,7 @@ namespace ENCAPv3.UI
                     dataTable.Rows.Add(dataRow);
                 }
             }
+            dataTable = new Utility().ReplaceSpecialCharsWithNull(dataTable);
             staticDt = dataTable;
             return dataTable;
         }
@@ -45,4 +47,3 @@ namespace ENCAPv3.UI
 
     }
 }
- 

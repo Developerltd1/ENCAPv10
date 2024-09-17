@@ -207,7 +207,7 @@ namespace ENCAPv3.UI
                 Logger.Info("MainParametersForm/Constructor InitializePollingTimer");
 
                 dataList = new List<BatteryData>();
-                minuteTimer = new Timer { Interval = 5000 };  //60000 }; // 1 minute interval
+                minuteTimer = new Timer { Interval = 10000 };  //60000 }; // 1 minute interval hassanCode
                 minuteTimer.Tick += MinuteTimerTick;
 
                 Paremeters();
@@ -286,7 +286,7 @@ namespace ENCAPv3.UI
                 btnTogglePolling1.Text = "Stop Reading";
                 startTime = DateTime.Now;
                 /*  secondTimer.Start(); */
-                minuteTimer.Start();
+                minuteTimer.Start(); //hassanCode
             }
             catch (Exception ex)
             {
@@ -301,7 +301,7 @@ namespace ENCAPv3.UI
                 btnTogglePolling1.Text = "Start Reading";
                 startTime = DateTime.Now;
                 /*   secondTimer.Start();  */
-                minuteTimer.Stop();
+                minuteTimer.Stop(); //hassanCode
             }
             catch (Exception ex)
             {
@@ -315,92 +315,135 @@ namespace ENCAPv3.UI
         {
             try
             {
-                #region DataTable
                 DataTable dataTable = new DataTable();
-                // Add columns to the DataTable
+                // Add HEADER columns to the DataTable
                 foreach (DataGridViewColumn column in dgvCellLevel.Columns)
                 {
                     dataTable.Columns.Add(column.HeaderText);
                 }
-                // Add rows to the DataTable
+                #region DataTable
+
+                #region This Code Only Check Serial SpecialChar
+                //// Add rows to the DataTable
+                //Regex specialCharPattern = new Regex(@"^[,\/\-_%\s]+$");
+                //foreach (DataGridViewRow row in dgvCellLevel.Rows)
+                //{
+                //    // Skip the last empty row if AllowUserToAddRows is true
+                //    if (!row.IsNewRow)
+                //    {
+                //        var cellValue = row.Cells[0].Value?.ToString();
+
+                //        if (cellValue == "Serial")
+                //        {
+                //            #region Skipp From DataTableCode
+                //            //// Check if Serial value contains only special characters
+                //            //if (!specialCharPattern.IsMatch(cellValue))
+                //            //{
+                //            //    // Valid Serial, assign to DataTable
+                //            //    DataRow dataRow = dataTable.NewRow();
+                //            //    foreach (DataGridViewCell cell in row.Cells)
+                //            //    {
+                //            //        dataRow[cell.ColumnIndex] = cell.Value;
+                //            //    }
+                //            //    dataTable.Rows.Add(dataRow);
+                //            //}
+                //            //else
+                //            //{
+                //            //    // Handle case where Serial contains only special characters (if needed)
+                //            //    // Skip or log the invalid row
+                //            //} 
+                //            #endregion
+                //            #region AssignNull to  DataTable  Currently i select this
+                //            // Create a new DataRow
+                //            DataRow dataRow = dataTable.NewRow();
+
+                //            // Loop through all cells in the Serial row
+                //            for (int i = 0; i < row.Cells.Count; i++)
+                //            {
+                //                var cellText = row.Cells[i].Value?.ToString();
+
+                //                // If the cell contains only special characters, assign NULL
+                //                if (specialCharPattern.IsMatch(cellText))
+                //                {
+                //                    dataRow[i] = DBNull.Value;
+                //                }
+                //                else
+                //                {
+                //                    // Otherwise, assign the actual value
+                //                    dataRow[i] = row.Cells[i].Value;
+                //                }
+                //            }
+
+                //            dataTable.Rows.Add(dataRow);
+                //            #endregion
+                //        }
+                //        else if (row.Cells[0].Value == "FAULT-1")
+                //        {
+                //        }
+                //        else if (row.Cells[0].Value == "FAULT-2")
+                //        {
+                //        }
+                //        else if (row.Cells[0].Value == "FAULT-3")
+                //        {
+                //        }
+                //        else if (row.Cells[0].Value == "FAULT-4")
+                //        {
+                //        }
+                //        else if (row.Cells[0].Value == "FAULT-5")
+                //        {
+                //        }
+                //        else
+                //        {
+                //            DataRow dataRow = dataTable.NewRow();
+                //            foreach (DataGridViewCell cell in row.Cells)
+                //            {
+                //                dataRow[cell.ColumnIndex] = cell.Value;
+                //            }
+                //            dataTable.Rows.Add(dataRow);
+                //        }
+                //    }
+                //}
+
+                #endregion
+                #region This Code Only Check All Column  SpecialChar
+                // Define the special character pattern
                 Regex specialCharPattern = new Regex(@"^[,\/\-_%\s]+$");
+
+                DataTable dataTable1 = (DataTable)dgvCellLevel.DataSource;
+                DataTable dt = (DataTable)dgvCellLevel.DataSource;
+                // Loop through all rows in the DataGridView
                 foreach (DataGridViewRow row in dgvCellLevel.Rows)
                 {
                     // Skip the last empty row if AllowUserToAddRows is true
                     if (!row.IsNewRow)
                     {
-                        var cellValue = row.Cells[0].Value?.ToString();
+                        DataRow dataRow = dataTable.NewRow(); // Create a new DataRow for the DataTable
 
-                        if (cellValue == "Serial")
+                        // Loop through all cells in the current row
+                        for (int i = 0; i < row.Cells.Count; i++)
                         {
-                            #region Skipp From DataTableCode
-                            //// Check if Serial value contains only special characters
-                            //if (!specialCharPattern.IsMatch(cellValue))
-                            //{
-                            //    // Valid Serial, assign to DataTable
-                            //    DataRow dataRow = dataTable.NewRow();
-                            //    foreach (DataGridViewCell cell in row.Cells)
-                            //    {
-                            //        dataRow[cell.ColumnIndex] = cell.Value;
-                            //    }
-                            //    dataTable.Rows.Add(dataRow);
-                            //}
-                            //else
-                            //{
-                            //    // Handle case where Serial contains only special characters (if needed)
-                            //    // Skip or log the invalid row
-                            //} 
-                            #endregion
-                            #region AssignNull to  DataTable  Currently i select this
-                            // Create a new DataRow
-                            DataRow dataRow = dataTable.NewRow();
+                            var cellText = row.Cells[i].Value?.ToString();
 
-                            // Loop through all cells in the Serial row
-                            for (int i = 0; i < row.Cells.Count; i++)
+                            // Check if the cell value contains only special characters
+                            if (specialCharPattern.IsMatch(cellText))
                             {
-                                var cellText = row.Cells[i].Value?.ToString();
-
-                                // If the cell contains only special characters, assign NULL
-                                if (specialCharPattern.IsMatch(cellText))
-                                {
-                                    dataRow[i] = DBNull.Value;
-                                }
-                                else
-                                {
-                                    // Otherwise, assign the actual value
-                                    dataRow[i] = row.Cells[i].Value;
-                                }
+                                // Assign NULL if the cell contains only special characters
+                                dataRow[i] = DBNull.Value;
                             }
-
-                            dataTable.Rows.Add(dataRow);
-                            #endregion
-                        }
-                        else if (row.Cells[0].Value == "FAULT-1")
-                        {
-                        }
-                        else if (row.Cells[0].Value == "FAULT-2")
-                        {
-                        }
-                        else if (row.Cells[0].Value == "FAULT-3")
-                        {
-                        }
-                        else if (row.Cells[0].Value == "FAULT-4")
-                        {
-                        }
-                        else if (row.Cells[0].Value == "FAULT-5")
-                        {
-                        }
-                        else
-                        {
-                            DataRow dataRow = dataTable.NewRow();
-                            foreach (DataGridViewCell cell in row.Cells)
+                            else
                             {
-                                dataRow[cell.ColumnIndex] = cell.Value;
+                                // Assign the actual value if it doesn't contain special characters
+                                dataRow[i] = row.Cells[i].Value;
                             }
-                            dataTable.Rows.Add(dataRow);
                         }
+
+                        // Add the row to the DataTable
+                        dataTable.Rows.Add(dataRow);
                     }
                 }
+
+
+                #endregion
                 #endregion
                 CheckDatabaseConnection();
                 new MainLogicClass().SaveDataToDatabase(dataTable);
@@ -445,11 +488,28 @@ namespace ENCAPv3.UI
                 }
 
                 #endregion
-                decimal _labelVolt = Convert.ToDecimal(labelVolt.Text);
-                decimal _labelCurrent = Convert.ToDecimal(labelCurrent.Text);
-                decimal _labelPower = Convert.ToDecimal(labelPower.Text);
-                decimal _labelSoc = Convert.ToDecimal(labelSoc.Text);
-                decimal _labelTemp = Convert.ToDecimal(labelTemp.Text);
+                Regex specialCharOrAlphabetPattern = new Regex(@"^-?[0-9]*(\.[0-9]+)?$");
+
+                string _volt = labelVolt.Text;
+                string _current = labelCurrent.Text;
+                string _power = labelPower.Text;
+                string _soc = labelSoc.Text;
+                string _temp = labelTemp.Text;
+
+                // Using ternary operator to check for special characters or alphabets
+                _volt = specialCharOrAlphabetPattern.IsMatch(_volt) ? null : _volt;
+                _current = specialCharOrAlphabetPattern.IsMatch(_current) ? null : _current;
+                _power = specialCharOrAlphabetPattern.IsMatch(_power) ? null : _power;
+                _soc = specialCharOrAlphabetPattern.IsMatch(_soc) ? null : _soc;
+                _temp = specialCharOrAlphabetPattern.IsMatch(_temp) ? null : _temp;
+
+                // Convert to decimal only if the value is not null
+                decimal? _labelVolt = _volt != null ? Convert.ToDecimal(_volt) : (decimal?)null;
+                decimal? _labelCurrent = _current != null ? Convert.ToDecimal(_current) : (decimal?)null;
+                decimal? _labelPower = _power != null ? Convert.ToDecimal(_power) : (decimal?)null;
+                decimal? _labelSoc = _soc != null ? Convert.ToDecimal(_soc) : (decimal?)null;
+                decimal? _labelTemp = _temp != null ? Convert.ToDecimal(_temp) : (decimal?)null;
+
                 new MainLogicClass().SaveMainParamatersToDatabase(_labelVolt, _labelCurrent, _labelPower, _labelSoc, _labelTemp);
 
                 _lblDbInsertCount++;
@@ -656,10 +716,10 @@ namespace ENCAPv3.UI
             try
             {
                 pollingTimer.Stop();
-                //if (modbusClient.Connected)  //hassancode
-                //{
-                //    modbusClient.Disconnect();
-                //}
+                if (modbusClient.Connected)  //hassancode
+                {
+                    modbusClient.Disconnect();
+                }
             }
             catch (Exception ex)
             {
@@ -675,14 +735,14 @@ namespace ENCAPv3.UI
         static List<ChartValues<double>> allLists = new List<ChartValues<double>>();
         //List<string> XAxisValue = new List<string>() { "Voltage (V)", "Current (Amps)", "Power (kW)", "SOC Power" };
         public static bool isPollSelected = false;
-        public async void PollingTimer_Tick(object sender, EventArgs e)
+        public  void PollingTimer_Tick(object sender, EventArgs e)
         {
             ushort temp;
             readReady = false;
             #region Data Reading
             try
             {
-                await Task.Delay(100); // Adjust delay if needed
+                //await Task.Delay(100); // Adjust delay if needed
 
                 if (slaveID > moduleCount.Value || slaveID == 0)
                 {
@@ -691,8 +751,8 @@ namespace ENCAPv3.UI
                     slaveID = 1;
 
                 }
-                ////LoadModbusData(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);   //HassanCode
-                await LoadModbusDataTestingByAqib(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);
+               LoadModbusData(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);   //HassanCode
+               // await LoadModbusDataTestingByAqib(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);
                 slaveID++;
 
                 string[] avgVoltage = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
@@ -888,6 +948,8 @@ namespace ENCAPv3.UI
                                         Logger.Info("MainParamaterForm/LoadModbusData| boolsRegister: " + boolsRegister.ToString());
                                         break;
                                     case 3:
+                                        var ss = modbusClient.Connected;
+                                        System.Threading.Thread.Sleep(500); // Delay for 500ms
                                         registers = modbusClient.ReadHoldingRegisters(modbusStartReg, modbusRegCount);    //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| boolsRegister: " + boolsRegister.ToString());
                                         int[] serialNumberRaw = modbusClient.ReadHoldingRegisters(registerNumber, data);  //uncomment
@@ -1171,7 +1233,7 @@ namespace ENCAPv3.UI
             catch (Exception ex)
             {
                 Logger.Error("MainParamaterForm/LoadModbusData|  Main Exception:" + ex.Message.ToString());
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("MainParamaterForm / LoadModbusData | Main Exception: "+ex.Message);
             }
 
             return allLists;
@@ -1508,7 +1570,7 @@ namespace ENCAPv3.UI
                 }
                 catch (Exception ex)
                 {
-                    JIMessageBox.ErrorMessage(ex.Message);
+                    JIMessageBox.ErrorMessage("iconButton1_Click:"+ex.Message);
                 }
             }  //uncomment
             else
@@ -1540,7 +1602,7 @@ namespace ENCAPv3.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("RefreshComPortList: "+ex.Message);
             }
 
         }
@@ -1561,7 +1623,7 @@ namespace ENCAPv3.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("SetupDataGridViewAlarm: "+ex.Message);
                 Logger.Error("DataGridViewAlarm| Exception: " + ex.Message);
                 dt = null;
             }
@@ -1587,7 +1649,7 @@ namespace ENCAPv3.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("SetupDataGridView:"+ex.Message);
                 dt = null;
             }
 
@@ -1646,7 +1708,7 @@ namespace ENCAPv3.UI
             catch (Exception ex)
             {
                 Logger.Error("MainParamaterForm/DataReceivedHandler|  SendCANPacket Exception:" + ex.Message.ToString());
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("DataReceivedHandler: "+ex.Message);
             }
 
         }
@@ -1716,7 +1778,7 @@ namespace ENCAPv3.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("LogAlarm: "+ex.Message);
             }
             // Check if the alarm is already logged
             if (activeAlarms.Contains(alarmID))
@@ -1803,7 +1865,7 @@ namespace ENCAPv3.UI
                 }
                 catch (Exception ex)
                 {
-                    JIMessageBox.ErrorMessage(ex.Message);
+                    JIMessageBox.ErrorMessage("alarm: "+ex.Message);
                 }
             }
 

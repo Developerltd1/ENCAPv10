@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static BusinessLogic.Model.StaticModel.DashboardModel;
 
@@ -14,6 +15,29 @@ namespace BusinessLogic
 
 
 
+        public DataTable ReplaceSpecialCharsWithNull(DataTable dataTable)
+        {
+            Regex specialCharPattern = new Regex(@"^[,\/\-_%\s]+$");
+
+            // Loop through all rows in the DataTable
+            foreach (DataRow row in dataTable.Rows)
+            {
+                // Loop through each column in the row
+                for (int i = 0; i < dataTable.Columns.Count; i++)
+                {
+                    var cellValue = row[i]?.ToString();
+
+                    // Check if the cell value contains only special characters
+                    if (specialCharPattern.IsMatch(cellValue))
+                    {
+                        // Assign NULL if the cell contains only special characters
+                        row[i] = DBNull.Value;
+                    }
+                }
+            }
+
+            return dataTable; // Return the updated DataTable
+        }
 
 
         public DataTable ListToDataTable<T>(List<T> items)
