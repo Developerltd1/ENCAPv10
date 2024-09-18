@@ -338,7 +338,7 @@ namespace ENCAPv3.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("001"+ex.Message);
             }
 
         }
@@ -358,7 +358,7 @@ namespace ENCAPv3.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("02:" + ex.Message);
             }
         }
         public void StopPollingDatabase()
@@ -373,7 +373,7 @@ namespace ENCAPv3.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("03:" + ex.Message);
             }
 
         }
@@ -587,7 +587,7 @@ namespace ENCAPv3.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("05:" + ex.Message);
             }
         }
         private const int MaxDataListSize = 1300; // Example limit
@@ -761,7 +761,7 @@ namespace ENCAPv3.UI
             catch (Exception ex)
             {
 
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("04:" + ex.Message);
             }
         }
 
@@ -775,7 +775,7 @@ namespace ENCAPv3.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("06:" + ex.Message);
             }
         }
 
@@ -792,7 +792,7 @@ namespace ENCAPv3.UI
             catch (Exception ex)
             {
 
-                JIMessageBox.ErrorMessage(ex.Message);
+                JIMessageBox.ErrorMessage("07:" + ex.Message);
             }
         }
         static ChartValues<double> lstvoltage = new ChartValues<double>();
@@ -910,7 +910,7 @@ namespace ENCAPv3.UI
                     TrimChartValues(lstpower);
                     TrimChartValues(SocColor);
                     TrimChartValues(TempColor);
-                    new ChartSet().chartGT3(allLists, cartesianChart1);
+                   await new ChartSet().chartGT3Async(allLists, cartesianChart1);
                 }
                 #endregion
             }
@@ -1201,20 +1201,11 @@ namespace ENCAPv3.UI
                                         byte[] canPacket = CreateCANPacket(FixedFrameID, canData);
 
 
-                                        // Display the resulting CAN packet
-                                        //canPkt.Text = "Generated CAN Packet: " + BitConverter.ToString(canPacket).Replace("-", "");
+                                      
                                         SendCANPacket(canPacket);
                                         string tmpp = BitConverter.ToString(canPacket).Replace("-", string.Empty);
                                         Logger.Info("MainParamaterForm/LoadModbusData|  canPacket:" + tmpp);
-                                        /* try
-                                         {
-                                             serialPort.Close();
-                                         }
-                                         catch (Exception ex)
-                                         {
-                                             Logger.Error("MainParamaterForm/LoadModbusData|  SendCANPacket Exception:" + ex.Message.ToString());
-                                             JIMessageBox.ErrorMessage(ex.Message);
-                                         }*/
+                                        
                                         break;
                                     case 98://load setting page data points
                                         #region AqibComentAgain
@@ -1974,7 +1965,7 @@ namespace ENCAPv3.UI
                     CaptureDataFromGridView();
                     new MainLogicClass().SaveDataToDatabase(dataTable);   //Single
                     dataList.Clear();
-                    new ChartSet().chartGT3(allLists, cartesianChart1);//, XAxisValue);
+                  await  new ChartSet().chartGT3Async(allLists, cartesianChart1);//, XAxisValue);
                 }
                 catch (Exception ex)
                 {

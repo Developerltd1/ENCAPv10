@@ -166,6 +166,7 @@ namespace ENCAPv3.UI
             }
             Application.DoEvents();
             await NavColor("pnBtnSetting");
+            Application.DoEvents();
         }
         private async  void pnBtnMenu_Click(object sender, EventArgs e)
         {
@@ -192,7 +193,7 @@ namespace ENCAPv3.UI
              
             if (kiloWattLab == null)
             {
-                kiloWattLab = new KiloWattLab();
+                kiloWattLab = new KiloWattLab(mainParamatersForm);
                 kiloWattLab.FormClosed += KiloWattLab_FormClosed;
                 kiloWattLab.MdiParent = this;
                 kiloWattLab.Dock = DockStyle.Fill;

@@ -29,36 +29,7 @@ namespace ENCAPv3.UI
         const int SETPOINTS_READ = 98;
         const int SERIAL_READ = 99;
         const int CAN_PKT = 0x50;
-        /*
-                const int HIGH_CELL_VOLTAGE = 7485;
-                const int LOW_CELL_VOLTAGE = 7487;
-                const int HIGH_SUM_VOLTAGE = 7489;
-                const int LOW_SUM_VOLTAGE = 7491;
-                const int HIGH_CURR_CHARGE = 7493;
-                const int HIGH_CURR_DISCHAR = 7495;
-                const int HIGH_TEMP_CHARGE = 7497;
-                const int HIGH_TEMP_DISCHARGE = 7499;
-                const int SOC_HIGH_ALARM = 7501;
-                const int SOC_LOW_ALARM = 7503;
-                const int BALANCE_START_VOLTAGE = 7505;
-                const int BALANCE_VOLTAGE_DIFF = 7507;
-                const int HIGH_DISCHARGE_TEMP = 7509;
-                const int LOW_DISCHARGE_TEMP = 7511;
-                const int CELL_RATED_VOLTAGE = 7513;
-                const int MAX_VOLTAGE_DIFF = 7515;
-                const int BATTERY_CAPACITY=7517;
-                const int SLEEP_TIME = 7519;
-                const int SERIAL_1 = 7521;
-                const int SERIAL_2 = 7523;
-                const int SERIAL_3 = 7525;
-                const int SERIAL_4 = 7526;
-                const int SERIAL_5 = 7529;
-                const int SERIAL_6 = 7531;
-                const int SERIAL_7 = 7533;
-                const int SERIAL_8 = 7535;
-                const int SERIAL_9 = 7537;
-        */
-
+       
         const int HIGH_CELL_VOLTAGE = 0x8B;//single voltage is too high level alarm
         const int LOW_CELL_VOLTAGE = 0x8D;//Single voltage too low level alarm
         const int HIGH_SUM_VOLTAGE = 7489;

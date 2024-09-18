@@ -237,7 +237,7 @@ namespace ENCAPv3.UI
                 List<ChartValues<double>> ll = await new MainParamatersForm().LoadModbusDataAsync(1,functionCode, 0, 0); // Load data function remains the same
                 LoadModbusData(functionCode);                                                                   //AQIB
                 DataTable ddt = new MainParamatersForm().fnpublic();
-                new ChartSet().chartGT3(ll, cartesianChart1);
+                await new ChartSet().chartGT3Async(ll, cartesianChart1);
             }
         }
 

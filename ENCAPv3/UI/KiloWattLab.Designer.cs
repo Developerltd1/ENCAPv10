@@ -258,7 +258,7 @@ namespace ENCAPv3.UI
             this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox7.TabIndex = 5;
             this.pictureBox7.TabStop = false;
-            this.pictureBox7.Click += new System.EventHandler(this.pictureBox1_Click);
+          //  this.pictureBox7.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // label4
             // 
@@ -273,7 +273,7 @@ namespace ENCAPv3.UI
             this.label4.Size = new System.Drawing.Size(60, 20);
             this.label4.TabIndex = 4;
             this.label4.Text = "Voltage";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
+           // this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // labelTotalVoltage
             // 
@@ -301,7 +301,7 @@ namespace ENCAPv3.UI
             this.label7.Size = new System.Drawing.Size(42, 20);
             this.label7.TabIndex = 0;
             this.label7.Text = "Total";
-            this.label7.Click += new System.EventHandler(this.label1_Click);
+           // this.label7.Click += new System.EventHandler(this.label1_Click);
             // 
             // labelSOC
             // 
@@ -391,7 +391,7 @@ namespace ENCAPv3.UI
             this.label96.Size = new System.Drawing.Size(120, 20);
             this.label96.TabIndex = 9;
             this.label96.Text = "Powered by HM";
-            this.label96.Click += new System.EventHandler(this.label96_Click);
+           // this.label96.Click += new System.EventHandler(this.label96_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -605,7 +605,7 @@ namespace ENCAPv3.UI
             this.labelModule18Serial.Size = new System.Drawing.Size(40, 17);
             this.labelModule18Serial.TabIndex = 8;
             this.labelModule18Serial.Text = "Serial";
-            this.labelModule18Serial.Click += new System.EventHandler(this.label52_Click);
+           // this.labelModule18Serial.Click += new System.EventHandler(this.label52_Click);
             // 
             // labelModule18SOC
             // 
@@ -1729,7 +1729,7 @@ namespace ENCAPv3.UI
             this.panel20.Name = "panel20";
             this.panel20.Size = new System.Drawing.Size(187, 146);
             this.panel20.TabIndex = 8;
-            this.panel20.Paint += new System.Windows.Forms.PaintEventHandler(this.panel20_Paint);
+           // this.panel20.Paint += new System.Windows.Forms.PaintEventHandler(this.panel20_Paint);
             // 
             // labelModule2Serial
             // 
@@ -1858,7 +1858,7 @@ namespace ENCAPv3.UI
             this.label29.Size = new System.Drawing.Size(74, 20);
             this.label29.TabIndex = 0;
             this.label29.Text = "Module-1";
-            this.label29.Click += new System.EventHandler(this.label29_Click);
+            //this.label29.Click += new System.EventHandler(this.label29_Click);
             // 
             // panel14
             // 
@@ -2213,7 +2213,7 @@ namespace ENCAPv3.UI
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(265, 101);
             this.panel2.TabIndex = 5;
-            this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
+           // this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // pictureBox2
             // 
@@ -2292,7 +2292,7 @@ namespace ENCAPv3.UI
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+          //  this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // label2
             // 
@@ -2334,7 +2334,7 @@ namespace ENCAPv3.UI
             this.label1.Size = new System.Drawing.Size(42, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Total";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
+            //this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // panel4
             // 
@@ -2360,7 +2360,7 @@ namespace ENCAPv3.UI
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox3.TabIndex = 7;
             this.pictureBox3.TabStop = false;
-            this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
+           // this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
             // labelTemprature
             // 
