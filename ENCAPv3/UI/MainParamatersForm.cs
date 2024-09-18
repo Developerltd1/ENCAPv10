@@ -147,10 +147,11 @@ namespace ENCAPv3.UI
         private Timer pollingTimer;
         private bool isPollingEnabled = false;
 
-        public static DataTable staticDt = null;
+        //  public static DataTable staticDt = null;
+        private DataTable _table;
         public DataTable fnpublic()
         {
-            return staticDt;
+            return _table;
         }
         private void InitializeModbusClient()
         {
@@ -185,10 +186,10 @@ namespace ENCAPv3.UI
         {
             try
             {
-              
-                    try
-                    {
-                        Logger.Info("MainParamaterForm/InitializeModbusClient| comPorts: " + comPorts.Text);
+
+                try
+                {
+                    Logger.Info("MainParamaterForm/InitializeModbusClient| comPorts: " + comPorts.Text);
                     // Check if the port is already connected and disconnect if necessary
                     if (modbusClient != null && modbusClient.Connected)
                     {
@@ -209,24 +210,24 @@ namespace ENCAPv3.UI
                     //await Task.Run(() => modbusClient.Connect());
                     modbusClient.Connect();
                     Logger.Info("MainParamaterForm/InitializeModbusClient| modbusClient.Connect()");
-                      
-                    }
-                    catch (Exception ex)
+
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error("MainParamaterForm/InitializeModbusClient| Exception: " + ex.Message);
+                    string ss = ex.Message;
+                    string[] parts = ss.Split('\''); // Split by single quote
+                    string port = parts.Length > 1 ? parts[1] : string.Empty; // Get the second part (COM4)
+
+                    Console.WriteLine(port); // Outputs: COM4
+
+                    // Update UI elements on the UI thread
+                    this.Invoke(new Action(() =>
                     {
-                        Logger.Error("MainParamaterForm/InitializeModbusClient| Exception: " + ex.Message);
-                        string ss = ex.Message;
-                        string[] parts = ss.Split('\''); // Split by single quote
-                        string port = parts.Length > 1 ? parts[1] : string.Empty; // Get the second part (COM4)
-
-                        Console.WriteLine(port); // Outputs: COM4
-
-                        // Update UI elements on the UI thread
-                        this.Invoke(new Action(() =>
-                        {
-                            statusConnection.Text = $"Disconnected {port} is denied";
-                            infoMessages.Text = $"Error reading: port: {port} {ex.Message}";
-                        }));
-                    }
+                        statusConnection.Text = $"Disconnected {port} is denied";
+                        infoMessages.Text = $"Error reading: port: {port} {ex.Message}";
+                    }));
+                }
                 finally
                 {
                     // Always ensure to close the port if it was opened
@@ -252,11 +253,6 @@ namespace ENCAPv3.UI
         }
 
 
-
-        public MainParamatersForm(int num)
-        {
-        }
-
         private void CheckDatabaseConnection()
         {
             string statusMessage;
@@ -265,29 +261,39 @@ namespace ENCAPv3.UI
             lblDbConnect.Text = statusMessage;
             lblDbConnect.ForeColor = isConnected ? System.Drawing.Color.Green : System.Drawing.Color.Red;
         }
+
+        public MainParamatersForm(int num)
+        {
+        }
+
         public MainParamatersForm()
         {
             try
             {
                 InitializeComponent();
+                Application.DoEvents();
+
+
                 Logger.Info("MainParametersForm/Constructor initialized.");
                 CheckDatabaseConnection();
                 RefreshComPortList();
                 Logger.Info("MainParametersForm/Constructor RefreshComPortList");
-                //Application.DoEvents();
+
                 InitializePollingTimer();
                 Logger.Info("MainParametersForm/Constructor InitializePollingTimer");
 
                 dataList = new List<BatteryData>();
                 minuteTimer = new Timer { Interval = 10000 };  //60000 }; // 1 minute interval hassanCode
                 minuteTimer.Tick += MinuteTimerTick;
-
-                Paremeters();
                 Logger.Info("MainParametersForm/Constructor Paremeters");
-                SetupDataGridViewAlarm();
+
+                //SetupDataGridViewAlarm();
+                SetupDataGridViewAlarmAsync();
                 Logger.Info("MainParametersForm/Constructor SetupDataGridViewAlarm");
-                DataTable dt = SetupDataGridView();  //ParamatersDataTable
+
+                SetupDataGridAsync();
                 Logger.Info("MainParametersForm/Constructor SetupDataGridView");
+
                 btnTogglePolling1.Click += BtnTogglePolling_Click;
             }
             catch (Exception ex)
@@ -297,26 +303,16 @@ namespace ENCAPv3.UI
             }
 
         }
+        private async void SetupDataGridAsync()
+        {
+            DataTable dt = await SetupDataGridViewAsync();  //ParamatersDataTable
+        }
+
         public void MainParamatersForm_Load(object sender, EventArgs e)
         {
         }
 
-        private void Paremeters()
-        {
-            try
-            {
-                StaticModel.MainParamatersForm_Parameters _Parameters = new StaticData().MainParamatersForm_ParametersFn();
-                /* labelVolt.Text = _Parameters.Volt.ToString();
-                 labelCurrent.Text = _Parameters.Current.ToString();
-                 labelPower.Text = _Parameters.Power.ToString();
-                 labelSoc.Text = _Parameters.Ah.ToString();
-                 labelTemp.Text = _Parameters.Temp.ToString();*/
-            }
-            catch (Exception ex)
-            {
-                JIMessageBox.ErrorMessage(ex.Message);
-            }
-        }
+
         //FUNCATIONS
 
         private void BtnTogglePolling_Click(object sender, EventArgs e)
@@ -807,7 +803,7 @@ namespace ENCAPv3.UI
         static List<ChartValues<double>> allLists = new List<ChartValues<double>>();
         //List<string> XAxisValue = new List<string>() { "Voltage (V)", "Current (Amps)", "Power (kW)", "SOC Power" };
         public static bool isPollSelected = false;
-        public async void   PollingTimer_Tick(object sender, EventArgs e)
+        public async void PollingTimer_Tick(object sender, EventArgs e)
         {
             ushort temp;
             readReady = false;
@@ -825,7 +821,7 @@ namespace ENCAPv3.UI
                 }
                 //LoadModbusData(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);   //HassanCode
                 await LoadModbusDataAsync(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);   //HassanCode
-                //  await LoadModbusDataTestingByAqib(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);  //AQIBSTAIC
+                //await LoadModbusDataTestingByAqib(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);  //AQIBSTAIC
                 slaveID++;
 
                 string[] avgVoltage = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
@@ -1006,7 +1002,7 @@ namespace ENCAPv3.UI
                         try
                         {
                             InitializeModbusClient();
-                            
+
                             try
                             {
                                 Logger.Info("MainParamaterForm/LoadModbusData| functionCode: " + functionCode);
@@ -1165,9 +1161,8 @@ namespace ENCAPv3.UI
 
                                         #endregion
 
-                                        staticDt = MainParamatersFormPartial.ConvertDataGridViewToDataTable(dgvCellLevel);
-                                        Logger.Info("MainParamaterForm/LoadModbusData| staticDt " + staticDt.ToString());
-                                        fnpublic();
+                                        _table = MainParamatersFormPartial.ConvertDataGridViewToDataTable(dgvCellLevel);
+                                        Logger.Info("MainParamaterForm/LoadModbusData| NonstaticDt " + _table.ToString());
                                         break;
                                     case 4:
                                         registers = modbusClient.ReadInputRegisters(modbusStartReg, modbusRegCount);// Read Input Registers (0x04)
@@ -1364,7 +1359,7 @@ namespace ENCAPv3.UI
                                 Logger.Info("MainParamaterForm/LoadModbusData| boolsRegister: " + boolsRegister.ToString());
                                 break;
                             case 3:
-                               
+
                                 if (!modbusClient.Connected)
                                     InitializeModbusClientAsync(); // Initialize the modbusClient if it's null
                                 this.Invoke(new Action(() =>
@@ -1373,7 +1368,7 @@ namespace ENCAPv3.UI
                                 }));
                                 await Task.Delay(100); // Remove this and replace with actual async call
                                 registers = modbusClient.ReadHoldingRegisters(modbusStartReg, modbusRegCount);
-                               
+
                                 Logger.Info("MainParamaterForm/LoadModbusData| boolsRegister: " + boolsRegister.ToString());
                                 int[] serialNumberRaw = modbusClient.ReadHoldingRegisters(registerNumber, data);
                                 Logger.Info("MainParamaterForm/LoadModbusData| serialNumberRaw.Count: " + serialNumberRaw.Count().ToString());
@@ -1483,9 +1478,9 @@ namespace ENCAPv3.UI
                                 #region FAULTS / ALARMS
                                 z = 0;//fault 2
                                 #endregion
-                                staticDt = MainParamatersFormPartial.ConvertDataGridViewToDataTable(dgvCellLevel);
-                                Logger.Info("MainParamaterForm/LoadModbusData| staticDt " + staticDt.ToString());
-                                fnpublic();
+                                _table = MainParamatersFormPartial.ConvertDataGridViewToDataTable(dgvCellLevel);
+                                Logger.Info("MainParamaterForm/LoadModbusData| staticDt " + _table.ToString());
+
                                 break;
                             case 4:
                                 if (!modbusClient.Connected)
@@ -1787,9 +1782,9 @@ namespace ENCAPv3.UI
                                         z = 0;//fault 2
                                         #endregion
 
-                                        staticDt = MainParamatersFormPartial.ConvertDataGridViewToDataTable(dgvCellLevel);
-                                        Logger.Info("MainParamaterForm/LoadModbusData| staticDt " + staticDt.ToString());
-                                        fnpublic();
+                                        _table = MainParamatersFormPartial.ConvertDataGridViewToDataTable(dgvCellLevel);
+                                        Logger.Info("MainParamaterForm/LoadModbusData| staticDt " + _table.ToString());
+
                                         break;
                                     //case 4:
                                     //registers = modbusClient.ReadInputRegisters(modbusStartReg, modbusRegCount);// Read Input Registers (0x04)
@@ -1911,8 +1906,6 @@ namespace ENCAPv3.UI
             return allLists;
         }
 
-
-
         static double FindMax(params double[] numbers)
         {
             return numbers.Max();
@@ -1951,7 +1944,7 @@ namespace ENCAPv3.UI
                 try
                 {
                     DataTable dt = SetupDataGridView();  //GetPatamatersHeader
-                    allLists =await  LoadModbusDataAsync(1, 3, 0, 0);
+                    allLists = await LoadModbusDataAsync(1, 3, 0, 0);
                     #region DataTable
                     DataTable dataTable = new DataTable();
                     // Add columns to the DataTable
@@ -2045,6 +2038,43 @@ namespace ENCAPv3.UI
 
 
         }
+        private async Task SetupDataGridViewAlarmAsync()
+        {
+            try
+            {
+                DataTable dt = await Task.Run(() => new StaticData().DataGridViewAlarm());
+                Logger.Info("DataGridViewAlarm| StaticData");
+
+                // Update the DataGridView on the main thread
+                if (dataGridViewAlarm.InvokeRequired)
+                {
+                    dataGridViewAlarm.Invoke((Action)(() =>
+                    {
+                        dataGridViewAlarm.Rows.Clear();
+                        foreach (DataRow r in dt.Rows)
+                        {
+                            dataGridViewAlarm.Rows.Add(
+                                r["SNo"].ToString(), r["Alarm"].ToString());
+                        }
+                    }));
+                }
+                else
+                {
+                    dataGridViewAlarm.Rows.Clear();
+                    foreach (DataRow r in dt.Rows)
+                    {
+                        dataGridViewAlarm.Rows.Add(
+                            r["SNo"].ToString(), r["Alarm"].ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                JIMessageBox.ErrorMessage("SetupDataGridViewAlarm: " + ex.Message);
+                Logger.Error("DataGridViewAlarm| Exception: " + ex.Message);
+            }
+        }
+
 
         private DataTable SetupDataGridView()
         {
@@ -2065,6 +2095,58 @@ namespace ENCAPv3.UI
             catch (Exception ex)
             {
                 JIMessageBox.ErrorMessage("SetupDataGridView:" + ex.Message);
+                dt = null;
+            }
+
+            return dt;
+        }
+
+        private async Task<DataTable> SetupDataGridViewAsync()
+        {
+            DataTable dt = null;
+            try
+            {
+                dt = await Task.Run(() => new StaticData().DataGridViewAsync());  // Use async method
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                    {
+                        dgvCellLevel.Rows.Clear();
+                        foreach (DataRow r in dt.Rows)
+                        {
+                            dgvCellLevel.Rows.Add(
+                                r["Parameter"].ToString(), r["Battery1"].ToString(), r["Battery2"].ToString(), r["Battery3"].ToString(), r["Battery4"].ToString(), r["Battery5"].ToString(),
+                                r["Battery6"].ToString(), r["Battery7"].ToString(), r["Battery8"].ToString(), r["Battery9"].ToString(), r["Battery10"].ToString(), r["Battery11"].ToString(),
+                                r["Battery12"].ToString(), r["Battery13"].ToString(), r["Battery14"].ToString(), r["Battery15"].ToString(), r["Battery16"].ToString(), r["Battery17"].ToString(),
+                                r["Battery18"].ToString(), r["Battery19"].ToString(), r["Battery20"].ToString());
+                        }
+                    }));
+                }
+                else
+                {
+                    foreach (DataRow r in dt.Rows)
+                    {
+                        dgvCellLevel.Rows.Add(
+                            r["Parameter"].ToString(), r["Battery1"].ToString(), r["Battery2"].ToString(), r["Battery3"].ToString(), r["Battery4"].ToString(), r["Battery5"].ToString(),
+                            r["Battery6"].ToString(), r["Battery7"].ToString(), r["Battery8"].ToString(), r["Battery9"].ToString(), r["Battery10"].ToString(), r["Battery11"].ToString(),
+                            r["Battery12"].ToString(), r["Battery13"].ToString(), r["Battery14"].ToString(), r["Battery15"].ToString(), r["Battery16"].ToString(), r["Battery17"].ToString(),
+                            r["Battery18"].ToString(), r["Battery19"].ToString(), r["Battery20"].ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() =>
+                {
+                    JIMessageBox.ErrorMessage("SetupDataGridView:" + ex.Message);
+                }));
+                }
+                else {
+                    JIMessageBox.ErrorMessage("SetupDataGridView:" + ex.Message);
+                }
+
                 dt = null;
             }
 

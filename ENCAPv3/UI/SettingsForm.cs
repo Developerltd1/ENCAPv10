@@ -195,7 +195,7 @@ namespace ENCAPv3.UI
         }
 
 
-        private async  void btnHighAndLowSumVolt_Click(object sender, EventArgs e)
+        private async void btnHighAndLowSumVolt_Click(object sender, EventArgs e)
         {
             StaticModelValues.tbHighCurrCharge = tbHighCurrCharge.Text.ToDouble();
             await new MainParamatersForm().LoadModbusDataAsync(slaveID, WRITE_DATA, HIGH_CURR_CHARGE, Convert.ToInt32(StaticModelValues.tbHighCurrCharge));
@@ -319,7 +319,7 @@ namespace ENCAPv3.UI
                 Logger.Info("SettingForm/loadData initialized");
                 string hexString = null;
                 await new MainParamatersForm().LoadModbusDataAsync(slaveID, SERIAL_READ, 0xB9, 11);
-                Logger.Info("SettingForm/loadData LoadModbusData| slaveID: " + slaveID.ToString() + " SERIAL_READ: "+ SERIAL_READ.ToString()+ "0xB9 : 11");
+                Logger.Info("SettingForm/loadData LoadModbusData| slaveID: " + slaveID.ToString() + " SERIAL_READ: " + SERIAL_READ.ToString() + "0xB9 : 11");
                 try
                 {
                     hexString = string.Join("", Array.ConvertAll(StaticModelValues.register_Settings, val => val.ToString("X")));
@@ -329,79 +329,64 @@ namespace ENCAPv3.UI
                     Logger.Error("SettingForm/loadData| Exception: " + ex.Message.ToString());
                     JIMessageBox.ErrorMessage("Serial Data Reading Failed");
                 }
-                string asciiString = ConvertHexStringToAscii(hexString);
-                tbSerial.Text = asciiString;
-                Logger.Info("SettingForm/loadData| asciiString: " + asciiString.ToString());
+                if (hexString != null)
+                {
+                    string asciiString = ConvertHexStringToAscii(hexString);
+                    tbSerial.Text = asciiString;
+                    Logger.Info("SettingForm/loadData| asciiString: " + asciiString.ToString());
+                }
 
 
                 await new MainParamatersForm().LoadModbusDataAsync(slaveID, SETPOINTS_READ, 0x81, 30);
-                Logger.Info("SettingForm/loadData LoadModbusData" );
-                #region AqibCodeStatic
-                ////////////////////tbLowCellVolt.Text = ((UInt16)StaticModelValues.register_Settings[13]).ToString();
-                ////////////////////tbHighCellVolt.Text = 2.ToString();//((UInt16)StaticModelValues.register_Settings[11]).ToString();
-                ////////////////////tbHighSumVolt.Text = "N/A";
-                ////////////////////tbLowSumVolt.Text = "N/A";// StaticModelValues.register_Settings[1].ToString();
-                ////////////////////tbHighCurrCharge.Text = 3.ToString();//((UInt16)StaticModelValues.register_Settings[19]).ToString();
-                ////////////////////tbHighCurrDischarge.Text = 4.ToString();//((UInt16)StaticModelValues.register_Settings[21]).ToString();
-                ////////////////////tbHighTempCharge.Text = 5.ToString();//((UInt16)StaticModelValues.register_Settings[23]).ToString();
-                ////////////////////tbHighTempDischarge.Text = 6.ToString();//((UInt16)StaticModelValues.register_Settings[29]).ToString();
-                ////////////////////tbSocHighAlarm.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                ////////////////////tbSocLowAlarm.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                ////////////////////tbStartVoltage.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                ////////////////////tbBalanceVoltageDiff.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                ////////////////////tbHighDischargeTemp.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                ////////////////////tbLowDischargeTemp.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                ////////////////////tbCellRatedVoltage.Text = 8.ToString();//((UInt16)StaticModelValues.register_Settings[1]).ToString();
-                ////////////////////tbMaxVoltageDifference.Text = "N/A";
-                ////////////////////tbBatteryCapacity.Text = 7.ToString();//((UInt16)StaticModelValues.register_Settings[0]).ToString();
-                ////////////////////tbSleepTime.Text = 8.ToString();//((UInt16)StaticModelValues.register_Settings[10]).ToString();
-                #endregion
+                Logger.Info("SettingForm/loadData LoadModbusData");
 
                 #region MyRegion
-                Logger.Info("SettingForm/loadData| asciiString: " + StaticModelValues.register_Settings.Count().ToString());
-                for (int i = 0; i < StaticModelValues.register_Settings.Count(); i++)
+                if (StaticModelValues.register_Settings != null)
                 {
-  
-                    if (i == 0)
+                    Logger.Info("SettingForm/loadData| asciiString: " + StaticModelValues.register_Settings.Count().ToString());
+                    for (int i = 0; i < StaticModelValues.register_Settings.Count(); i++)
                     {
-                        tbCellRatedVoltage.Text = ((UInt16)StaticModelValues.register_Settings[0]).ToString();
-                    }
-                    if (i == 9)
-                    {
-                        tbSleepTime.Text = ((UInt16)StaticModelValues.register_Settings[9]).ToString();
-                    }
-                    if (i == 10)
-                    {
-                        tbHighCellVolt.Text = ((UInt16)StaticModelValues.register_Settings[10]).ToString();
-                    }
-                    if (i == 12)
-                    {
-                        tbLowCellVolt.Text = ((UInt16)StaticModelValues.register_Settings[12]).ToString();
-                    }
-                    if (i == 18)
-                    {
-                        tbHighCurrCharge.Text = ((UInt16)StaticModelValues.register_Settings[18]).ToString();
-                    }
-                    if (i == 20)
-                    {
-                        tbHighCurrDischarge.Text = ((UInt16)StaticModelValues.register_Settings[20]).ToString();
-                    }
-                    if (i == 22)
-                    {
-                        tbHighTempCharge.Text = ((UInt16)StaticModelValues.register_Settings[22]).ToString();
-                    }
-                    if (i == 28)
-                    {
-                        tbHighTempDischarge.Text = ((UInt16)StaticModelValues.register_Settings[28]).ToString();
-                    }
-                    tbHighSumVolt.Text = "N/A";
-                    tbLowSumVolt.Text = "N/A";// StaticModelValues.register_Settings[1].ToString();}
-                    tbSocHighAlarm.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                    tbSocLowAlarm.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                    tbStartVoltage.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                    tbBalanceVoltageDiff.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                }
 
+                        if (i == 0)
+                        {
+                            tbCellRatedVoltage.Text = ((UInt16)StaticModelValues.register_Settings[0]).ToString();
+                        }
+                        if (i == 9)
+                        {
+                            tbSleepTime.Text = ((UInt16)StaticModelValues.register_Settings[9]).ToString();
+                        }
+                        if (i == 10)
+                        {
+                            tbHighCellVolt.Text = ((UInt16)StaticModelValues.register_Settings[10]).ToString();
+                        }
+                        if (i == 12)
+                        {
+                            tbLowCellVolt.Text = ((UInt16)StaticModelValues.register_Settings[12]).ToString();
+                        }
+                        if (i == 18)
+                        {
+                            tbHighCurrCharge.Text = ((UInt16)StaticModelValues.register_Settings[18]).ToString();
+                        }
+                        if (i == 20)
+                        {
+                            tbHighCurrDischarge.Text = ((UInt16)StaticModelValues.register_Settings[20]).ToString();
+                        }
+                        if (i == 22)
+                        {
+                            tbHighTempCharge.Text = ((UInt16)StaticModelValues.register_Settings[22]).ToString();
+                        }
+                        if (i == 28)
+                        {
+                            tbHighTempDischarge.Text = ((UInt16)StaticModelValues.register_Settings[28]).ToString();
+                        }
+                        tbHighSumVolt.Text = "N/A";
+                        tbLowSumVolt.Text = "N/A";// StaticModelValues.register_Settings[1].ToString();}
+                        tbSocHighAlarm.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
+                        tbSocLowAlarm.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
+                        tbStartVoltage.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
+                        tbBalanceVoltageDiff.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
+                    }
+                }
                 #endregion
 
             }
@@ -424,6 +409,10 @@ namespace ENCAPv3.UI
 
         public static string ConvertHexStringToAscii(string hexString)
         {
+            if (hexString == null)
+            {
+                return null;
+            }
             if (hexString.Length % 2 != 0)
                 throw new ArgumentException("Hex string must have an even number of characters");
 
@@ -656,7 +645,7 @@ namespace ENCAPv3.UI
                     #endregion
                     string hexString = null;
                     await new MainParamatersForm().LoadModbusDataAsync(i, SERIAL_READ, 0xB9, 11);
-                    Logger.Info("SettingForm/reload_Click new MainParamatersForm().LoadModbusData(i, SERIAL_READ, 0xB9, 11): "+i + ": "+ SERIAL_READ);
+                    Logger.Info("SettingForm/reload_Click new MainParamatersForm().LoadModbusData(i, SERIAL_READ, 0xB9, 11): " + i + ": " + SERIAL_READ);
                     try
                     {
                         hexString = string.Join("", Array.ConvertAll(StaticModelValues.register_Settings, val => val.ToString("X")));
@@ -677,8 +666,8 @@ namespace ENCAPv3.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage("Error: "+ ex.Message);
-                Logger.Error("SettingForm/reload_Click Exception: "+ ex.Message);
+                JIMessageBox.ErrorMessage("Error: " + ex.Message);
+                Logger.Error("SettingForm/reload_Click Exception: " + ex.Message);
             }
         }
 

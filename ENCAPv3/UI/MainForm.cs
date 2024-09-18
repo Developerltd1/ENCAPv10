@@ -130,7 +130,7 @@ namespace ENCAPv3.UI
         //FUNCATIONS
         
 
-        private void pnBtnAboutUs_Click(object sender, EventArgs e)
+        private async void pnBtnAboutUs_Click(object sender, EventArgs e)
         {
             if (dashboard == null)
             {
@@ -143,10 +143,11 @@ namespace ENCAPv3.UI
             else
             {
                 dashboard.Activate();
+                await Task.Yield(); // Yield control to ensure UI updates.
             }
-            NavColor("pnBtnAboutUs");
+            await NavColor("pnBtnAboutUs");
         }
-        private void pnBtnSetting_Click(object sender, EventArgs e)
+        private async void pnBtnSetting_Click(object sender, EventArgs e)
         {
             pnBtnSetting.BackColor = System.Drawing.Color.Black;
             if (settingsForm == null)
@@ -161,9 +162,10 @@ namespace ENCAPv3.UI
             {
                 settingsForm.checkIsGuest();
                 settingsForm.Activate();
-                // settingsForm.UpdateCaseValueFromMainParamaterForm();
+                await Task.Yield(); // Yield control to ensure UI updates.
             }
-            NavColor("pnBtnSetting");
+            Application.DoEvents();
+            await NavColor("pnBtnSetting");
         }
         private async  void pnBtnMenu_Click(object sender, EventArgs e)
         {
@@ -182,7 +184,8 @@ namespace ENCAPv3.UI
                 //await  mainParamatersForm.UpdateSettingFormTextbox();
                 await Task.Yield();
             }
-            NavColor("pnBtnMenu");
+            Application.DoEvents();
+            await NavColor("pnBtnMenu");
         }
         private async void pnBtnDashboard_Click(object sender, EventArgs e)
         {
@@ -199,13 +202,14 @@ namespace ENCAPv3.UI
             {
                 // dt, "KilowaatForm");
                 kiloWattLab.Activate();
-
+                await Task.Yield(); // Yield control to ensure UI updates.
                 // this.Activated += kiloWattLab.KiloWattLab_Activated; // Attach the Activated event handler
             }
-            NavColor("pnBtnDashboard");
+            Application.DoEvents();
+            await NavColor("pnBtnDashboard");
 
         }
-        private  void pnBtnDataExport_Click(object sender, EventArgs e)
+        private async  void pnBtnDataExport_Click(object sender, EventArgs e)
         {
            
             if (exportData == null)
@@ -220,9 +224,10 @@ namespace ENCAPv3.UI
             {
                 exportData.ExportData_Load(null,null);
                 exportData.Activate();
+                await Task.Yield(); // Yield control to ensure UI updates.
             }
-
-            NavColor("pnBtnDataExport");
+            Application.DoEvents();
+            await NavColor("pnBtnDataExport");
         }
 
         public async Task  NavColor(string tab)

@@ -324,7 +324,7 @@ namespace ENCAPv3.UI
             dt = await new MainLogicClass().GetAlarmDataFrmDb(datePickerStartDate.Value, datePickerEndDate.Value);
             if (dt.Rows.Count > 0)
             {
-                ExportToAlarmCsv(dt, datePickerStartDate.Value, datePickerEndDate.Value);
+                await ExportToAlarmCsv(dt, datePickerStartDate.Value, datePickerEndDate.Value);
             }
             else
             {
