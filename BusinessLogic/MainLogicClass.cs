@@ -380,6 +380,10 @@ namespace BusinessLogic
                                             newRow["DateCheck"] = row["DateCheck"];
                                             newRow["SlaveId"] = columnIndex;
                                             string parameterName = row["Parameter"].ToString();
+                                            if (parameterName == "Serial" && transposedDataTable.Columns.Contains("Serial"))
+                                            {
+                                                newRow["Serial"] = value;
+                                            }
                                             if (parameterName == "SOC" && transposedDataTable.Columns.Contains("SOC"))
                                             {
                                                 newRow["SOC"] = value;
@@ -533,6 +537,10 @@ namespace BusinessLogic
                         continue; // Skip null values
 
                     // Assign values to the corresponding columns
+                    if (columnName == "Serial" && transposedDataTable.Columns.Contains("Serial"))
+                    {
+                        newRow["Serial"] = value;
+                    }
                     if (columnName == "SOC" && transposedDataTable.Columns.Contains("SOC"))
                     {
                         newRow["SOC"] = value;
