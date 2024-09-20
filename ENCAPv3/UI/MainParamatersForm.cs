@@ -283,7 +283,7 @@ namespace EMView.UI
                 Logger.Info("MainParametersForm/Constructor InitializePollingTimer");
 
                 dataList = new List<BatteryData>();
-                minuteTimer = new Timer { Interval = 10000 };  //60000 }; // 1 minute interval hassanCode
+                minuteTimer = new Timer { Interval = 60000 };  //60000 }; // 1 minute interval hassanCode
                 minuteTimer.Tick += MinuteTimerTick;
                 Logger.Info("MainParametersForm/Constructor Paremeters");
 
