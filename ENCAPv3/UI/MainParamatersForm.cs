@@ -825,35 +825,66 @@ namespace EMView.UI
                 slaveID++;
 
                 string[] avgVoltage = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
-                for (int z = 1; z <= 20; z++)
+                #region Hassan and Aqib 
+                //for (int z = 1; z <= 20; z++)  //Hassan
+                //{
+                //    var cellValue = dgvCellLevel.Rows[1].Cells[z]?.Value?.ToString();
+                //    if (string.IsNullOrEmpty(cellValue) || cellValue == "-")
+                //        break;
+                //    avgVoltage[z] = cellValue;
+                //    double[] doubleArray = Array.ConvertAll(avgVoltage, double.Parse);
+                //    double average = Math.Round(doubleArray.Where(x => x != 0).Average(), 1);
+                //    labelVolt.Text = average.ToString();
+                //}
+
+                for (int z = 1; z <= slaveID; z++) //Aqib
                 {
                     var cellValue = dgvCellLevel.Rows[1].Cells[z]?.Value?.ToString();
-                    if (string.IsNullOrEmpty(cellValue) || cellValue == "-")
-                        break;
-                    avgVoltage[z] = cellValue;
+
+                    // Check if the value is numeric, continue if it is, skip otherwise
+                    if (!double.TryParse(cellValue, out double numericValue))
+                    {
+                        labelVolt.Text = cellValue.ToString();
+                        continue; // Skip to the next iteration if not numeric
+                    }
+                    avgVoltage[z] = cellValue; // Store the numeric value
+
+                    // Convert and calculate the average
                     double[] doubleArray = Array.ConvertAll(avgVoltage, double.Parse);
                     double average = Math.Round(doubleArray.Where(x => x != 0).Average(), 1);
                     labelVolt.Text = average.ToString();
                 }
 
+
+                #endregion
+
                 string[] totalCurrent = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
-                for (int z = 1; z <= 20; z++)
+                for (int z = 1; z <= slaveID; z++)
                 {
                     var cellValue = dgvCellLevel.Rows[2].Cells[z]?.Value?.ToString();
-                    if (string.IsNullOrEmpty(cellValue) || cellValue == "-")
-                        break;
+                    // Check if the value is numeric, continue if it is, skip otherwise
+                    if (!double.TryParse(cellValue, out double numericValue))
+                    {
+                        labelCurrent.Text = cellValue.ToString();
+                        continue; // Skip to the next iteration if not numeric
+                    }
                     totalCurrent[z] = cellValue;
                     double[] doubleArray = Array.ConvertAll(totalCurrent, double.Parse);
                     double sum = Math.Round(doubleArray.Where(x => x != 0).Sum(), 1);
                     labelCurrent.Text = sum.ToString();
                 }
+ 
 
                 string[] totalPower = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
-                for (int z = 1; z <= 20; z++)
+                for (int z = 1; z <= slaveID; z++)
                 {
                     var cellValue = dgvCellLevel.Rows[3].Cells[z]?.Value?.ToString();
-                    if (string.IsNullOrEmpty(cellValue) || cellValue == "-")
-                        break;
+                    // Check if the value is numeric, continue if it is, skip otherwise
+                    if (!double.TryParse(cellValue, out double numericValue))
+                        {
+                            labelPower.Text = cellValue.ToString();
+                            continue; // Skip to the next iteration if not numeric
+                        }
                     totalPower[z] = cellValue;
                     double[] doubleArray = Array.ConvertAll(totalPower, double.Parse);
                     double sum = Math.Round(doubleArray.Where(x => x != 0).Sum(), 1);
@@ -861,22 +892,30 @@ namespace EMView.UI
                 }
 
                 string[] avgSOC = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
-                for (int z = 1; z <= 20; z++)
+                for (int z = 1; z <= slaveID; z++)
                 {
                     var cellValue = dgvCellLevel.Rows[4].Cells[z]?.Value?.ToString();
-                    if (string.IsNullOrEmpty(cellValue) || cellValue == "-")
-                        break;
+                    // Check if the value is numeric, continue if it is, skip otherwise
+                    if (!double.TryParse(cellValue, out double numericValue))
+                    {
+                        labelSoc.Text = cellValue.ToString();
+                        continue; // Skip to the next iteration if not numeric
+                    }
                     avgSOC[z] = cellValue;
                     double[] doubleArray = Array.ConvertAll(avgSOC, double.Parse);
                     double average = Math.Round(doubleArray.Where(x => x != 0).Average(), 1);
                     labelSoc.Text = average.ToString();
                 }
                 string[] avgTemp = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
-                for (int z = 1; z <= 20; z++)
+                for (int z = 1; z <= slaveID; z++)
                 {
                     var cellValue = dgvCellLevel.Rows[6].Cells[z]?.Value?.ToString();
-                    if (string.IsNullOrEmpty(cellValue) || cellValue == "-")
-                        break;
+                    // Check if the value is numeric, continue if it is, skip otherwise
+                    if (!double.TryParse(cellValue, out double numericValue))
+                    {
+                        labelTemp.Text = cellValue.ToString();
+                        continue; // Skip to the next iteration if not numeric
+                    }
                     avgTemp[z] = cellValue;
                     double[] doubleArray = Array.ConvertAll(avgTemp, double.Parse);
                     double average = Math.Round(doubleArray.Where(x => x != 0).Average(), 1);
@@ -891,12 +930,17 @@ namespace EMView.UI
                     (string.IsNullOrEmpty(labelPower.Text) || labelPower.Text != "-"))
                 {
                     // Add new data points to existing lists
-                    lstvoltage.Add(Convert.ToDouble(labelVolt.Text));
-                    lstcurrent.Add(Convert.ToDouble(labelCurrent.Text));
-                    lstpower.Add(Convert.ToDouble(labelPower.Text));
-                    lstpower.Add(Convert.ToDouble(labelPower.Text));
-                    SocColor.Add(Convert.ToDouble(labelSoc.Text));
-                    TempColor.Add(Convert.ToDouble(labelTemp.Text));
+
+                    double voltValue = SafeConvertToDouble(labelVolt.Text);
+                    lstvoltage.Add(voltValue);
+                    double currentValue = SafeConvertToDouble(labelCurrent.Text);
+                    lstcurrent.Add(currentValue);
+                    double powerValue = SafeConvertToDouble(labelPower.Text);
+                    lstpower.Add(voltValue);
+                    double SocValue = SafeConvertToDouble(labelSoc.Text);
+                    SocColor.Add(SocValue);
+                    double TempValue = SafeConvertToDouble(labelTemp.Text);
+                    TempColor.Add(TempValue);
 
                     // Update allLists with the updated data
                     allLists.Clear();
@@ -1246,11 +1290,11 @@ namespace EMView.UI
                                 infoMessages.Text = ("Reading Successful");
                                 statusConnection.Text = ("Connected");
                                 avgcell = ((cell1 + cell2 + cell3 + cell4 + cell5 + cell6 + cell7 + cell8 + cell9 + cell10 + cell11 + cell12 + cell13 + cell14) / 14);
-                                labelVolt.Text = voltage.ToString("0.0");
-                                labelCurrent.Text = current.ToString("0.0");
-                                labelPower.Text = power.ToString("0.0");
-                                labelTemp.Text = temp.ToString("0.0");
-                                labelSoc.Text = soc.ToString("0.0");
+                                //labelVolt.Text = voltage.ToString("0.0");
+                                //labelCurrent.Text = current.ToString("0.0");
+                                //labelPower.Text = power.ToString("0.0");
+                                //labelTemp.Text = temp.ToString("0.0");
+                                //labelSoc.Text = soc.ToString("0.0");
                             }
                             catch (Exception ex)
                             {
@@ -1342,11 +1386,12 @@ namespace EMView.UI
                                 Logger.Info("MainParamaterForm/LoadModbusData| boolsRegister: " + boolsRegister.ToString());
                                 break;
                             case 2:
+                                UpdateStatusConnection("Connected");
                                 if (!modbusClient.Connected)
                                     InitializeModbusClientAsync();
                                 await Task.Delay(100);
                                 boolsRegister = modbusClient.ReadDiscreteInputs(modbusStartReg, modbusRegCount);// Read Discrete Inputs (0x02)
-                                UpdateStatusConnection("Connected");
+                              
                                 Logger.Info("MainParamaterForm/LoadModbusData| boolsRegister: " + boolsRegister.ToString());
                                 break;
                             case 3:
@@ -1575,11 +1620,11 @@ namespace EMView.UI
                         this.Invoke(new Action(() =>
                         {
                             UpdateInfoMessages("Reading Successful", Color.DarkGreen, Color.White);
-                            labelVolt.Text = voltage.ToString("0.0");
-                            labelCurrent.Text = current.ToString("0.0");
-                            labelPower.Text = power.ToString("0.0");
-                            labelTemp.Text = temp.ToString("0.0");
-                            labelSoc.Text = soc.ToString("0.0");
+                            //labelVolt.Text = voltage.ToString("0.0");
+                            //labelCurrent.Text = current.ToString("0.0");
+                            //labelPower.Text = power.ToString("0.0");
+                            //labelTemp.Text = temp.ToString("0.0");
+                            //labelSoc.Text = soc.ToString("0.0");
                         }));
                     }
                     catch (Exception ex)
@@ -1847,11 +1892,11 @@ namespace EMView.UI
                                 infoMessages.Text = ("Reading Successful");
 
                                 avgcell = ((cell1 + cell2 + cell3 + cell4 + cell5 + cell6 + cell7 + cell8 + cell9 + cell10 + cell11 + cell12 + cell13 + cell14) / 14);
-                                labelVolt.Text = voltage.ToString("0.0");
-                                labelCurrent.Text = current.ToString("0.0");
-                                labelPower.Text = power.ToString("0.0");
-                                labelTemp.Text = temp.ToString("0.0");
-                                labelSoc.Text = soc.ToString("0.0");
+                                //labelVolt.Text = voltage.ToString("0.0");
+                                //labelCurrent.Text = current.ToString("0.0");
+                                //labelPower.Text = power.ToString("0.0");
+                                //labelTemp.Text = temp.ToString("0.0");
+                                //labelSoc.Text = soc.ToString("0.0");
                             }
                             catch (Exception ex)
                             {
@@ -2440,6 +2485,19 @@ namespace EMView.UI
             }
         }
         #endregion
+
+        public static double SafeConvertToDouble(string input, double defaultValue = 0)
+        {
+            // Try to parse the input to a double
+            if (double.TryParse(input, out double result))
+            {
+                return result; // Return the parsed value if successful
+            }
+
+            // Return the default value if the input is not numeric
+            return defaultValue;
+        }
+
 
     }
 
