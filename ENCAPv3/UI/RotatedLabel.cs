@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace ENCAPv3.UI
+namespace EMView.UI
 {
     public class RotatedLabel : Label
     {

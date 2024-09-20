@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D900A60C-163C-4574-9F97-DEBB88694EF7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ENCAPv3</RootNamespace>
-    <AssemblyName>ENCAPv3</AssemblyName>
+    <RootNamespace>EMView</RootNamespace>
+    <AssemblyName>EMView</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -68,6 +68,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>EMView.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EasyModbus, Version=5.6.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -162,12 +165,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
-    <Compile Include="UI\AboutUsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\AboutUsForm.Designer.cs">
-      <DependentUpon>AboutUsForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\BaseForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -185,12 +182,6 @@
     </Compile>
     <Compile Include="UI\DashBoard1.Designer.cs">
       <DependentUpon>DashBoard1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ExportChart.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\ExportChart.Designer.cs">
-      <DependentUpon>ExportChart.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\ExportData.cs">
       <SubType>Form</SubType>
@@ -243,9 +234,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="UI\AboutUsForm.resx">
-      <DependentUpon>AboutUsForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UI\BaseForm.resx">
       <DependentUpon>BaseForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -254,9 +242,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\DashBoard1.resx">
       <DependentUpon>DashBoard1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\ExportChart.resx">
-      <DependentUpon>ExportChart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\ExportData.resx">
       <DependentUpon>ExportData.cs</DependentUpon>

@@ -1,5 +1,5 @@
 ﻿
-namespace ENCAPv3.UI
+namespace EMView.UI
 {
     partial class ExportData
     {
@@ -32,7 +32,7 @@ namespace ENCAPv3.UI
             this.components = new System.ComponentModel.Container();
             Microsoft.Reporting.WinForms.ReportDataSource reportDataSource1 = new Microsoft.Reporting.WinForms.ReportDataSource();
             this.dataTable1BindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.set1 = new ENCAPv3.Set1();
+            this.set1 = new EMView.Set1();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.datePickerEndDate = new System.Windows.Forms.DateTimePicker();
@@ -305,7 +305,7 @@ namespace ENCAPv3.UI
             reportDataSource1.Name = "DataSet0";
             reportDataSource1.Value = this.dataTable1BindingSource;
             this.reportViewer1.LocalReport.DataSources.Add(reportDataSource1);
-            this.reportViewer1.LocalReport.ReportEmbeddedResource = "ENCAPv3.Report1.rdlc";
+            this.reportViewer1.LocalReport.ReportEmbeddedResource = "EMView.Report1.rdlc";
             this.reportViewer1.Location = new System.Drawing.Point(25, 555);
             this.reportViewer1.Name = "reportViewer1";
             this.reportViewer1.ServerReport.BearerToken = null;

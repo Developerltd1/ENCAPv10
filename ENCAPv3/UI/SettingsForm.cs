@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static BusinessLogic.Model.StaticModel.SettingsModel;
 
-namespace ENCAPv3.UI
+namespace EMView.UI
 {
 
     public partial class SettingsForm : Form//BasetForm

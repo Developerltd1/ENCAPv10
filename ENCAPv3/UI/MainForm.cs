@@ -12,13 +12,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media;
 
-namespace ENCAPv3.UI
+namespace EMView.UI
 {
     public partial class MainForm : Form//d BasetForm
     {
         Dashboard dashboard;
-        AboutUsForm aboutUsForm;
-        ExportChart exportChart;
+      
         SettingsForm settingsForm;
         MainParamatersForm mainParamatersForm;
         ExportData exportData;
@@ -295,11 +294,11 @@ namespace ENCAPv3.UI
 
         private void ExportChart_FormClosed(object sender, FormClosedEventArgs e)
         {
-            exportChart = null;
+         
         }
         private void AboutUsForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            aboutUsForm = null;
+           
         }
         private void SettingsForm_FormClosed(object sender, FormClosedEventArgs e)
         {

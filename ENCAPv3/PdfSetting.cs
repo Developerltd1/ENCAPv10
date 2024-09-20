@@ -12,7 +12,7 @@ using LiveCharts.WinForms;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
 
-namespace ENCAPv3
+namespace EMView
 {
     public class PdfSetting
     {

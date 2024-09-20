@@ -20,7 +20,7 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using CheckBox = System.Windows.Forms.CheckBox;
 
-namespace ENCAPv3.UI
+namespace EMView.UI  
 {
     public partial class ExportData : BaseForm//Form
     {

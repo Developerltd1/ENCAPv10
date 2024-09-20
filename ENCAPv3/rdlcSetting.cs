@@ -19,7 +19,7 @@ using PdfSharp.Pdf;
 using System.Data;
 using Microsoft.Reporting.WinForms;
 
-namespace ENCAPv3
+namespace EMView
 {
     public class rdlcSetting
     {

@@ -1,5 +1,5 @@
 ﻿
-namespace ENCAPv3.UI
+namespace EMView.UI
 {
     partial class MainForm
     {

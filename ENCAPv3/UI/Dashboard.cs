@@ -16,7 +16,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 using Series = System.Windows.Forms.DataVisualization.Charting.Series;
 using EasyModbus;
 
-namespace ENCAPv3.UI
+namespace EMView.UI
 {
     public partial class Dashboard : Form//BaseForm//Form//BasetForm
     {

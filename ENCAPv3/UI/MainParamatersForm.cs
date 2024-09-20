@@ -21,7 +21,7 @@ using log4net;
 using System.Text.RegularExpressions;
 using Color = System.Drawing.Color;
 //System.Windows.Forms
-namespace ENCAPv3.UI
+namespace EMView.UI
 {
     public partial class MainParamatersForm : Form//BasetForm
     {

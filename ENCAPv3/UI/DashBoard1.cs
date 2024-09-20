@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using Series = System.Windows.Forms.DataVisualization.Charting.Series;
 
-namespace ENCAPv3.UI
+namespace EMView.UI
 {
     public partial class DashBoard1 : Form
     {

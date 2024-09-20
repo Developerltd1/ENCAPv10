@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ENCAPv3
+namespace EMView
 {
     public static class SeriesExtensions
     {

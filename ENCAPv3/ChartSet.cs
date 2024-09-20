@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Media;
 using CheckBox = System.Windows.Forms.CheckBox;
-namespace ENCAPv3
+namespace EMView
 {
     public class ChartSet
     {

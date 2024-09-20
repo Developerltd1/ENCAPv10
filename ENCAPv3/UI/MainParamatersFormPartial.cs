@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ENCAPv3.UI
+namespace EMView.UI
 {
     public static partial class MainParamatersFormPartial
     {

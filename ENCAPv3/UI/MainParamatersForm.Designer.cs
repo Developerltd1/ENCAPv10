@@ -1,5 +1,5 @@
 ﻿
-namespace ENCAPv3.UI
+namespace EMView.UI
 {
     partial class MainParamatersForm
     {
@@ -216,9 +216,9 @@ namespace ENCAPv3.UI
             this.numSlaveID.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.numSlaveID.Location = new System.Drawing.Point(1019, 35);
             this.numSlaveID.Name = "numSlaveID";
-            this.numSlaveID.Size = new System.Drawing.Size(56, 16);
+            this.numSlaveID.Size = new System.Drawing.Size(11, 16);
             this.numSlaveID.TabIndex = 28;
-            this.numSlaveID.Text = "SlaveID";
+            this.numSlaveID.Text = ".";
             // 
             // label12
             // 

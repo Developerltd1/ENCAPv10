@@ -1,4 +1,4 @@
-﻿using ENCAPv3.UI;
+﻿using EMView.UI;
 using log4net;
 using log4net.Appender;
 using log4net.Config;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ENCAPv3
+namespace EMView
 {
     static class Program
     {

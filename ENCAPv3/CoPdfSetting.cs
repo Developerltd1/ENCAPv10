@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace ENCAPv3
+namespace EMView
 {
     public class CoPdfSetting
     {
