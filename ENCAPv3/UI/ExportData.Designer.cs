@@ -340,7 +340,7 @@ namespace ENCAPv3.UI
             this.Controls.Add(this.panel1);
             this.Name = "ExportData";
             this.Text = "ExportData";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.WindowState = System.Windows.Forms.FormWindowState.Normal;
             this.Load += new System.EventHandler(this.ExportData_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataTable1BindingSource)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.set1)).EndInit();

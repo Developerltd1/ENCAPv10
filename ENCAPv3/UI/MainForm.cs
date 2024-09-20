@@ -185,7 +185,7 @@ namespace ENCAPv3.UI
                 //await  mainParamatersForm.UpdateSettingFormTextbox();
                 await Task.Yield();
             }
-            Application.DoEvents();
+           // Application.DoEvents();
             await NavColor("pnBtnMenu");
         }
         private async void pnBtnDashboard_Click(object sender, EventArgs e)

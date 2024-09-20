@@ -145,9 +145,6 @@ namespace ENCAPv3.UI
             this.label29 = new System.Windows.Forms.Label();
             this.panel14 = new System.Windows.Forms.Panel();
             this.labelForModule = new System.Windows.Forms.Label();
-            this.lblCell16 = new System.Windows.Forms.Label();
-            this.lblCell15 = new System.Windows.Forms.Label();
-            this.lblCell14 = new System.Windows.Forms.Label();
             this.lblCell13 = new System.Windows.Forms.Label();
             this.lblCell12 = new System.Windows.Forms.Label();
             this.label48 = new System.Windows.Forms.Label();
@@ -258,7 +255,6 @@ namespace ENCAPv3.UI
             this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox7.TabIndex = 5;
             this.pictureBox7.TabStop = false;
-          //  this.pictureBox7.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // label4
             // 
@@ -273,7 +269,6 @@ namespace ENCAPv3.UI
             this.label4.Size = new System.Drawing.Size(60, 20);
             this.label4.TabIndex = 4;
             this.label4.Text = "Voltage";
-           // this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // labelTotalVoltage
             // 
@@ -301,7 +296,6 @@ namespace ENCAPv3.UI
             this.label7.Size = new System.Drawing.Size(42, 20);
             this.label7.TabIndex = 0;
             this.label7.Text = "Total";
-           // this.label7.Click += new System.EventHandler(this.label1_Click);
             // 
             // labelSOC
             // 
@@ -391,7 +385,6 @@ namespace ENCAPv3.UI
             this.label96.Size = new System.Drawing.Size(120, 20);
             this.label96.TabIndex = 9;
             this.label96.Text = "Powered by HM";
-           // this.label96.Click += new System.EventHandler(this.label96_Click);
             // 
             // flowLayoutPanel1
             // 
@@ -605,7 +598,6 @@ namespace ENCAPv3.UI
             this.labelModule18Serial.Size = new System.Drawing.Size(40, 17);
             this.labelModule18Serial.TabIndex = 8;
             this.labelModule18Serial.Text = "Serial";
-           // this.labelModule18Serial.Click += new System.EventHandler(this.label52_Click);
             // 
             // labelModule18SOC
             // 
@@ -1729,7 +1721,6 @@ namespace ENCAPv3.UI
             this.panel20.Name = "panel20";
             this.panel20.Size = new System.Drawing.Size(187, 146);
             this.panel20.TabIndex = 8;
-           // this.panel20.Paint += new System.Windows.Forms.PaintEventHandler(this.panel20_Paint);
             // 
             // labelModule2Serial
             // 
@@ -1858,7 +1849,6 @@ namespace ENCAPv3.UI
             this.label29.Size = new System.Drawing.Size(74, 20);
             this.label29.TabIndex = 0;
             this.label29.Text = "Module-1";
-            //this.label29.Click += new System.EventHandler(this.label29_Click);
             // 
             // panel14
             // 
@@ -1866,9 +1856,6 @@ namespace ENCAPv3.UI
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(78)))), ((int)(((byte)(74)))));
             this.panel14.Controls.Add(this.labelForModule);
-            this.panel14.Controls.Add(this.lblCell16);
-            this.panel14.Controls.Add(this.lblCell15);
-            this.panel14.Controls.Add(this.lblCell14);
             this.panel14.Controls.Add(this.lblCell13);
             this.panel14.Controls.Add(this.lblCell12);
             this.panel14.Controls.Add(this.label48);
@@ -1902,54 +1889,6 @@ namespace ENCAPv3.UI
             this.labelForModule.Size = new System.Drawing.Size(0, 17);
             this.labelForModule.TabIndex = 10;
             // 
-            // lblCell16
-            // 
-            this.lblCell16.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lblCell16.AutoSize = true;
-            this.lblCell16.BackColor = System.Drawing.Color.Transparent;
-            this.lblCell16.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCell16.ForeColor = System.Drawing.Color.White;
-            this.lblCell16.Image = ((System.Drawing.Image)(resources.GetObject("lblCell16.Image")));
-            this.lblCell16.Location = new System.Drawing.Point(1047, 77);
-            this.lblCell16.Name = "lblCell16";
-            this.lblCell16.Padding = new System.Windows.Forms.Padding(15, 30, 15, 30);
-            this.lblCell16.Size = new System.Drawing.Size(60, 81);
-            this.lblCell16.TabIndex = 24;
-            this.lblCell16.Text = "0V";
-            this.lblCell16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblCell15
-            // 
-            this.lblCell15.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lblCell15.AutoSize = true;
-            this.lblCell15.BackColor = System.Drawing.Color.Transparent;
-            this.lblCell15.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCell15.ForeColor = System.Drawing.Color.White;
-            this.lblCell15.Image = ((System.Drawing.Image)(resources.GetObject("lblCell15.Image")));
-            this.lblCell15.Location = new System.Drawing.Point(981, 77);
-            this.lblCell15.Name = "lblCell15";
-            this.lblCell15.Padding = new System.Windows.Forms.Padding(15, 30, 15, 30);
-            this.lblCell15.Size = new System.Drawing.Size(60, 81);
-            this.lblCell15.TabIndex = 23;
-            this.lblCell15.Text = "0V";
-            this.lblCell15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblCell14
-            // 
-            this.lblCell14.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lblCell14.AutoSize = true;
-            this.lblCell14.BackColor = System.Drawing.Color.Transparent;
-            this.lblCell14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCell14.ForeColor = System.Drawing.Color.White;
-            this.lblCell14.Image = ((System.Drawing.Image)(resources.GetObject("lblCell14.Image")));
-            this.lblCell14.Location = new System.Drawing.Point(915, 77);
-            this.lblCell14.Name = "lblCell14";
-            this.lblCell14.Padding = new System.Windows.Forms.Padding(15, 30, 15, 30);
-            this.lblCell14.Size = new System.Drawing.Size(60, 81);
-            this.lblCell14.TabIndex = 22;
-            this.lblCell14.Text = "0V";
-            this.lblCell14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // lblCell13
             // 
             this.lblCell13.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -1958,7 +1897,7 @@ namespace ENCAPv3.UI
             this.lblCell13.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCell13.ForeColor = System.Drawing.Color.White;
             this.lblCell13.Image = ((System.Drawing.Image)(resources.GetObject("lblCell13.Image")));
-            this.lblCell13.Location = new System.Drawing.Point(849, 77);
+            this.lblCell13.Location = new System.Drawing.Point(810, 77);
             this.lblCell13.Name = "lblCell13";
             this.lblCell13.Padding = new System.Windows.Forms.Padding(15, 30, 15, 30);
             this.lblCell13.Size = new System.Drawing.Size(60, 81);
@@ -1974,7 +1913,7 @@ namespace ENCAPv3.UI
             this.lblCell12.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCell12.ForeColor = System.Drawing.Color.White;
             this.lblCell12.Image = ((System.Drawing.Image)(resources.GetObject("lblCell12.Image")));
-            this.lblCell12.Location = new System.Drawing.Point(783, 77);
+            this.lblCell12.Location = new System.Drawing.Point(744, 77);
             this.lblCell12.Name = "lblCell12";
             this.lblCell12.Padding = new System.Windows.Forms.Padding(15, 30, 15, 30);
             this.lblCell12.Size = new System.Drawing.Size(60, 81);
@@ -2017,7 +1956,7 @@ namespace ENCAPv3.UI
             this.lblCell11.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCell11.ForeColor = System.Drawing.Color.White;
             this.lblCell11.Image = ((System.Drawing.Image)(resources.GetObject("lblCell11.Image")));
-            this.lblCell11.Location = new System.Drawing.Point(717, 77);
+            this.lblCell11.Location = new System.Drawing.Point(678, 77);
             this.lblCell11.Name = "lblCell11";
             this.lblCell11.Padding = new System.Windows.Forms.Padding(15, 30, 15, 30);
             this.lblCell11.Size = new System.Drawing.Size(60, 81);
@@ -2033,7 +1972,7 @@ namespace ENCAPv3.UI
             this.lblCell10.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCell10.ForeColor = System.Drawing.Color.White;
             this.lblCell10.Image = ((System.Drawing.Image)(resources.GetObject("lblCell10.Image")));
-            this.lblCell10.Location = new System.Drawing.Point(651, 77);
+            this.lblCell10.Location = new System.Drawing.Point(612, 77);
             this.lblCell10.Name = "lblCell10";
             this.lblCell10.Padding = new System.Windows.Forms.Padding(15, 30, 15, 30);
             this.lblCell10.Size = new System.Drawing.Size(60, 81);
@@ -2049,7 +1988,7 @@ namespace ENCAPv3.UI
             this.lblCell9.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCell9.ForeColor = System.Drawing.Color.White;
             this.lblCell9.Image = ((System.Drawing.Image)(resources.GetObject("lblCell9.Image")));
-            this.lblCell9.Location = new System.Drawing.Point(585, 77);
+            this.lblCell9.Location = new System.Drawing.Point(546, 77);
             this.lblCell9.Name = "lblCell9";
             this.lblCell9.Padding = new System.Windows.Forms.Padding(15, 30, 15, 30);
             this.lblCell9.Size = new System.Drawing.Size(60, 81);
@@ -2213,7 +2152,6 @@ namespace ENCAPv3.UI
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(265, 101);
             this.panel2.TabIndex = 5;
-           // this.panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.panel2_Paint);
             // 
             // pictureBox2
             // 
@@ -2292,7 +2230,6 @@ namespace ENCAPv3.UI
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
-          //  this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
             // label2
             // 
@@ -2334,7 +2271,6 @@ namespace ENCAPv3.UI
             this.label1.Size = new System.Drawing.Size(42, 20);
             this.label1.TabIndex = 0;
             this.label1.Text = "Total";
-            //this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // panel4
             // 
@@ -2360,7 +2296,6 @@ namespace ENCAPv3.UI
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.pictureBox3.TabIndex = 7;
             this.pictureBox3.TabStop = false;
-           // this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
             // 
             // labelTemprature
             // 
@@ -2574,7 +2509,6 @@ namespace ENCAPv3.UI
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "KiloWattLab";
             this.Text = "KiloWattLab";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.KiloWattLab_Load);
             this.panel23.ResumeLayout(false);
             this.panel23.PerformLayout();
@@ -2662,9 +2596,6 @@ namespace ENCAPv3.UI
         private System.Windows.Forms.Label label96;
         private FontAwesome.Sharp.IconButton iconButton15;
         private FontAwesome.Sharp.IconButton iconButton13;
-        private System.Windows.Forms.Label lblCell16;
-        private System.Windows.Forms.Label lblCell15;
-        private System.Windows.Forms.Label lblCell14;
         private System.Windows.Forms.Label lblCell13;
         private System.Windows.Forms.Label lblCell12;
         private System.Windows.Forms.Label lblCell11;

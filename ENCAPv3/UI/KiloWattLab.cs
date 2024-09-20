@@ -162,8 +162,6 @@ namespace ENCAPv3.UI
                             lblCell11.Text = ddt.Rows[dataPageIndex++][selectedModule].ToString();
                             lblCell12.Text = ddt.Rows[dataPageIndex++][selectedModule].ToString();
                             lblCell13.Text = ddt.Rows[dataPageIndex++][selectedModule].ToString();
-                            lblCell14.Text = ddt.Rows[dataPageIndex++][selectedModule].ToString();
-                            lblCell15.Text = ddt.Rows[dataPageIndex++][selectedModule].ToString();
                             #endregion
 
                             //lblCell16.Text = ddt.Rows[21]["Battery-1"].ToString();
