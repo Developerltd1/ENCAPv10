@@ -283,7 +283,7 @@ namespace EMView.UI
                 Logger.Info("MainParametersForm/Constructor InitializePollingTimer");
 
                 dataList = new List<BatteryData>();
-                minuteTimer = new Timer { Interval = 60000 };  //60000 }; // 1 minute interval hassanCode
+                minuteTimer = new Timer { Interval = 10000 };  //60000 }; // 1 minute interval hassanCode
                 minuteTimer.Tick += MinuteTimerTick;
                 Logger.Info("MainParametersForm/Constructor Paremeters");
 
@@ -811,7 +811,6 @@ namespace EMView.UI
             try
             {
                 //await Task.Delay(100); // Adjust delay if needed
-               //slaveID = (string.IsNullOrEmpty(numSlaveID.Text) || !int.TryParse(numSlaveID.Text, out int parsedValue)) ? 0 : parsedValue;
 
                 if (slaveID > moduleCount.Value || slaveID == 0)
                 {
@@ -1247,11 +1246,11 @@ namespace EMView.UI
                                 infoMessages.Text = ("Reading Successful");
                                 statusConnection.Text = ("Connected");
                                 avgcell = ((cell1 + cell2 + cell3 + cell4 + cell5 + cell6 + cell7 + cell8 + cell9 + cell10 + cell11 + cell12 + cell13 + cell14) / 14);
-                               /* labelVolt.Text = voltage.ToString("0.0");
+                                labelVolt.Text = voltage.ToString("0.0");
                                 labelCurrent.Text = current.ToString("0.0");
                                 labelPower.Text = power.ToString("0.0");
                                 labelTemp.Text = temp.ToString("0.0");
-                                labelSoc.Text = soc.ToString("0.0");*/
+                                labelSoc.Text = soc.ToString("0.0");
                             }
                             catch (Exception ex)
                             {
@@ -1261,9 +1260,14 @@ namespace EMView.UI
                                 infoMessages.ForeColor = System.Drawing.Color.White;
                                 infoMessages.Text = ("Error reading Modbus data: " + ex.Message);
                                 StaticModelValues.register_Settings = tmp;
-                                for (z = 0; z <= 30; z++)
+                                for (z = 0; z <= 18; z++)
                                     dgvCellLevel.Rows[z].Cells[batteryIndex].Value = "-";
-                               
+                                labelVolt.Text = "-";
+                                labelCurrent.Text = "-";
+                                labelPower.Text = "-";
+                                labelTemp.Text = "-";
+
+                                labelSoc.Text = "-";
                             }
                             finally   //uncomment
                             {
@@ -1369,9 +1373,9 @@ namespace EMView.UI
                                 #region DynamicData from register to Variable
                                 voltage = (registers[VOLTAGE]) * 0.1;
                                 Logger.Info("MainParamaterForm/LoadModbusData| voltage: " + voltage.ToString());
-                                current = ((registers[CURRENT] - 30000) * 0.1) * -1;          //uncomment
+                                current = (registers[CURRENT] - 30000) * 0.1;
                                 Logger.Info("MainParamaterForm/LoadModbusData| current: " + current.ToString());
-                                power = (((double)registers[POWER]) / 1000.0);
+                                power = (registers[POWER]);
                                 Logger.Info("MainParamaterForm/LoadModbusData| power: " + current.ToString());
                                 soc = (registers[SOC]) * 0.1;
                                 Logger.Info("MainParamaterForm/LoadModbusData| soc: " + soc.ToString());
@@ -1586,19 +1590,19 @@ namespace EMView.UI
                         UpdateInfoMessages($"Error reading Modbus data:{ex.Message}", Color.Red, Color.White);
                         this.Invoke(new Action(() =>
                         {
-                            statusConnection.Text = "Connected";
+                            statusConnection.Text = "Disconnected";
                         }));
                         StaticModelValues.register_Settings = tmp;
                         this.Invoke(new Action(() =>
                         {
 
-                            for (z = 0; z <= 30; z++)
+                            for (z = 0; z <= 18; z++)
                                 dgvCellLevel.Rows[z].Cells[batteryIndex].Value = "-";
-                            /*labelVolt.Text = "-";
+                            labelVolt.Text = "-";
                             labelCurrent.Text = "-";
                             labelPower.Text = "-";
                             labelTemp.Text = "-";
-                            labelSoc.Text = "-";*/
+                            labelSoc.Text = "-";
                         }));
                     }
                     finally   //uncomment
@@ -1687,7 +1691,7 @@ namespace EMView.UI
                                         //Logger.Info("MainParamaterForm/LoadModbusData| hexString: " + hexString.ToString());
 
                                         //serialNumberString = ConvertHexStringToAscii(hexString);    //uncomment
-                                        await Task.Delay(1000); // Remove this and replace with actual async call
+                                        await Task.Delay(100); // Remove this and replace with actual async call
 
                                         Logger.Info("MainParamaterForm/LoadModbusData| serialNumberString: " + serialNumberString.ToString());
                                         #region StaticDataByAQIB
@@ -1855,13 +1859,13 @@ namespace EMView.UI
                                 int[] tmp = { 0, 0 };
                                 UpdateInfoMessages($"Error reading Modbus data:: {ex.Message}", Color.Red, Color.White);
                                 StaticModelValues.register_Settings = tmp;
-                                for (z = 0; z <= 30; z++)
+                                for (z = 0; z <= 18; z++)
                                     dgvCellLevel.Rows[z].Cells[batteryIndex].Value = "-";
-                                /*labelVolt.Text = "-";
+                                labelVolt.Text = "-";
                                 labelCurrent.Text = "-";
                                 labelPower.Text = "-";
                                 labelTemp.Text = "-";
-                                labelSoc.Text = "-";*/
+                                labelSoc.Text = "-";
                             }
                             finally   //uncomment
                             {
