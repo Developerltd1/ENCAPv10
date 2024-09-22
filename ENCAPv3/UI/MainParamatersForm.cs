@@ -828,17 +828,17 @@ namespace EMView.UI
 
 
 
-                int validColumnCount = await CountValidColumnsAsync();
+               // int validColumnCount = await CountValidColumnsAsync();
 
 
                 if (!string.IsNullOrEmpty(slaveidCount) && slaveidCount != "-")
                 {
                     ////  ProcessDataGridViewRowAsync(GridView, RowIndex, Formula, LabelName, moduleCount, CurrentRowTotalNumericColums);
-                    await ProcessDataGridViewRowAsync(dgvCellLevel, 1, arr => arr.Average(), labelVolt , Convert.ToInt32(slaveidCount), validColumnCount);   //totalVolt
-                    await ProcessDataGridViewRowAsync(dgvCellLevel, 2, arr => arr.Sum(), labelCurrent, Convert.ToInt32(slaveidCount), validColumnCount);  //totalCurrent
-                    await ProcessDataGridViewRowAsync(dgvCellLevel, 3, arr => arr.Sum(), labelPower, Convert.ToInt32(slaveidCount), validColumnCount);  //totalPower
-                    await ProcessDataGridViewRowAsync(dgvCellLevel, 4, arr => arr.Average(), labelSoc, Convert.ToInt32(slaveidCount), validColumnCount);  //avgSOC
-                    await ProcessDataGridViewRowAsync(dgvCellLevel, 5, arr => arr.Average(), labelTemp, Convert.ToInt32(slaveidCount), validColumnCount);  //avgTemp
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 1, arr => arr.Average(), labelVolt , Convert.ToInt32(slaveidCount), null);   //totalVolt
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 2, arr => arr.Sum(), labelCurrent, Convert.ToInt32(slaveidCount), null);  //totalCurrent
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 3, arr => arr.Sum(), labelPower, Convert.ToInt32(slaveidCount), null);  //totalPower
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 4, arr => arr.Average(), labelSoc, Convert.ToInt32(slaveidCount), null);  //avgSOC
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 5, arr => arr.Average(), labelTemp, Convert.ToInt32(slaveidCount), null);  //avgTemp
 
                     #region ForChart
                     if ((string.IsNullOrEmpty(labelVolt.Text) || labelVolt.Text != "-") ||
@@ -884,7 +884,7 @@ namespace EMView.UI
                 MessageBox.Show("Tiles section error: " + ex.Message);
             }
         }
-        private async Task<double> ProcessDataGridViewRowAsync(DataGridView dgv, int rowIndex, Func<double[], double> calculationFunc, Label label, int slaveidCount, int validColumnCount)
+        private async Task<double> ProcessDataGridViewRowAsync(DataGridView dgv, int rowIndex, Func<double[], double> calculationFunc, Label label, int slaveidCount, int? validColumnCount)
         {
             string[] values = new string[dgv.Columns.Count];
 
@@ -898,8 +898,8 @@ namespace EMView.UI
                 values[z] = cellValue;
             }
 
-            if (Convert.ToInt32(slaveidCount) == validColumnCount)
-            {
+           // if (Convert.ToInt32(slaveidCount) == validColumnCount)
+           // {
                 double[] doubleArray = values.Where(x => !string.IsNullOrEmpty(x))
                                               .Select(double.Parse)
                                               .ToArray();
@@ -914,12 +914,26 @@ namespace EMView.UI
 
                     // Clear values in columns beyond batteryIndex if needed
                     // ClearExtraColumns(columnIndex);
-                }
+              //  }
             }
 
             return 0; // Return value if needed
         }
 
+        //private async Task<int> CountValidColumnsAsync()
+        //{
+        //    return await Task.Run(() =>
+        //    {
+        //        return dgvCellLevel.Columns
+        //            .Cast<DataGridViewColumn>()
+        //            .Count(col =>
+        //            {
+        //                var cellValue = dgvCellLevel.Rows[1].Cells[col.Index]?.Value?.ToString();
+        //                return !string.IsNullOrEmpty(cellValue) && double.TryParse(cellValue, out _);
+        //            });
+        //    });
+        //}
+        //alsochech -
         private async Task<int> CountValidColumnsAsync()
         {
             return await Task.Run(() =>
@@ -929,10 +943,30 @@ namespace EMView.UI
                     .Count(col =>
                     {
                         var cellValue = dgvCellLevel.Rows[1].Cells[col.Index]?.Value?.ToString();
-                        return !string.IsNullOrEmpty(cellValue) && double.TryParse(cellValue, out _);
+                        return !string.IsNullOrEmpty(cellValue) &&
+                               !cellValue.Equals("-", StringComparison.OrdinalIgnoreCase) &&
+                               double.TryParse(cellValue, out _);
                     });
             });
         }
+        //alsochech - curremtrow
+        //private async Task<int> CountValidColumnsAsync(int currentRowIndex)
+        //{
+        //    return await Task.Run(() =>
+        //    {
+        //        return dgvCellLevel.Columns
+        //            .Cast<DataGridViewColumn>()
+        //            .Count(col =>
+        //            {
+        //                var cellValue = dgvCellLevel.Rows[currentRowIndex].Cells[col.Index]?.Value?.ToString();
+        //                return !string.IsNullOrEmpty(cellValue) &&
+        //                       !cellValue.Equals("-", StringComparison.OrdinalIgnoreCase) &&
+        //                       double.TryParse(cellValue, out _);
+        //            });
+        //    });
+        //}
+
+
 
         //private void ClearExtraColumns(int batteryIndex)
         //{
