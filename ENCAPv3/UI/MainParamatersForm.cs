@@ -338,7 +338,7 @@ namespace EMView.UI
             }
             catch (Exception ex)
             {
-                JIMessageBox.ErrorMessage("001"+ex.Message);
+                JIMessageBox.ErrorMessage("001" + ex.Message);
             }
 
         }
@@ -354,7 +354,7 @@ namespace EMView.UI
                 btnTogglePolling1.Text = "Stop Reading";
                 startTime = DateTime.Now;
                 /*  secondTimer.Start(); */
-                minuteTimer.Start(); //hassanCode
+                 minuteTimer.Start(); //hassanCode
             }
             catch (Exception ex)
             {
@@ -369,7 +369,7 @@ namespace EMView.UI
                 btnTogglePolling1.Text = "Start Reading";
                 startTime = DateTime.Now;
                 /*   secondTimer.Start();  */
-                minuteTimer.Stop(); //hassanCode
+               minuteTimer.Stop(); //hassanCode
             }
             catch (Exception ex)
             {
@@ -807,7 +807,7 @@ namespace EMView.UI
         {
             ushort temp;
             readReady = false;
-            #region Data Reading
+
             try
             {
                 //await Task.Delay(100); // Adjust delay if needed
@@ -822,147 +822,130 @@ namespace EMView.UI
                 //LoadModbusData(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);   //HassanCode
                 await LoadModbusDataAsync(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);   //HassanCode
                 //await LoadModbusDataTestingByAqib(slaveID, READ_HOLDING_REGISTER, 0xB9, 11);  //AQIBSTAIC
+
+                Dictionary<string, double> parametersAvg = new Dictionary<string, double>();
+                string slaveidCount = moduleCount.Value.ToString();
+
+
+
+                int validColumnCount = await CountValidColumnsAsync();
+
+
+                if (!string.IsNullOrEmpty(slaveidCount) && slaveidCount != "-")
+                {
+                    ////  ProcessDataGridViewRowAsync(GridView, RowIndex, Formula, LabelName, moduleCount, CurrentRowTotalNumericColums);
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 1, arr => arr.Average(), labelVolt , Convert.ToInt32(slaveidCount), validColumnCount);   //totalVolt
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 2, arr => arr.Sum(), labelCurrent, Convert.ToInt32(slaveidCount), validColumnCount);  //totalCurrent
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 3, arr => arr.Sum(), labelPower, Convert.ToInt32(slaveidCount), validColumnCount);  //totalPower
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 4, arr => arr.Average(), labelSoc, Convert.ToInt32(slaveidCount), validColumnCount);  //avgSOC
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 5, arr => arr.Average(), labelTemp, Convert.ToInt32(slaveidCount), validColumnCount);  //avgTemp
+
+                    #region ForChart
+                    if ((string.IsNullOrEmpty(labelVolt.Text) || labelVolt.Text != "-") ||
+                            (string.IsNullOrEmpty(labelCurrent.Text) || labelCurrent.Text != "-") ||
+                            (string.IsNullOrEmpty(labelPower.Text) || labelPower.Text != "-"))
+                    {
+                        // Add new data points to existing lists
+
+                        double voltValue = SafeConvertToDouble(labelVolt.Text);
+                        lstvoltage.Add(voltValue);
+                        double currentValue = SafeConvertToDouble(labelCurrent.Text);
+                        lstcurrent.Add(currentValue);
+                        double powerValue = SafeConvertToDouble(labelPower.Text);
+                        lstpower.Add(voltValue);
+                        double SocValue = SafeConvertToDouble(labelSoc.Text);
+                        SocColor.Add(SocValue);
+                        double TempValue = SafeConvertToDouble(labelTemp.Text);
+                        TempColor.Add(TempValue);
+
+                        // Update allLists with the updated data
+                        allLists.Clear();
+                        allLists.Add(new ChartValues<double>(lstvoltage));
+                        allLists.Add(new ChartValues<double>(lstcurrent));
+                        allLists.Add(new ChartValues<double>(lstpower));
+                        allLists.Add(new ChartValues<double>(SocColor));
+                        allLists.Add(new ChartValues<double>(TempColor));
+                        TrimChartValues(lstvoltage);
+                        TrimChartValues(lstcurrent);
+                        TrimChartValues(lstpower);
+                        TrimChartValues(SocColor);
+                        TrimChartValues(TempColor);
+                        await new ChartSet().chartGT3Async(allLists, cartesianChart1);
+                    }
+                    #endregion
+                }
+
+
+
                 slaveID++;
-
-                string[] avgVoltage = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
-                #region Hassan and Aqib 
-                //for (int z = 1; z <= 20; z++)  //Hassan
-                //{
-                //    var cellValue = dgvCellLevel.Rows[1].Cells[z]?.Value?.ToString();
-                //    if (string.IsNullOrEmpty(cellValue) || cellValue == "-")
-                //        break;
-                //    avgVoltage[z] = cellValue;
-                //    double[] doubleArray = Array.ConvertAll(avgVoltage, double.Parse);
-                //    double average = Math.Round(doubleArray.Where(x => x != 0).Average(), 1);
-                //    labelVolt.Text = average.ToString();
-                //}
-
-                for (int z = 1; z <= slaveID; z++) //Aqib
-                {
-                    var cellValue = dgvCellLevel.Rows[1].Cells[z]?.Value?.ToString();
-
-                    // Check if the value is numeric, continue if it is, skip otherwise
-                    if (!double.TryParse(cellValue, out double numericValue))
-                    {
-                        labelVolt.Text = cellValue.ToString();
-                        continue; // Skip to the next iteration if not numeric
-                    }
-                    avgVoltage[z] = cellValue; // Store the numeric value
-
-                    // Convert and calculate the average
-                    double[] doubleArray = Array.ConvertAll(avgVoltage, double.Parse);
-                    double average = Math.Round(doubleArray.Where(x => x != 0).Average(), 1);
-                    labelVolt.Text = average.ToString();
-                }
-
-
-                #endregion
-
-                string[] totalCurrent = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
-                for (int z = 1; z <= slaveID; z++)
-                {
-                    var cellValue = dgvCellLevel.Rows[2].Cells[z]?.Value?.ToString();
-                    // Check if the value is numeric, continue if it is, skip otherwise
-                    if (!double.TryParse(cellValue, out double numericValue))
-                    {
-                        labelCurrent.Text = cellValue.ToString();
-                        continue; // Skip to the next iteration if not numeric
-                    }
-                    totalCurrent[z] = cellValue;
-                    double[] doubleArray = Array.ConvertAll(totalCurrent, double.Parse);
-                    double sum = Math.Round(doubleArray.Where(x => x != 0).Sum(), 1);
-                    labelCurrent.Text = sum.ToString();
-                }
- 
-
-                string[] totalPower = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
-                for (int z = 1; z <= slaveID; z++)
-                {
-                    var cellValue = dgvCellLevel.Rows[3].Cells[z]?.Value?.ToString();
-                    // Check if the value is numeric, continue if it is, skip otherwise
-                    if (!double.TryParse(cellValue, out double numericValue))
-                        {
-                            labelPower.Text = cellValue.ToString();
-                            continue; // Skip to the next iteration if not numeric
-                        }
-                    totalPower[z] = cellValue;
-                    double[] doubleArray = Array.ConvertAll(totalPower, double.Parse);
-                    double sum = Math.Round(doubleArray.Where(x => x != 0).Sum(), 1);
-                    labelPower.Text = sum.ToString();
-                }
-
-                string[] avgSOC = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
-                for (int z = 1; z <= slaveID; z++)
-                {
-                    var cellValue = dgvCellLevel.Rows[4].Cells[z]?.Value?.ToString();
-                    // Check if the value is numeric, continue if it is, skip otherwise
-                    if (!double.TryParse(cellValue, out double numericValue))
-                    {
-                        labelSoc.Text = cellValue.ToString();
-                        continue; // Skip to the next iteration if not numeric
-                    }
-                    avgSOC[z] = cellValue;
-                    double[] doubleArray = Array.ConvertAll(avgSOC, double.Parse);
-                    double average = Math.Round(doubleArray.Where(x => x != 0).Average(), 1);
-                    labelSoc.Text = average.ToString();
-                }
-                string[] avgTemp = { "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0" };
-                for (int z = 1; z <= slaveID; z++)
-                {
-                    var cellValue = dgvCellLevel.Rows[6].Cells[z]?.Value?.ToString();
-                    // Check if the value is numeric, continue if it is, skip otherwise
-                    if (!double.TryParse(cellValue, out double numericValue))
-                    {
-                        labelTemp.Text = cellValue.ToString();
-                        continue; // Skip to the next iteration if not numeric
-                    }
-                    avgTemp[z] = cellValue;
-                    double[] doubleArray = Array.ConvertAll(avgTemp, double.Parse);
-                    double average = Math.Round(doubleArray.Where(x => x != 0).Average(), 1);
-                    labelTemp.Text = average.ToString();
-                }
-
-                #endregion
-
-                #region ForChart
-                if ((string.IsNullOrEmpty(labelVolt.Text) || labelVolt.Text != "-") ||
-                    (string.IsNullOrEmpty(labelCurrent.Text) || labelCurrent.Text != "-") ||
-                    (string.IsNullOrEmpty(labelPower.Text) || labelPower.Text != "-"))
-                {
-                    // Add new data points to existing lists
-
-                    double voltValue = SafeConvertToDouble(labelVolt.Text);
-                    lstvoltage.Add(voltValue);
-                    double currentValue = SafeConvertToDouble(labelCurrent.Text);
-                    lstcurrent.Add(currentValue);
-                    double powerValue = SafeConvertToDouble(labelPower.Text);
-                    lstpower.Add(voltValue);
-                    double SocValue = SafeConvertToDouble(labelSoc.Text);
-                    SocColor.Add(SocValue);
-                    double TempValue = SafeConvertToDouble(labelTemp.Text);
-                    TempColor.Add(TempValue);
-
-                    // Update allLists with the updated data
-                    allLists.Clear();
-                    allLists.Add(new ChartValues<double>(lstvoltage));
-                    allLists.Add(new ChartValues<double>(lstcurrent));
-                    allLists.Add(new ChartValues<double>(lstpower));
-                    allLists.Add(new ChartValues<double>(SocColor));
-                    allLists.Add(new ChartValues<double>(TempColor));
-                    TrimChartValues(lstvoltage);
-                    TrimChartValues(lstcurrent);
-                    TrimChartValues(lstpower);
-                    TrimChartValues(SocColor);
-                    TrimChartValues(TempColor);
-                   await new ChartSet().chartGT3Async(allLists, cartesianChart1);
-                }
-                #endregion
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Tiles section error: " + ex.Message);
             }
         }
+        private async Task<double> ProcessDataGridViewRowAsync(DataGridView dgv, int rowIndex, Func<double[], double> calculationFunc, Label label, int slaveidCount, int validColumnCount)
+        {
+            string[] values = new string[dgv.Columns.Count];
+
+            for (int z = 0; z < dgv.Columns.Count; z++)
+            {
+                var cellValue = dgv.Rows[rowIndex].Cells[z]?.Value?.ToString();
+                if (!double.TryParse(cellValue, out _))
+                {
+                    continue; // Skip to the next iteration if not numeric
+                }
+                values[z] = cellValue;
+            }
+
+            if (Convert.ToInt32(slaveidCount) == validColumnCount)
+            {
+                double[] doubleArray = values.Where(x => !string.IsNullOrEmpty(x))
+                                              .Select(double.Parse)
+                                              .ToArray();
+
+                if (doubleArray.Any())
+                {
+                    double result = Math.Round(calculationFunc(doubleArray), 1);
+                    await Task.Run(() =>
+                    {
+                        label.Invoke(new Action(() => label.Text = result.ToString()));
+                    });
+
+                    // Clear values in columns beyond batteryIndex if needed
+                    // ClearExtraColumns(columnIndex);
+                }
+            }
+
+            return 0; // Return value if needed
+        }
+
+        private async Task<int> CountValidColumnsAsync()
+        {
+            return await Task.Run(() =>
+            {
+                return dgvCellLevel.Columns
+                    .Cast<DataGridViewColumn>()
+                    .Count(col =>
+                    {
+                        var cellValue = dgvCellLevel.Rows[1].Cells[col.Index]?.Value?.ToString();
+                        return !string.IsNullOrEmpty(cellValue) && double.TryParse(cellValue, out _);
+                    });
+            });
+        }
+
+        //private void ClearExtraColumns(int batteryIndex)
+        //{
+        //    for (int colIndex = batteryIndex; colIndex < dgvCellLevel.Columns.Count; colIndex++)
+        //    {
+        //        for (int rowIndex = 0; rowIndex < dgvCellLevel.Rows.Count; rowIndex++)
+        //        {
+        //            dgvCellLevel.Rows[rowIndex].Cells[colIndex].Value = null; // Clear the cell value
+        //        }
+        //    }
+        //}
+
+
         List<double> lst;
         string dateTime;
         Int32 modbusStartReg = START_ADDRESS;
@@ -1245,11 +1228,11 @@ namespace EMView.UI
                                         byte[] canPacket = CreateCANPacket(FixedFrameID, canData);
 
 
-                                      
+
                                         SendCANPacket(canPacket);
                                         string tmpp = BitConverter.ToString(canPacket).Replace("-", string.Empty);
                                         Logger.Info("MainParamaterForm/LoadModbusData|  canPacket:" + tmpp);
-                                        
+
                                         break;
                                     case 98://load setting page data points
                                         #region AqibComentAgain
@@ -1391,7 +1374,7 @@ namespace EMView.UI
                                     InitializeModbusClientAsync();
                                 await Task.Delay(100);
                                 boolsRegister = modbusClient.ReadDiscreteInputs(modbusStartReg, modbusRegCount);// Read Discrete Inputs (0x02)
-                              
+
                                 Logger.Info("MainParamaterForm/LoadModbusData| boolsRegister: " + boolsRegister.ToString());
                                 break;
                             case 3:
@@ -2010,7 +1993,7 @@ namespace EMView.UI
                     CaptureDataFromGridView();
                     new MainLogicClass().SaveDataToDatabase(dataTable);   //Single
                     dataList.Clear();
-                  await  new ChartSet().chartGT3Async(allLists, cartesianChart1);//, XAxisValue);
+                    await new ChartSet().chartGT3Async(allLists, cartesianChart1);//, XAxisValue);
                 }
                 catch (Exception ex)
                 {
@@ -2179,7 +2162,8 @@ namespace EMView.UI
                     JIMessageBox.ErrorMessage("SetupDataGridView:" + ex.Message);
                 }));
                 }
-                else {
+                else
+                {
                     JIMessageBox.ErrorMessage("SetupDataGridView:" + ex.Message);
                 }
 
@@ -2481,9 +2465,25 @@ namespace EMView.UI
             }
             else
             {
+                // Update the specific cell value
                 dgvCellLevel.Rows[rowIndex].Cells[columnIndex].Value = value;
+
+
             }
         }
+
+        private void ClearExtraColumns(int batteryIndex)
+        {
+            for (int colIndex = batteryIndex; colIndex < dgvCellLevel.Columns.Count; colIndex++)
+            {
+                for (int rowIndex = 0; rowIndex < dgvCellLevel.Rows.Count; rowIndex++)
+                {
+                    dgvCellLevel.Rows[rowIndex].Cells[colIndex].Value = null; // or set to a default value if needed
+                }
+            }
+        }
+
+
         #endregion
 
         public static double SafeConvertToDouble(string input, double defaultValue = 0)
