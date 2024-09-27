@@ -520,7 +520,7 @@ namespace EMView.UI
                 // Check and execute SaveDataToDatabase only if the DataTable is valid
                 //if (IsDataTableAllRowsValid(dataTable))
                 //{
-                    new MainLogicClass().SaveDataToDatabase(dataTable);
+                new MainLogicClass().SaveDataToDatabase(dataTable);
                 //}
 
 
@@ -572,11 +572,11 @@ namespace EMView.UI
                 string _temp = labelTemp.Text;
 
                 // Using ternary operator to check for special characters or alphabets
-                _volt = specialCharOrAlphabetPattern.IsMatch(_volt) ? null : _volt;
-                _current = specialCharOrAlphabetPattern.IsMatch(_current) ? null : _current;
-                _power = specialCharOrAlphabetPattern.IsMatch(_power) ? null : _power;
-                _soc = specialCharOrAlphabetPattern.IsMatch(_soc) ? null : _soc;
-                _temp = specialCharOrAlphabetPattern.IsMatch(_temp) ? null : _temp;
+                _volt = specialCharOrAlphabetPattern.IsMatch(_volt) ? _volt : null;
+                _current = specialCharOrAlphabetPattern.IsMatch(_current) ? _current : null;
+                _power = specialCharOrAlphabetPattern.IsMatch(_power) ? _power : null;
+                _soc = specialCharOrAlphabetPattern.IsMatch(_soc) ? _soc : null;
+                _temp = specialCharOrAlphabetPattern.IsMatch(_temp) ? _temp : null;
 
                 // Convert to decimal only if the value is not null
                 decimal? _labelVolt = _volt != null ? Convert.ToDecimal(_volt) : (decimal?)null;
@@ -584,8 +584,8 @@ namespace EMView.UI
                 decimal? _labelPower = _power != null ? Convert.ToDecimal(_power) : (decimal?)null;
                 decimal? _labelSoc = _soc != null ? Convert.ToDecimal(_soc) : (decimal?)null;
                 decimal? _labelTemp = _temp != null ? Convert.ToDecimal(_temp) : (decimal?)null;
-
-                new MainLogicClass().SaveMainParamatersToDatabase(_labelVolt, _labelCurrent, _labelPower, _labelSoc, _labelTemp);
+                if (_labelVolt != null && _labelCurrent != null && _labelPower != null && _labelSoc != null && _labelTemp != null)
+                    new MainLogicClass().SaveMainParamatersToDatabase(_labelVolt, _labelCurrent, _labelPower, _labelSoc, _labelTemp);
 
                 _lblDbInsertCount++;
                 lblDbInsertCount.Text = _lblDbInsertCount.ToString();
@@ -927,10 +927,10 @@ namespace EMView.UI
             }
             catch (Exception ex)
             {
-                    await Task.Run(() =>
-                    {
-                        infoMessages.Invoke(new Action(() => infoMessages.Text = infoMessages.ToString()));
-                    });
+                await Task.Run(() =>
+                {
+                    infoMessages.Invoke(new Action(() => infoMessages.Text = infoMessages.ToString()));
+                });
             }
         }
         private async Task<double> ProcessDataGridViewRowAsync(DataGridView dgv, int rowIndex, Func<double[], double> calculationFunc, Label label, int slaveidCount, int? validColumnCount)
