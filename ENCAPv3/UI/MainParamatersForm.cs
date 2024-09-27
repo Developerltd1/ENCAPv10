@@ -572,11 +572,17 @@ namespace EMView.UI
                 string _temp = labelTemp.Text;
 
                 // Using ternary operator to check for special characters or alphabets
-                _volt = specialCharOrAlphabetPattern.IsMatch(_volt) ? _volt : null;
-                _current = specialCharOrAlphabetPattern.IsMatch(_current) ? _current : null;
-                _power = specialCharOrAlphabetPattern.IsMatch(_power) ? _power : null;
-                _soc = specialCharOrAlphabetPattern.IsMatch(_soc) ? _soc : null;
-                _temp = specialCharOrAlphabetPattern.IsMatch(_temp) ? _temp : null;
+                if(_volt == "-")
+                _volt = null;
+                if (_current == "-")
+                    _current = null;
+                if (_power == "-")
+                    _power = null;
+                if (_soc == "-")
+                    _soc = null;
+                if (_temp == "-")
+                    _temp = null;
+             
 
                 // Convert to decimal only if the value is not null
                 decimal? _labelVolt = _volt != null ? Convert.ToDecimal(_volt) : (decimal?)null;
