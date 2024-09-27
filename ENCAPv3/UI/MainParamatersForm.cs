@@ -837,9 +837,9 @@ namespace ENCAPv3.UI
                                         #region DynamicData
                                         voltage = (registers[VOLTAGE]) * 0.1;                  //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| voltage: " + voltage.ToString());
-                                        current = (registers[CURRENT] - 30000) * 0.1;          //uncomment
+                                        current = ((registers[CURRENT] - 30000) * 0.1)*-1;          //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| current: " + current.ToString());
-                                        power = (registers[POWER]);                            //uncomment
+                                        power = (((double)registers[POWER])/1000.0);                            //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| power: " + current.ToString());
                                         soc = (registers[SOC]) * 0.1;                          //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| soc: " + soc.ToString());
