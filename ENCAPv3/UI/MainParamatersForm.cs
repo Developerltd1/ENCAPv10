@@ -354,7 +354,7 @@ namespace EMView.UI
                 btnTogglePolling1.Text = "Stop Reading";
                 startTime = DateTime.Now;
                 /*  secondTimer.Start(); */
-                 minuteTimer.Start(); //hassanCode
+                minuteTimer.Start(); //hassanCode
             }
             catch (Exception ex)
             {
@@ -369,7 +369,7 @@ namespace EMView.UI
                 btnTogglePolling1.Text = "Start Reading";
                 startTime = DateTime.Now;
                 /*   secondTimer.Start();  */
-               minuteTimer.Stop(); //hassanCode
+                minuteTimer.Stop(); //hassanCode
             }
             catch (Exception ex)
             {
@@ -509,12 +509,19 @@ namespace EMView.UI
                         dataTable.Rows.Add(dataRow);
                     }
                 }
+                #region CheckAllDbNullOrNot
 
+                #endregion
 
                 #endregion
                 #endregion
                 CheckDatabaseConnection();
-                new MainLogicClass().SaveDataToDatabase(dataTable);
+
+                // Check and execute SaveDataToDatabase only if the DataTable is valid
+                //if (IsDataTableAllRowsValid(dataTable))
+                //{
+                    new MainLogicClass().SaveDataToDatabase(dataTable);
+                //}
 
 
 
@@ -590,6 +597,45 @@ namespace EMView.UI
                 JIMessageBox.ErrorMessage("05:" + ex.Message);
             }
         }
+
+        // Method to check if any field in the DataTable is null or empty
+        private bool IsDataTableAllRowsValid(DataTable dataTable)
+        {
+            // Loop through all rows in the DataTable
+            foreach (DataRow row in dataTable.Rows)
+            {
+                bool allColumnsEmpty = true; // Flag to check if all columns in the row are empty (except "Parameter" column)
+
+                // Loop through all columns in the current row
+                foreach (DataColumn column in dataTable.Columns)
+                {
+                    // Skip the "Parameter" column
+                    if (column.ColumnName == "Paramater")
+                    {
+                        continue; // Skip this column if it's the "Parameter" column
+                    }
+
+                    // Check if the current column's value is non-null and non-whitespace
+                    var item = row[column];
+                    if (item != null && !string.IsNullOrWhiteSpace(item.ToString()))
+                    {
+                        allColumnsEmpty = false; // Found a non-empty column
+                        break;
+                    }
+                }
+
+                // If all non-Parameter columns are empty, consider the DataTable invalid
+                if (allColumnsEmpty)
+                {
+                    return false; // Invalid if any row has all columns empty (excluding "Parameter" column)
+                }
+            }
+
+            return true; // Valid if no row has all non-Parameter columns empty
+        }
+
+
+
         private const int MaxDataListSize = 1300; // Example limit
         private const int MaxChartValuesSize = 1300; // Example limit
         private void CaptureDataFromGridView()
@@ -828,17 +874,17 @@ namespace EMView.UI
 
 
 
-               // int validColumnCount = await CountValidColumnsAsync();
+                // int validColumnCount = await CountValidColumnsAsync();
 
 
                 if (!string.IsNullOrEmpty(slaveidCount) && slaveidCount != "-")
                 {
                     ////  ProcessDataGridViewRowAsync(GridView, RowIndex, Formula, LabelName, moduleCount, CurrentRowTotalNumericColums);
-                    await ProcessDataGridViewRowAsync(dgvCellLevel, 1, arr => arr.Average(), labelVolt , Convert.ToInt32(slaveidCount), null);   //totalVolt
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 1, arr => arr.Average(), labelVolt, Convert.ToInt32(slaveidCount), null);   //totalVolt
                     await ProcessDataGridViewRowAsync(dgvCellLevel, 2, arr => arr.Sum(), labelCurrent, Convert.ToInt32(slaveidCount), null);  //totalCurrent
                     await ProcessDataGridViewRowAsync(dgvCellLevel, 3, arr => arr.Sum(), labelPower, Convert.ToInt32(slaveidCount), null);  //totalPower
                     await ProcessDataGridViewRowAsync(dgvCellLevel, 4, arr => arr.Average(), labelSoc, Convert.ToInt32(slaveidCount), null);  //avgSOC
-                    await ProcessDataGridViewRowAsync(dgvCellLevel, 5, arr => arr.Average(), labelTemp, Convert.ToInt32(slaveidCount), null);  //avgTemp
+                    await ProcessDataGridViewRowAsync(dgvCellLevel, 6, arr => arr.Average(), labelTemp, Convert.ToInt32(slaveidCount), null);  //avgTemp
 
                     #region ForChart
                     if ((string.IsNullOrEmpty(labelVolt.Text) || labelVolt.Text != "-") ||
@@ -881,7 +927,10 @@ namespace EMView.UI
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Tiles section error: " + ex.Message);
+                    await Task.Run(() =>
+                    {
+                        infoMessages.Invoke(new Action(() => infoMessages.Text = infoMessages.ToString()));
+                    });
             }
         }
         private async Task<double> ProcessDataGridViewRowAsync(DataGridView dgv, int rowIndex, Func<double[], double> calculationFunc, Label label, int slaveidCount, int? validColumnCount)
@@ -898,23 +947,23 @@ namespace EMView.UI
                 values[z] = cellValue;
             }
 
-           // if (Convert.ToInt32(slaveidCount) == validColumnCount)
-           // {
-                double[] doubleArray = values.Where(x => !string.IsNullOrEmpty(x))
-                                              .Select(double.Parse)
-                                              .ToArray();
+            // if (Convert.ToInt32(slaveidCount) == validColumnCount)
+            // {
+            double[] doubleArray = values.Where(x => !string.IsNullOrEmpty(x))
+                                          .Select(double.Parse)
+                                          .ToArray();
 
-                if (doubleArray.Any())
+            if (doubleArray.Any())
+            {
+                double result = Math.Round(calculationFunc(doubleArray), 1);
+                await Task.Run(() =>
                 {
-                    double result = Math.Round(calculationFunc(doubleArray), 1);
-                    await Task.Run(() =>
-                    {
-                        label.Invoke(new Action(() => label.Text = result.ToString()));
-                    });
+                    label.Invoke(new Action(() => label.Text = result.ToString()));
+                });
 
-                    // Clear values in columns beyond batteryIndex if needed
-                    // ClearExtraColumns(columnIndex);
-              //  }
+                // Clear values in columns beyond batteryIndex if needed
+                // ClearExtraColumns(columnIndex);
+                //  }
             }
 
             return 0; // Return value if needed
