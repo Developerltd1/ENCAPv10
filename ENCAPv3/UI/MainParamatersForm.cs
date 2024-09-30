@@ -843,8 +843,10 @@ namespace EMView.UI
             }
             catch (Exception ex)
             {
-
-                JIMessageBox.ErrorMessage("07:" + ex.Message);
+                this.Invoke(new Action(() =>
+                {
+                    statusConnection.Text = "Stop Polling: "+ex.Message;
+                }));
             }
         }
         static ChartValues<double> lstvoltage = new ChartValues<double>();
