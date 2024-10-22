@@ -149,6 +149,7 @@
   <ItemGroup>
     <Compile Include="ChartSet.cs" />
     <Compile Include="CoPdfSetting.cs" />
+    <Compile Include="ModbusClientWithHandler.cs" />
     <Compile Include="PdfSetting.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

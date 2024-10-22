@@ -29,7 +29,7 @@ namespace EMView.UI
         const int SETPOINTS_READ = 98;
         const int SERIAL_READ = 99;
         const int CAN_PKT = 0x50;
-       
+
         const int HIGH_CELL_VOLTAGE = 0x8B;//single voltage is too high level alarm
         const int LOW_CELL_VOLTAGE = 0x8D;//Single voltage too low level alarm
         const int HIGH_SUM_VOLTAGE = 7489;
@@ -125,31 +125,45 @@ namespace EMView.UI
         {
             if (string.IsNullOrEmpty(LoginModel.username) && string.IsNullOrEmpty(LoginModel.password))
             {
-                btnhighAndLowCellVolt.Visible = false;
-                btnHighAndLowSumVolt.Visible = false;
-                btnHighCurrentCharAndDic.Visible = false;
-                btnHighTempCharAndDic.Visible = false;
-                btnHighAndLowSocAlarm.Visible = false;
-                btnSetEnergyCharAndDisc.Visible = false;
-                iconButton2.Visible = false;
-                iconButton3.Visible = false;
-            }
+                if (this.IsHandleCreated)
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        btnhighAndLowCellVolt.Visible = false;
+                        btnHighAndLowSumVolt.Visible = false;
+                        btnHighCurrentCharAndDic.Visible = false;
+                        btnHighTempCharAndDic.Visible = false;
+                        btnHighAndLowSocAlarm.Visible = false;
+                        btnSetEnergyCharAndDisc.Visible = false;
+                        iconButton2.Visible = false;
+                        iconButton3.Visible = false;
+                    }));
+                }
+                //else
+                //{
+                //    // Handle case when the handle is not yet created
+                //    //this.HandleCreated += (sender, e) =>
+                //    //{
+                //    //}));
+                //}
             else
-            {
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        btnhighAndLowCellVolt.Visible = true;
+                        btnHighAndLowSumVolt.Visible = true;
+                        btnHighCurrentCharAndDic.Visible = true;
+                        btnHighTempCharAndDic.Visible = true;
+                        btnHighAndLowSocAlarm.Visible = true;
+                        btnSetEnergyCharAndDisc.Visible = true;
 
-                btnhighAndLowCellVolt.Visible = true;
-                btnHighAndLowSumVolt.Visible = true;
-                btnHighCurrentCharAndDic.Visible = true;
-                btnHighTempCharAndDic.Visible = true;
-                btnHighAndLowSocAlarm.Visible = true;
-                btnSetEnergyCharAndDisc.Visible = true;
+                        iconButton2.Visible = true;
+                        iconButton3.Visible = true;
+                    }));
+                }
 
-                iconButton2.Visible = true;
-                iconButton3.Visible = true;
             }
-
         }
-
         private void SettingsForm_Load(object sender, EventArgs e)
         {
 
@@ -164,8 +178,6 @@ namespace EMView.UI
                 selectedModule.SelectedIndex = 0;
             }
         }
-
-
         private async void btnHighAndLowSumVolt_Click(object sender, EventArgs e)
         {
             StaticModelValues.tbHighCurrCharge = tbHighCurrCharge.Text.ToDouble();
@@ -181,7 +193,6 @@ namespace EMView.UI
             tbLowSumVolt.Text = _settingsModel.tbLowSumVolt.ToString();
             tbHighSumVolt.Text = _settingsModel.tbHighSumVolt.ToString();
         }
-
         private async void btnHighCurrentCharAndDic_Click(object sender, EventArgs e)
         {
             StaticModelValues.tbHighCurrCharge = tbHighCurrCharge.Text.ToDouble();
@@ -198,7 +209,6 @@ namespace EMView.UI
             tbHighCurrDischarge.Text = _settingsModel.tbHighCurrDischarge.ToString();
 
         }
-
         private async void btnHighTempCharAndDic_Click(object sender, EventArgs e)
         {
             StaticModelValues.tbHighTempDischarge = tbHighTempDischarge.Text.ToDouble();
@@ -214,7 +224,6 @@ namespace EMView.UI
             tbHighTempCharge.Text = _settingsModel.tbHighTempCharge.ToString();
             tbHighTempDischarge.Text = _settingsModel.tbHighTempDischarge.ToString();
         }
-
         private void btnHighAndLowSocAlarm_Click(object sender, EventArgs e)
         {   //Get
             _settingsModel.tbSocLowAlarm = tbSocLowAlarm.Text.ToDouble();
@@ -223,7 +232,6 @@ namespace EMView.UI
             tbSocLowAlarm.Text = _settingsModel.tbSocLowAlarm.ToString();
             tbSocHighAlarm.Text = _settingsModel.tbSocHighAlarm.ToString();
         }
-
         private void btnSetEnergyCharAndDisc_Click(object sender, EventArgs e)
         {   //Get
             _settingsModel.tbSetChargeEnergy = tbStartVoltage.Text.ToDouble();
@@ -232,38 +240,57 @@ namespace EMView.UI
             tbStartVoltage.Text = _settingsModel.tbSetChargeEnergy.ToString();
             tbBalanceVoltageDiff.Text = _settingsModel.tbSetDishargeEnergy.ToString();
         }
-
         private void bodyPanel_Paint(object sender, PaintEventArgs e)
         {
 
         }
-
         //Funcations
         private void InitlizeStaticData()
         {
             SettingsRequest model = new StaticData().SettingsData();
-
-            tbLowCellVolt.Text = model.tbLowCellVolt.ToString();
-            tbHighCellVolt.Text = model.tbHighCellVolt.ToString();
-            tbHighCurrCharge.Text = model.tbHighCurrCharge.ToString();
-            tbHighCurrDischarge.Text = model.tbHighCurrDischarge.ToString();
-            tbHighTempCharge.Text = model.tbHighTempCharge.ToString();
-            tbHighTempDischarge.Text = model.tbHighTempDischarge.ToString();
-            tbHighSumVolt.Text = model.tbHighSumVolt.ToString();
-            tbLowSumVolt.Text = model.tbLowSumVolt.ToString();
-            tbSocHighAlarm.Text = model.tbSocHighAlarm.ToString();
-            tbSocLowAlarm.Text = model.tbSocLowAlarm.ToString();
-            tbStartVoltage.Text = model.tbSetChargeEnergy.ToString();
-            tbBalanceVoltageDiff.Text = model.tbSetDishargeEnergy.ToString();
-            tbSerial.Text = model.tbSerial.ToString();
-
-
-            //cbMode = items,
-
+            if (this.IsHandleCreated)
+            {
+                this.Invoke(new Action(() =>
+                {
+                    tbLowCellVolt.Text = model.tbLowCellVolt.ToString();
+                    tbHighCellVolt.Text = model.tbHighCellVolt.ToString();
+                    tbHighCurrCharge.Text = model.tbHighCurrCharge.ToString();
+                    tbHighCurrDischarge.Text = model.tbHighCurrDischarge.ToString();
+                    tbHighTempCharge.Text = model.tbHighTempCharge.ToString();
+                    tbHighTempDischarge.Text = model.tbHighTempDischarge.ToString();
+                    tbHighSumVolt.Text = model.tbHighSumVolt.ToString();
+                    tbLowSumVolt.Text = model.tbLowSumVolt.ToString();
+                    tbSocHighAlarm.Text = model.tbSocHighAlarm.ToString();
+                    tbSocLowAlarm.Text = model.tbSocLowAlarm.ToString();
+                    tbStartVoltage.Text = model.tbSetChargeEnergy.ToString();
+                    tbBalanceVoltageDiff.Text = model.tbSetDishargeEnergy.ToString();
+                    tbSerial.Text = model.tbSerial.ToString();
+                }));
+            }
+            else
+            {
+                // Handle case when the handle is not yet created
+                this.HandleCreated += (sender, e) =>
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        tbLowCellVolt.Text = model.tbLowCellVolt.ToString();
+                        tbHighCellVolt.Text = model.tbHighCellVolt.ToString();
+                        tbHighCurrCharge.Text = model.tbHighCurrCharge.ToString();
+                        tbHighCurrDischarge.Text = model.tbHighCurrDischarge.ToString();
+                        tbHighTempCharge.Text = model.tbHighTempCharge.ToString();
+                        tbHighTempDischarge.Text = model.tbHighTempDischarge.ToString();
+                        tbHighSumVolt.Text = model.tbHighSumVolt.ToString();
+                        tbLowSumVolt.Text = model.tbLowSumVolt.ToString();
+                        tbSocHighAlarm.Text = model.tbSocHighAlarm.ToString();
+                        tbSocLowAlarm.Text = model.tbSocLowAlarm.ToString();
+                        tbStartVoltage.Text = model.tbSetChargeEnergy.ToString();
+                        tbBalanceVoltageDiff.Text = model.tbSetDishargeEnergy.ToString();
+                        tbSerial.Text = model.tbSerial.ToString();
+                    }));
+                };
+            }
         }
-
-
-
         private void tbHighCellVolt_TextChanged(object sender, EventArgs e)
         {
 
@@ -303,7 +330,10 @@ namespace EMView.UI
                 if (hexString != null)
                 {
                     string asciiString = ConvertHexStringToAscii(hexString);
-                    tbSerial.Text = asciiString;
+                    this.Invoke(new Action(() =>
+                    {
+                        tbSerial.Text = asciiString;
+                    }));
                     Logger.Info("SettingForm/loadData| asciiString: " + asciiString.ToString());
                 }
 
@@ -317,45 +347,47 @@ namespace EMView.UI
                     Logger.Info("SettingForm/loadData| asciiString: " + StaticModelValues.register_Settings.Count().ToString());
                     for (int i = 0; i < StaticModelValues.register_Settings.Count(); i++)
                     {
-
-                        if (i == 0)
+                        this.Invoke(new Action(() =>
                         {
-                            tbCellRatedVoltage.Text = ((UInt16)StaticModelValues.register_Settings[0]).ToString();
-                        }
-                        if (i == 9)
-                        {
-                            tbSleepTime.Text = ((UInt16)StaticModelValues.register_Settings[9]).ToString();
-                        }
-                        if (i == 10)
-                        {
-                            tbHighCellVolt.Text = ((UInt16)StaticModelValues.register_Settings[10]).ToString();
-                        }
-                        if (i == 12)
-                        {
-                            tbLowCellVolt.Text = ((UInt16)StaticModelValues.register_Settings[12]).ToString();
-                        }
-                        if (i == 18)
-                        {
-                            tbHighCurrCharge.Text = ((UInt16)StaticModelValues.register_Settings[18]).ToString();
-                        }
-                        if (i == 20)
-                        {
-                            tbHighCurrDischarge.Text = ((UInt16)StaticModelValues.register_Settings[20]).ToString();
-                        }
-                        if (i == 22)
-                        {
-                            tbHighTempCharge.Text = ((UInt16)StaticModelValues.register_Settings[22]).ToString();
-                        }
-                        if (i == 28)
-                        {
-                            tbHighTempDischarge.Text = ((UInt16)StaticModelValues.register_Settings[28]).ToString();
-                        }
-                        tbHighSumVolt.Text = "N/A";
-                        tbLowSumVolt.Text = "N/A";// StaticModelValues.register_Settings[1].ToString();}
-                        tbSocHighAlarm.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                        tbSocLowAlarm.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                        tbStartVoltage.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
-                        tbBalanceVoltageDiff.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
+                            if (i == 0)
+                            {
+                                tbCellRatedVoltage.Text = ((UInt16)StaticModelValues.register_Settings[0]).ToString();
+                            }
+                            if (i == 9)
+                            {
+                                tbSleepTime.Text = ((UInt16)StaticModelValues.register_Settings[9]).ToString();
+                            }
+                            if (i == 10)
+                            {
+                                tbHighCellVolt.Text = ((UInt16)StaticModelValues.register_Settings[10]).ToString();
+                            }
+                            if (i == 12)
+                            {
+                                tbLowCellVolt.Text = ((UInt16)StaticModelValues.register_Settings[12]).ToString();
+                            }
+                            if (i == 18)
+                            {
+                                tbHighCurrCharge.Text = ((UInt16)StaticModelValues.register_Settings[18]).ToString();
+                            }
+                            if (i == 20)
+                            {
+                                tbHighCurrDischarge.Text = ((UInt16)StaticModelValues.register_Settings[20]).ToString();
+                            }
+                            if (i == 22)
+                            {
+                                tbHighTempCharge.Text = ((UInt16)StaticModelValues.register_Settings[22]).ToString();
+                            }
+                            if (i == 28)
+                            {
+                                tbHighTempDischarge.Text = ((UInt16)StaticModelValues.register_Settings[28]).ToString();
+                            }
+                            tbHighSumVolt.Text = "N/A";
+                            tbLowSumVolt.Text = "N/A";// StaticModelValues.register_Settings[1].ToString();}
+                            tbSocHighAlarm.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
+                            tbSocLowAlarm.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
+                            tbStartVoltage.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
+                            tbBalanceVoltageDiff.Text = "N/A";//StaticModelValues.register_Settings[1].ToString();
+                        }));
                     }
                 }
                 #endregion
@@ -377,7 +409,6 @@ namespace EMView.UI
                 Logger.Error("SettingForm/loadData| Exception1: " + ex.Message.ToString());
             }
         }
-
         public static string ConvertHexStringToAscii(string hexString)
         {
             if (hexString == null)
@@ -397,17 +428,12 @@ namespace EMView.UI
 
             return new string(asciiChars);
         }
-
-
         private async void iconButton2_Click(object sender, EventArgs e)
         {
             StaticModelValues.tbCellRatedVoltage = tbCellRatedVoltage.Text.ToDouble();
             await new MainParamatersForm().LoadModbusDataAsync(slaveID, WRITE_DATA, CELL_RATED_VOLTAGE, Convert.ToInt32(StaticModelValues.tbCellRatedVoltage));
 
         }
-
-
-
         private void btnDownloadValue_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
