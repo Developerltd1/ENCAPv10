@@ -317,28 +317,39 @@ namespace EMView.UI
 
         private void BtnTogglePolling_Click(object sender, EventArgs e)
         {
-            try
+            if(commType.Text == "MODBUS")   //uncomment
             {
-                isPollingEnabled = !isPollingEnabled;
-                if (isPollingEnabled)
+                try
                 {
-                    isPollSelected = true;
-                    btnTogglePolling1.BackColor = System.Drawing.Color.Gray;
-                    InitializePollingTimer();
-                    StartPolling();
-                    StartPollingDatabase();
+                    isPollingEnabled = !isPollingEnabled;
+                    if (isPollingEnabled)
+                    {
+                        isPollSelected = true;
+                        btnTogglePolling1.BackColor = System.Drawing.Color.Gray;
+                        InitializePollingTimer();
+                        StartPolling();
+                        StartPollingDatabase();
+                    }
+                    else
+                    {
+                        isPollSelected = false;
+                        btnTogglePolling1.BackColor = System.Drawing.Color.White;
+                        StopPolling();
+                        StopPollingDatabase();
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    isPollSelected = false;
-                    btnTogglePolling1.BackColor = System.Drawing.Color.White;
-                    StopPolling();
-                    StopPollingDatabase();
-                }
+                    JIMessageBox.ErrorMessage("001" + ex.Message);
+                } 
             }
-            catch (Exception ex)
+            else
             {
-                JIMessageBox.ErrorMessage("001" + ex.Message);
+                //modbusClient.Disconnect();
+                //Logger.Info("MainParamaterForm/LoadModbusData| modbusClient.Disconnect() " + modbusClient.ToString());
+
+                InitializeSerialPort();
+                //while (true) ;
             }
 
         }
@@ -1180,7 +1191,7 @@ namespace EMView.UI
                                         Logger.Info("MainParamaterForm/LoadModbusData| voltage: " + voltage.ToString());
                                         current = ((registers[CURRENT] - 30000) * 0.1)*-1;          //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| current: " + current.ToString());
-                                        power = (registers[POWER]/1000);                            //uncomment
+                                        power = (((double)registers[POWER])/1000.0);                            //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| power: " + current.ToString());
                                         soc = (registers[SOC]) * 0.1;                          //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| soc: " + soc.ToString());
@@ -1607,7 +1618,7 @@ namespace EMView.UI
                                 Logger.Info("MainParamaterForm/LoadModbusData| registerNumber " + registerNumber.ToString() + " data: " + data.ToString());
                                 Logger.Info("MainParamaterForm/LoadModbusData| registers " + modbusClient.ToString());
                                 break;
-                            case 0x50:
+                            case 0x50://CAN packet transmission
                                 modbusClient.Disconnect();
                                 Logger.Info("MainParamaterForm/LoadModbusData| modbusClient.Disconnect() " + modbusClient.ToString());
                                 UpdateStatusConnection("Connected");
@@ -2307,7 +2318,7 @@ namespace EMView.UI
         {
             SerialPort serialPort = (SerialPort)sender;
             string inData = serialPort.ReadExisting();
-
+       
             Logger.Info("MainParamaterForm/DataReceivedHandler|  canPacket Ack:" + inData);
             try
             {

@@ -29,18 +29,39 @@ namespace EMView.UI
         /// </summary>
         private void InitializeComponent()
         {
-            this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.btnTogglePolling1 = new FontAwesome.Sharp.IconButton();
             this.SuspendLayout();
             // 
-            // cartesianChart1
+            // richTextBox1
             // 
-            this.cartesianChart1.BackColorTransparent = true;
-            this.cartesianChart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cartesianChart1.Location = new System.Drawing.Point(0, 0);
-            this.cartesianChart1.Name = "cartesianChart1";
-            this.cartesianChart1.Size = new System.Drawing.Size(998, 649);
-            this.cartesianChart1.TabIndex = 2;
-            this.cartesianChart1.Text = "cartesianChart";
+            this.richTextBox1.Location = new System.Drawing.Point(60, 146);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(876, 444);
+            this.richTextBox1.TabIndex = 21;
+            this.richTextBox1.Text = "";
+            // 
+            // btnTogglePolling1
+            // 
+            this.btnTogglePolling1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnTogglePolling1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(2)))), ((int)(((byte)(192)))), ((int)(((byte)(139)))));
+            this.btnTogglePolling1.FlatAppearance.BorderSize = 0;
+            this.btnTogglePolling1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTogglePolling1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTogglePolling1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(37)))), ((int)(((byte)(60)))));
+            this.btnTogglePolling1.IconChar = FontAwesome.Sharp.IconChar.None;
+            this.btnTogglePolling1.IconColor = System.Drawing.Color.White;
+            this.btnTogglePolling1.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            this.btnTogglePolling1.IconSize = 32;
+            this.btnTogglePolling1.Location = new System.Drawing.Point(421, 60);
+            this.btnTogglePolling1.Margin = new System.Windows.Forms.Padding(2);
+            this.btnTogglePolling1.Name = "btnTogglePolling1";
+            this.btnTogglePolling1.Padding = new System.Windows.Forms.Padding(15, 0, 0, 0);
+            this.btnTogglePolling1.Size = new System.Drawing.Size(178, 49);
+            this.btnTogglePolling1.TabIndex = 22;
+            this.btnTogglePolling1.Text = "Start Reading";
+            this.btnTogglePolling1.UseVisualStyleBackColor = false;
+            this.btnTogglePolling1.Click += new System.EventHandler(this.btnTogglePolling1_Click);
             // 
             // DashBoard1
             // 
@@ -48,7 +69,8 @@ namespace EMView.UI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(37)))), ((int)(((byte)(60)))));
             this.ClientSize = new System.Drawing.Size(998, 649);
-            this.Controls.Add(this.cartesianChart1);
+            this.Controls.Add(this.btnTogglePolling1);
+            this.Controls.Add(this.richTextBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "DashBoard1";
@@ -58,7 +80,7 @@ namespace EMView.UI
         }
 
         #endregion
-
-        private LiveCharts.WinForms.CartesianChart cartesianChart1;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private FontAwesome.Sharp.IconButton btnTogglePolling1;
     }
 }

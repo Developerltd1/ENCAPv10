@@ -49,9 +49,9 @@ namespace EMView
             try
             {
 
-                //Application.Run(new DashBoard1());
+                Application.Run(new DashBoard1());
                 //Application.Run(new MainForm(null,null));
-                Application.Run(new MainForm());
+                //Application.Run(new MainForm());
             }
             catch (Exception ex)
             {
