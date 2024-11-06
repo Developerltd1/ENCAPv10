@@ -36,6 +36,8 @@ namespace EMView.UI
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblCanbus = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             this.lblDbConnect = new System.Windows.Forms.Label();
             this.lblDbInsertCount = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
@@ -44,7 +46,6 @@ namespace EMView.UI
             this.label12 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.commType = new System.Windows.Forms.ComboBox();
-            this.labelCount = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
             this.comPorts = new System.Windows.Forms.ComboBox();
@@ -109,7 +110,41 @@ namespace EMView.UI
             this.Battery20 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cartesianChart1 = new LiveCharts.WinForms.CartesianChart();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.label21 = new System.Windows.Forms.Label();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.lblPowerCanbus = new System.Windows.Forms.Label();
+            this.label999 = new System.Windows.Forms.Label();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.lblCanbusId = new System.Windows.Forms.Label();
+            this.panel15 = new System.Windows.Forms.Panel();
+            this.lblSOHCanbus = new System.Windows.Forms.Label();
+            this.pictureBox11 = new System.Windows.Forms.PictureBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.label35 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.panel16 = new System.Windows.Forms.Panel();
+            this.lblSOCCanbus = new System.Windows.Forms.Label();
+            this.pictureBox12 = new System.Windows.Forms.PictureBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.panel12 = new System.Windows.Forms.Panel();
+            this.lblAvgTempCanbus = new System.Windows.Forms.Label();
+            this.pictureBox8 = new System.Windows.Forms.PictureBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.lblCurrentCanbus = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.pictureBox9 = new System.Windows.Forms.PictureBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.lblVoltageCanbus = new System.Windows.Forms.Label();
+            this.pictureBox10 = new System.Windows.Forms.PictureBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.moduleCount)).BeginInit();
             this.panel3.SuspendLayout();
@@ -129,6 +164,19 @@ namespace EMView.UI
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCellLevel)).BeginInit();
             this.groupBox2.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel10.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            this.panel15.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
+            this.panel16.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).BeginInit();
+            this.panel12.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
+            this.panel13.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).BeginInit();
+            this.panel14.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -136,6 +184,8 @@ namespace EMView.UI
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(59)))), ((int)(((byte)(57)))));
+            this.panel1.Controls.Add(this.lblCanbus);
+            this.panel1.Controls.Add(this.label19);
             this.panel1.Controls.Add(this.lblDbConnect);
             this.panel1.Controls.Add(this.lblDbInsertCount);
             this.panel1.Controls.Add(this.label15);
@@ -144,7 +194,6 @@ namespace EMView.UI
             this.panel1.Controls.Add(this.label12);
             this.panel1.Controls.Add(this.label16);
             this.panel1.Controls.Add(this.commType);
-            this.panel1.Controls.Add(this.labelCount);
             this.panel1.Controls.Add(this.label13);
             this.panel1.Controls.Add(this.label14);
             this.panel1.Controls.Add(this.comPorts);
@@ -154,6 +203,30 @@ namespace EMView.UI
             this.panel1.Size = new System.Drawing.Size(1080, 67);
             this.panel1.TabIndex = 3;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
+            // 
+            // lblCanbus
+            // 
+            this.lblCanbus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCanbus.AutoSize = true;
+            this.lblCanbus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCanbus.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.lblCanbus.Location = new System.Drawing.Point(862, 34);
+            this.lblCanbus.Name = "lblCanbus";
+            this.lblCanbus.Size = new System.Drawing.Size(11, 16);
+            this.lblCanbus.TabIndex = 36;
+            this.lblCanbus.Text = ".";
+            // 
+            // label19
+            // 
+            this.label19.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label19.Location = new System.Drawing.Point(760, 35);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(94, 16);
+            this.label19.TabIndex = 35;
+            this.label19.Text = "Canbus Count:";
             // 
             // lblDbConnect
             // 
@@ -173,7 +246,7 @@ namespace EMView.UI
             this.lblDbInsertCount.AutoSize = true;
             this.lblDbInsertCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDbInsertCount.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.lblDbInsertCount.Location = new System.Drawing.Point(1017, 8);
+            this.lblDbInsertCount.Location = new System.Drawing.Point(999, 8);
             this.lblDbInsertCount.Name = "lblDbInsertCount";
             this.lblDbInsertCount.Size = new System.Drawing.Size(15, 16);
             this.lblDbInsertCount.TabIndex = 33;
@@ -215,7 +288,7 @@ namespace EMView.UI
             this.numSlaveID.AutoSize = true;
             this.numSlaveID.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numSlaveID.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.numSlaveID.Location = new System.Drawing.Point(1019, 35);
+            this.numSlaveID.Location = new System.Drawing.Point(1001, 35);
             this.numSlaveID.Name = "numSlaveID";
             this.numSlaveID.Size = new System.Drawing.Size(11, 16);
             this.numSlaveID.TabIndex = 28;
@@ -253,18 +326,7 @@ namespace EMView.UI
             this.commType.Name = "commType";
             this.commType.Size = new System.Drawing.Size(71, 21);
             this.commType.TabIndex = 23;
-            this.commType.SelectedIndexChanged += new System.EventHandler(this.commType_SelectedIndexChanged);
-            // 
-            // labelCount
-            // 
-            this.labelCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelCount.AutoSize = true;
-            this.labelCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelCount.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.labelCount.Location = new System.Drawing.Point(804, 30);
-            this.labelCount.Name = "labelCount";
-            this.labelCount.Size = new System.Drawing.Size(0, 20);
-            this.labelCount.TabIndex = 20;
+            this.commType.SelectedValueChanged += new System.EventHandler(this.commType_SelectedValueChanged);
             // 
             // label13
             // 
@@ -284,11 +346,11 @@ namespace EMView.UI
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.label14.Location = new System.Drawing.Point(838, 35);
+            this.label14.Location = new System.Drawing.Point(903, 35);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(175, 16);
+            this.label14.Size = new System.Drawing.Size(91, 16);
             this.label14.TabIndex = 19;
-            this.label14.Text = "Reading Data From Battery-";
+            this.label14.Text = "Read Battery-";
             this.label14.Click += new System.EventHandler(this.label14_Click);
             // 
             // comPorts
@@ -339,14 +401,13 @@ namespace EMView.UI
             this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(59)))), ((int)(((byte)(57)))));
-            this.panel3.Controls.Add(this.richTextBox1);
             this.panel3.Controls.Add(this.label4);
             this.panel3.Controls.Add(this.panel7);
             this.panel3.Controls.Add(this.panel6);
             this.panel3.Controls.Add(this.panel5);
             this.panel3.Controls.Add(this.panel4);
             this.panel3.Controls.Add(this.panel8);
-            this.panel3.Location = new System.Drawing.Point(1, 72);
+            this.panel3.Location = new System.Drawing.Point(1, 84);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(1080, 221);
             this.panel3.TabIndex = 5;
@@ -1015,13 +1076,466 @@ namespace EMView.UI
             this.cartesianChart1.TabIndex = 1;
             this.cartesianChart1.Text = "cartesianChart";
             // 
+            // panel2
+            // 
+            this.panel2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(59)))), ((int)(((byte)(57)))));
+            this.panel2.Controls.Add(this.label21);
+            this.panel2.Controls.Add(this.panel10);
+            this.panel2.Controls.Add(this.lblCanbusId);
+            this.panel2.Controls.Add(this.panel15);
+            this.panel2.Controls.Add(this.richTextBox1);
+            this.panel2.Controls.Add(this.panel16);
+            this.panel2.Controls.Add(this.label17);
+            this.panel2.Controls.Add(this.panel12);
+            this.panel2.Controls.Add(this.panel13);
+            this.panel2.Controls.Add(this.panel14);
+            this.panel2.Location = new System.Drawing.Point(-2, 71);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1080, 559);
+            this.panel2.TabIndex = 23;
+            // 
+            // label21
+            // 
+            this.label21.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label21.AutoSize = true;
+            this.label21.BackColor = System.Drawing.Color.Transparent;
+            this.label21.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.ForeColor = System.Drawing.SystemColors.InactiveBorder;
+            this.label21.Location = new System.Drawing.Point(838, 20);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(115, 30);
+            this.label21.TabIndex = 24;
+            this.label21.Text = "CanbusID: ";
+            this.label21.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // panel10
+            // 
+            this.panel10.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel10.BackColor = System.Drawing.Color.Olive;
+            this.panel10.Controls.Add(this.lblPowerCanbus);
+            this.panel10.Controls.Add(this.label999);
+            this.panel10.Controls.Add(this.pictureBox6);
+            this.panel10.Controls.Add(this.label20);
+            this.panel10.Location = new System.Drawing.Point(705, 111);
+            this.panel10.Margin = new System.Windows.Forms.Padding(14, 0, 4, 0);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(300, 169);
+            this.panel10.TabIndex = 7;
+            // 
+            // lblPowerCanbus
+            // 
+            this.lblPowerCanbus.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblPowerCanbus.AutoSize = true;
+            this.lblPowerCanbus.BackColor = System.Drawing.Color.Transparent;
+            this.lblPowerCanbus.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPowerCanbus.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.lblPowerCanbus.Location = new System.Drawing.Point(50, 75);
+            this.lblPowerCanbus.Name = "lblPowerCanbus";
+            this.lblPowerCanbus.Size = new System.Drawing.Size(33, 45);
+            this.lblPowerCanbus.TabIndex = 3;
+            this.lblPowerCanbus.Text = "-";
+            // 
+            // label999
+            // 
+            this.label999.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label999.AutoSize = true;
+            this.label999.BackColor = System.Drawing.Color.Transparent;
+            this.label999.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label999.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label999.Location = new System.Drawing.Point(32, 30);
+            this.label999.Name = "label999";
+            this.label999.Size = new System.Drawing.Size(115, 45);
+            this.label999.TabIndex = 1;
+            this.label999.Text = "Power";
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
+            this.pictureBox6.Location = new System.Drawing.Point(220, 31);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(72, 105);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox6.TabIndex = 2;
+            this.pictureBox6.TabStop = false;
+            // 
+            // label20
+            // 
+            this.label20.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label20.AutoSize = true;
+            this.label20.BackColor = System.Drawing.Color.Transparent;
+            this.label20.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label20.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label20.Location = new System.Drawing.Point(46, 144);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(49, 20);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "Power";
+            // 
+            // lblCanbusId
+            // 
+            this.lblCanbusId.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblCanbusId.AutoSize = true;
+            this.lblCanbusId.BackColor = System.Drawing.Color.Transparent;
+            this.lblCanbusId.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCanbusId.ForeColor = System.Drawing.SystemColors.InactiveBorder;
+            this.lblCanbusId.Location = new System.Drawing.Point(973, 20);
+            this.lblCanbusId.Name = "lblCanbusId";
+            this.lblCanbusId.Size = new System.Drawing.Size(21, 30);
+            this.lblCanbusId.TabIndex = 23;
+            this.lblCanbusId.Text = "-";
+            this.lblCanbusId.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // panel15
+            // 
+            this.panel15.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.panel15.Controls.Add(this.lblSOHCanbus);
+            this.panel15.Controls.Add(this.pictureBox11);
+            this.panel15.Controls.Add(this.label34);
+            this.panel15.Controls.Add(this.label35);
+            this.panel15.Location = new System.Drawing.Point(705, 299);
+            this.panel15.Margin = new System.Windows.Forms.Padding(14, 0, 4, 0);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(300, 169);
+            this.panel15.TabIndex = 11;
+            // 
+            // lblSOHCanbus
+            // 
+            this.lblSOHCanbus.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblSOHCanbus.AutoSize = true;
+            this.lblSOHCanbus.BackColor = System.Drawing.Color.Transparent;
+            this.lblSOHCanbus.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSOHCanbus.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.lblSOHCanbus.Location = new System.Drawing.Point(54, 75);
+            this.lblSOHCanbus.Name = "lblSOHCanbus";
+            this.lblSOHCanbus.Size = new System.Drawing.Size(33, 45);
+            this.lblSOHCanbus.TabIndex = 3;
+            this.lblSOHCanbus.Text = "-";
+            // 
+            // pictureBox11
+            // 
+            this.pictureBox11.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox11.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox11.Image")));
+            this.pictureBox11.Location = new System.Drawing.Point(191, 31);
+            this.pictureBox11.Name = "pictureBox11";
+            this.pictureBox11.Size = new System.Drawing.Size(67, 105);
+            this.pictureBox11.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox11.TabIndex = 2;
+            this.pictureBox11.TabStop = false;
+            // 
+            // label34
+            // 
+            this.label34.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label34.AutoSize = true;
+            this.label34.BackColor = System.Drawing.Color.Transparent;
+            this.label34.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label34.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label34.Location = new System.Drawing.Point(54, 31);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(87, 45);
+            this.label34.TabIndex = 1;
+            this.label34.Text = "SOH";
+            // 
+            // label35
+            // 
+            this.label35.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label35.AutoSize = true;
+            this.label35.BackColor = System.Drawing.Color.Transparent;
+            this.label35.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label35.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label35.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label35.Location = new System.Drawing.Point(55, 144);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(39, 20);
+            this.label35.TabIndex = 0;
+            this.label35.Text = "SOH";
+            // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(372, 7);
+            this.richTextBox1.Location = new System.Drawing.Point(728, 519);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(641, 152);
+            this.richTextBox1.Size = new System.Drawing.Size(289, 28);
             this.richTextBox1.TabIndex = 22;
-            this.richTextBox1.Text = "";
+            this.richTextBox1.Text = "-";
+            this.richTextBox1.Visible = false;
+            // 
+            // panel16
+            // 
+            this.panel16.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel16.BackColor = System.Drawing.Color.Teal;
+            this.panel16.Controls.Add(this.lblSOCCanbus);
+            this.panel16.Controls.Add(this.pictureBox12);
+            this.panel16.Controls.Add(this.label37);
+            this.panel16.Controls.Add(this.label38);
+            this.panel16.Location = new System.Drawing.Point(389, 299);
+            this.panel16.Margin = new System.Windows.Forms.Padding(14, 0, 4, 0);
+            this.panel16.Name = "panel16";
+            this.panel16.Size = new System.Drawing.Size(300, 169);
+            this.panel16.TabIndex = 10;
+            // 
+            // lblSOCCanbus
+            // 
+            this.lblSOCCanbus.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblSOCCanbus.AutoSize = true;
+            this.lblSOCCanbus.BackColor = System.Drawing.Color.Transparent;
+            this.lblSOCCanbus.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSOCCanbus.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.lblSOCCanbus.Location = new System.Drawing.Point(51, 75);
+            this.lblSOCCanbus.Name = "lblSOCCanbus";
+            this.lblSOCCanbus.Size = new System.Drawing.Size(33, 45);
+            this.lblSOCCanbus.TabIndex = 3;
+            this.lblSOCCanbus.Text = "-";
+            // 
+            // pictureBox12
+            // 
+            this.pictureBox12.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox12.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox12.Image")));
+            this.pictureBox12.Location = new System.Drawing.Point(195, 30);
+            this.pictureBox12.Name = "pictureBox12";
+            this.pictureBox12.Size = new System.Drawing.Size(67, 105);
+            this.pictureBox12.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox12.TabIndex = 2;
+            this.pictureBox12.TabStop = false;
+            // 
+            // label37
+            // 
+            this.label37.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label37.AutoSize = true;
+            this.label37.BackColor = System.Drawing.Color.Transparent;
+            this.label37.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label37.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label37.Location = new System.Drawing.Point(51, 30);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(82, 45);
+            this.label37.TabIndex = 1;
+            this.label37.Text = "SOC";
+            // 
+            // label38
+            // 
+            this.label38.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label38.AutoSize = true;
+            this.label38.BackColor = System.Drawing.Color.Transparent;
+            this.label38.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label38.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label38.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label38.Location = new System.Drawing.Point(55, 144);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(37, 20);
+            this.label38.TabIndex = 0;
+            this.label38.Text = "SOC";
+            // 
+            // label17
+            // 
+            this.label17.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.label17.AutoSize = true;
+            this.label17.BackColor = System.Drawing.Color.Transparent;
+            this.label17.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.ForeColor = System.Drawing.SystemColors.InactiveBorder;
+            this.label17.Location = new System.Drawing.Point(12, 7);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(208, 32);
+            this.label17.TabIndex = 2;
+            this.label17.Text = "Main Paramaters";
+            // 
+            // panel12
+            // 
+            this.panel12.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(14)))), ((int)(((byte)(11)))), ((int)(((byte)(240)))));
+            this.panel12.Controls.Add(this.lblAvgTempCanbus);
+            this.panel12.Controls.Add(this.pictureBox8);
+            this.panel12.Controls.Add(this.label25);
+            this.panel12.Controls.Add(this.label26);
+            this.panel12.Location = new System.Drawing.Point(73, 300);
+            this.panel12.Margin = new System.Windows.Forms.Padding(14, 0, 4, 0);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(300, 169);
+            this.panel12.TabIndex = 7;
+            // 
+            // lblAvgTempCanbus
+            // 
+            this.lblAvgTempCanbus.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblAvgTempCanbus.AutoSize = true;
+            this.lblAvgTempCanbus.BackColor = System.Drawing.Color.Transparent;
+            this.lblAvgTempCanbus.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAvgTempCanbus.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.lblAvgTempCanbus.Location = new System.Drawing.Point(51, 75);
+            this.lblAvgTempCanbus.Name = "lblAvgTempCanbus";
+            this.lblAvgTempCanbus.Size = new System.Drawing.Size(33, 45);
+            this.lblAvgTempCanbus.TabIndex = 3;
+            this.lblAvgTempCanbus.Text = "-";
+            // 
+            // pictureBox8
+            // 
+            this.pictureBox8.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox8.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox8.Image")));
+            this.pictureBox8.Location = new System.Drawing.Point(214, 30);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(67, 105);
+            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox8.TabIndex = 2;
+            this.pictureBox8.TabStop = false;
+            // 
+            // label25
+            // 
+            this.label25.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label25.AutoSize = true;
+            this.label25.BackColor = System.Drawing.Color.Transparent;
+            this.label25.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label25.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label25.Location = new System.Drawing.Point(25, 30);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(170, 45);
+            this.label25.TabIndex = 1;
+            this.label25.Text = "Avg Temp";
+            // 
+            // label26
+            // 
+            this.label26.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label26.AutoSize = true;
+            this.label26.BackColor = System.Drawing.Color.Transparent;
+            this.label26.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label26.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label26.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label26.Location = new System.Drawing.Point(32, 144);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(76, 20);
+            this.label26.TabIndex = 0;
+            this.label26.Text = "Avg Temp";
+            // 
+            // panel13
+            // 
+            this.panel13.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(160)))), ((int)(((byte)(0)))));
+            this.panel13.Controls.Add(this.lblCurrentCanbus);
+            this.panel13.Controls.Add(this.label28);
+            this.panel13.Controls.Add(this.pictureBox9);
+            this.panel13.Controls.Add(this.label29);
+            this.panel13.Location = new System.Drawing.Point(389, 111);
+            this.panel13.Margin = new System.Windows.Forms.Padding(14, 0, 4, 0);
+            this.panel13.Name = "panel13";
+            this.panel13.Size = new System.Drawing.Size(300, 169);
+            this.panel13.TabIndex = 6;
+            // 
+            // lblCurrentCanbus
+            // 
+            this.lblCurrentCanbus.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblCurrentCanbus.AutoSize = true;
+            this.lblCurrentCanbus.BackColor = System.Drawing.Color.Transparent;
+            this.lblCurrentCanbus.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurrentCanbus.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.lblCurrentCanbus.Location = new System.Drawing.Point(50, 75);
+            this.lblCurrentCanbus.Name = "lblCurrentCanbus";
+            this.lblCurrentCanbus.Size = new System.Drawing.Size(33, 45);
+            this.lblCurrentCanbus.TabIndex = 3;
+            this.lblCurrentCanbus.Text = "-";
+            // 
+            // label28
+            // 
+            this.label28.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label28.AutoSize = true;
+            this.label28.BackColor = System.Drawing.Color.Transparent;
+            this.label28.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label28.Location = new System.Drawing.Point(32, 30);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(133, 45);
+            this.label28.TabIndex = 1;
+            this.label28.Text = "Current";
+            // 
+            // pictureBox9
+            // 
+            this.pictureBox9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBox9.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox9.Image")));
+            this.pictureBox9.Location = new System.Drawing.Point(220, 31);
+            this.pictureBox9.Name = "pictureBox9";
+            this.pictureBox9.Size = new System.Drawing.Size(72, 105);
+            this.pictureBox9.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox9.TabIndex = 2;
+            this.pictureBox9.TabStop = false;
+            // 
+            // label29
+            // 
+            this.label29.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label29.AutoSize = true;
+            this.label29.BackColor = System.Drawing.Color.Transparent;
+            this.label29.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label29.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label29.Location = new System.Drawing.Point(46, 144);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(57, 20);
+            this.label29.TabIndex = 0;
+            this.label29.Text = "Current";
+            // 
+            // panel14
+            // 
+            this.panel14.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.panel14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(170)))), ((int)(((byte)(3)))));
+            this.panel14.Controls.Add(this.lblVoltageCanbus);
+            this.panel14.Controls.Add(this.pictureBox10);
+            this.panel14.Controls.Add(this.label31);
+            this.panel14.Controls.Add(this.label32);
+            this.panel14.Location = new System.Drawing.Point(73, 111);
+            this.panel14.Margin = new System.Windows.Forms.Padding(14, 0, 4, 0);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(300, 169);
+            this.panel14.TabIndex = 5;
+            // 
+            // lblVoltageCanbus
+            // 
+            this.lblVoltageCanbus.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lblVoltageCanbus.AutoSize = true;
+            this.lblVoltageCanbus.BackColor = System.Drawing.Color.Transparent;
+            this.lblVoltageCanbus.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblVoltageCanbus.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.lblVoltageCanbus.Location = new System.Drawing.Point(57, 70);
+            this.lblVoltageCanbus.Name = "lblVoltageCanbus";
+            this.lblVoltageCanbus.Size = new System.Drawing.Size(33, 45);
+            this.lblVoltageCanbus.TabIndex = 3;
+            this.lblVoltageCanbus.Text = "-";
+            // 
+            // pictureBox10
+            // 
+            this.pictureBox10.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox10.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox10.Image")));
+            this.pictureBox10.Location = new System.Drawing.Point(213, 30);
+            this.pictureBox10.Name = "pictureBox10";
+            this.pictureBox10.Size = new System.Drawing.Size(67, 105);
+            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox10.TabIndex = 2;
+            this.pictureBox10.TabStop = false;
+            // 
+            // label31
+            // 
+            this.label31.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label31.AutoSize = true;
+            this.label31.BackColor = System.Drawing.Color.Transparent;
+            this.label31.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label31.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label31.Location = new System.Drawing.Point(45, 30);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(134, 45);
+            this.label31.TabIndex = 1;
+            this.label31.Text = "Voltage";
+            // 
+            // label32
+            // 
+            this.label32.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label32.AutoSize = true;
+            this.label32.BackColor = System.Drawing.Color.Transparent;
+            this.label32.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.label32.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label32.ForeColor = System.Drawing.SystemColors.HighlightText;
+            this.label32.Location = new System.Drawing.Point(50, 144);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(60, 20);
+            this.label32.TabIndex = 0;
+            this.label32.Text = "Voltage";
             // 
             // MainParamatersForm
             // 
@@ -1029,6 +1543,7 @@ namespace EMView.UI
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(67)))), ((int)(((byte)(78)))), ((int)(((byte)(74)))));
             this.ClientSize = new System.Drawing.Size(1080, 791);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel9);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
@@ -1064,6 +1579,26 @@ namespace EMView.UI
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvCellLevel)).EndInit();
             this.groupBox2.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            this.panel15.ResumeLayout(false);
+            this.panel15.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
+            this.panel16.ResumeLayout(false);
+            this.panel16.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).EndInit();
+            this.panel12.ResumeLayout(false);
+            this.panel12.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
+            this.panel13.ResumeLayout(false);
+            this.panel13.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox9)).EndInit();
+            this.panel14.ResumeLayout(false);
+            this.panel14.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1108,7 +1643,6 @@ namespace EMView.UI
         private System.Windows.Forms.ComboBox comPorts;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.Label labelCount;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.DataGridView dataGridViewAlarm;
         private System.Windows.Forms.Label label16;
@@ -1144,6 +1678,42 @@ namespace EMView.UI
         private System.Windows.Forms.DataGridViewTextBoxColumn ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn Alarm;
         private System.Windows.Forms.DataGridViewTextBoxColumn OccurrenceTime;
+        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Panel panel12;
+        private System.Windows.Forms.Label lblAvgTempCanbus;
+        private System.Windows.Forms.PictureBox pictureBox8;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Panel panel13;
+        private System.Windows.Forms.Label lblCurrentCanbus;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.PictureBox pictureBox9;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Panel panel14;
+        public System.Windows.Forms.Label lblVoltageCanbus;
+        private System.Windows.Forms.PictureBox pictureBox10;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.Panel panel15;
+        private System.Windows.Forms.Label lblSOHCanbus;
+        private System.Windows.Forms.PictureBox pictureBox11;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.Panel panel16;
+        private System.Windows.Forms.Label lblSOCCanbus;
+        private System.Windows.Forms.PictureBox pictureBox12;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Label lblCanbusId;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Panel panel10;
+        private System.Windows.Forms.Label lblPowerCanbus;
+        private System.Windows.Forms.Label label999;
+        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label lblCanbus;
+        private System.Windows.Forms.Label label19;
     }
 }

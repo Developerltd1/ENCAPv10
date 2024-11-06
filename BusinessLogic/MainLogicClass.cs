@@ -310,7 +310,7 @@ namespace BusinessLogic
             }
             return dataTable;
         }
-        public async Task<DataTable> GetDataForCSV(DateTime startDate, DateTime endDate, CheckBox cbVoltage, CheckBox cbCurrent, CheckBox cbPower, CheckBox cbSOC,  CheckBox cbTemp, CheckBox cbSelectAll)
+        public async Task<DataTable> GetDataForCSV(DateTime startDate, DateTime endDate, CheckBox cbVoltage, CheckBox cbCurrent, CheckBox cbPower, CheckBox cbSOC, CheckBox cbTemp, CheckBox cbSelectAll)
         {
             DataTable transposedDataTable = null;
             DataTable mergeDataTable = null;
@@ -340,7 +340,7 @@ namespace BusinessLogic
                             await connection.OpenAsync();
                             DataTable originalTable = new DataTable();
                             adapter.Fill(originalTable);
-                           
+
                             #region Transpose
                             // Assuming you have an existing DataTable called "originalDataTable"
                             transposedDataTable = new DataTable();
@@ -357,10 +357,10 @@ namespace BusinessLogic
                                 //}
                                 //else
                                 //{
-                                    if (!transposedDataTable.Columns.Contains(parameter)) // Check if column already exists
-                                    {
-                                        transposedDataTable.Columns.Add(parameter);
-                                    }
+                                if (!transposedDataTable.Columns.Contains(parameter)) // Check if column already exists
+                                {
+                                    transposedDataTable.Columns.Add(parameter);
+                                }
                                 //}
                             }
                             // Assign "Battery1" value to the new row
@@ -687,6 +687,35 @@ namespace BusinessLogic
                 throw new Exception("Exception From Database InsertionTime MainParamaters: " + ex.Message);
             }
         }
+        public void SaveMainParamatersToDatabaseCanbus(decimal? voltCanbus, decimal? currentCanbus, decimal? PowerCanbus, decimal? AvgTempCanbus, decimal? SOCCanbus, decimal? SOHCanbus)
+        {
+            try
+            {
+                string query = "INSERT INTO tblCanbus (VoltCanbus, CurrentCanbus, PowerCanbus, AvgTempCanbus, SOCCanbus, SOHCanbus) VALUES (@VoltCanbus, @CurrentCanbus, @PowerCanbus, @AvgTempCanbus, @SOCCanbus, @SOHCanbus)";
+                using (SqlConnection connection = new SqlConnection(new DbConnection().connectionString))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, connection))
+                    {
+                        // Assign DBNull.Value if the parameter is null
+                        cmd.Parameters.AddWithValue("@VoltCanbus", voltCanbus.HasValue ? (object)voltCanbus.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@CurrentCanbus", currentCanbus.HasValue ? (object)currentCanbus.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@PowerCanbus", PowerCanbus.HasValue ? (object)PowerCanbus.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@AvgTempCanbus", AvgTempCanbus.HasValue ? (object)AvgTempCanbus.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@SOCCanbus", SOCCanbus.HasValue ? (object)SOCCanbus.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@SOHCanbus", SOHCanbus.HasValue ? (object)SOHCanbus.Value : DBNull.Value);
+
+                        connection.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Exception From Database InsertionTime Canbus: " + ex.Message);
+            }
+        }
+
+
         public void SaveAlarmGridToDatabase(DataTable dataTableAlarm)
         {
             try

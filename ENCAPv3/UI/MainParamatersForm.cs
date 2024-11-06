@@ -36,6 +36,7 @@ namespace EMView.UI
         private List<BatteryData> dataList;
         /*  private Timer secondTimer;*/
         private Timer minuteTimer;
+        private Timer minuteTimerCanbus;
         private DateTime startTime;
 
 
@@ -146,6 +147,7 @@ namespace EMView.UI
 
         private Timer pollingTimer;
         private bool isPollingEnabled = false;
+        private bool isPollingEnabledCanbus = false;
 
         //  public static DataTable staticDt = null;
         private DataTable _table;
@@ -255,11 +257,21 @@ namespace EMView.UI
 
         private void CheckDatabaseConnection()
         {
-            string statusMessage;
-            bool isConnected = MainLogicClass.CheckConnection(out statusMessage);
+            try
+            {
 
-            lblDbConnect.Text = statusMessage;
-            lblDbConnect.ForeColor = isConnected ? System.Drawing.Color.Green : System.Drawing.Color.Red;
+
+                string statusMessage;
+                bool isConnected = MainLogicClass.CheckConnection(out statusMessage);
+
+                lblDbConnect.Text = statusMessage;
+                lblDbConnect.ForeColor = isConnected ? System.Drawing.Color.Green : System.Drawing.Color.Red;
+            }
+            catch (Exception ex)
+            {
+
+                JIMessageBox.ErrorMessage("db: " + ex.Message);
+            }
         }
 
         public MainParamatersForm(int num)
@@ -272,7 +284,11 @@ namespace EMView.UI
             {
                 InitializeComponent();
                 Application.DoEvents();
-
+                //HideUI
+                panel9.Visible = true;
+                panel3.Visible = true;
+                panel2.Visible = false;
+                StopPortCanbus();
 
                 Logger.Info("MainParametersForm/Constructor initialized.");
                 CheckDatabaseConnection();
@@ -283,8 +299,12 @@ namespace EMView.UI
                 Logger.Info("MainParametersForm/Constructor InitializePollingTimer");
 
                 dataList = new List<BatteryData>();
-                minuteTimer = new Timer { Interval = 60000  }; //10000 }; // 1 minute interval hassanCode
+                minuteTimer = new Timer { Interval = 60000 }; //10000 }; // 1 minute interval hassanCode
                 minuteTimer.Tick += MinuteTimerTick;
+
+
+
+
                 Logger.Info("MainParametersForm/Constructor Paremeters");
 
                 //SetupDataGridViewAlarm();
@@ -317,7 +337,7 @@ namespace EMView.UI
 
         private void BtnTogglePolling_Click(object sender, EventArgs e)
         {
-            if(commType.Text == "MODBUS")   //uncomment
+            if (commType.Text == "MODBUS")   //uncomment
             {
                 try
                 {
@@ -341,7 +361,7 @@ namespace EMView.UI
                 catch (Exception ex)
                 {
                     JIMessageBox.ErrorMessage("001" + ex.Message);
-                } 
+                }
             }
             else
             {
@@ -372,6 +392,39 @@ namespace EMView.UI
                 JIMessageBox.ErrorMessage("02:" + ex.Message);
             }
         }
+        public void StartPollingDatabaseCanbus()
+        {
+            try
+            {
+                isPolling = true;
+                startTime = DateTime.Now;
+                minuteTimerCanbus.Start();
+            }
+            catch (Exception ex)
+            {
+                JIMessageBox.ErrorMessage("02:" + ex.Message);
+            }
+        }
+        public void StopPollingDatabaseCanbus()
+        {
+            try
+            {
+                isPolling = true;
+                startTime = DateTime.Now;
+                if (minuteTimerCanbus != null)
+                {
+                    if (minuteTimerCanbus.Enabled)
+                    {
+                        minuteTimerCanbus.Stop(); //hassanCode
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                JIMessageBox.ErrorMessage("03_:" + ex.Message);
+            }
+
+        }
         public void StopPollingDatabase()
         {
             try
@@ -380,13 +433,29 @@ namespace EMView.UI
                 btnTogglePolling1.Text = "Start Reading";
                 startTime = DateTime.Now;
                 /*   secondTimer.Start();  */
-                minuteTimer.Stop(); //hassanCode
+                // Check if minuteTimer is running, then stop it
+                if (minuteTimer.Enabled)
+                {
+                    minuteTimer.Stop(); //hassanCode
+                }
             }
             catch (Exception ex)
             {
                 JIMessageBox.ErrorMessage("03:" + ex.Message);
             }
 
+        }
+
+        public void StopPortCanbus()
+        {
+            if (_serialPort != null)
+            {
+                if (_serialPort.IsOpen)
+                {
+                    _serialPort.Close();
+                    richTextBox1.AppendText("Stopped reading CAN data.\n");
+                }
+            }
         }
 
         int _lblDbInsertCount = 0;
@@ -583,8 +652,8 @@ namespace EMView.UI
                 string _temp = labelTemp.Text;
 
                 // Using ternary operator to check for special characters or alphabets
-                if(_volt == "-")
-                _volt = null;
+                if (_volt == "-")
+                    _volt = null;
                 if (_current == "-")
                     _current = null;
                 if (_power == "-")
@@ -593,7 +662,7 @@ namespace EMView.UI
                     _soc = null;
                 if (_temp == "-")
                     _temp = null;
-             
+
 
                 // Convert to decimal only if the value is not null
                 decimal? _labelVolt = _volt != null ? Convert.ToDecimal(_volt) : (decimal?)null;
@@ -614,6 +683,61 @@ namespace EMView.UI
                 JIMessageBox.ErrorMessage("05:" + ex.Message);
             }
         }
+
+        private void MinuteTimerTickCanbus(object sender, EventArgs e)
+        {
+            try
+            {
+                CheckDatabaseConnection();
+
+                string _voltCanbus = lblVoltageCanbus.Text;
+                 _voltCanbus = Regex.Replace(_voltCanbus, @"\D", "");
+                string _currentCanbus = lblCurrentCanbus.Text;
+                _currentCanbus = Regex.Replace(_currentCanbus, @"\D", "");
+                string _PowerCanbus = lblPowerCanbus.Text;
+                _PowerCanbus = Regex.Replace(_PowerCanbus, @"\D", "");
+                string _AvgTempCanbus = lblAvgTempCanbus.Text;
+                _AvgTempCanbus = Regex.Replace(_AvgTempCanbus, @"\D", "");
+                string _SOCCanbus = lblSOCCanbus.Text;
+                _SOCCanbus = Regex.Replace(_SOCCanbus, @"\D", "");
+                string _SOHCanbus = lblSOHCanbus.Text;
+                _SOHCanbus = Regex.Replace(_SOHCanbus, @"\D", "");
+                if (_voltCanbus == "-")
+                    _voltCanbus = null;
+                if (_currentCanbus == "-")
+                    _currentCanbus = null;
+                if (_PowerCanbus == "-")
+                    _PowerCanbus = null;
+                if (_AvgTempCanbus == "-")
+                    _AvgTempCanbus = null;
+                if (_SOCCanbus == "-")
+                    _SOCCanbus = null;
+                if (_SOHCanbus == "-")
+                    _SOHCanbus = null;
+
+                decimal? voltCanbus = _voltCanbus != null ? Convert.ToDecimal(_voltCanbus) : (decimal?)null;
+                decimal? currentCanbus = _currentCanbus != null ? Convert.ToDecimal(_currentCanbus) : (decimal?)null;
+                decimal? PowerCanbus = _PowerCanbus != null ? Convert.ToDecimal(_PowerCanbus) : (decimal?)null;
+                decimal? AvgTempCanbus = _AvgTempCanbus != null ? Convert.ToDecimal(_AvgTempCanbus) : (decimal?)null;
+                decimal? SOCCanbus = _SOCCanbus != null ? Convert.ToDecimal(_SOCCanbus) : (decimal?)null;
+                decimal? SOHCanbus = _SOHCanbus != null ? Convert.ToDecimal(_SOHCanbus) : (decimal?)null;
+
+                if (voltCanbus != null && currentCanbus != null && PowerCanbus != null && AvgTempCanbus != null && SOCCanbus != null && SOHCanbus != null)
+                {
+                    new MainLogicClass().SaveMainParamatersToDatabaseCanbus(voltCanbus, currentCanbus, PowerCanbus, AvgTempCanbus, SOCCanbus, SOHCanbus);
+
+                    _lblDbInsertCount++;
+                    lblCanbus.Text = _lblDbInsertCount.ToString();
+                    dataList.Clear();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                JIMessageBox.ErrorMessage("_05:" + ex.Message);
+            }
+        }
+
 
         // Method to check if any field in the DataTable is null or empty
         private bool IsDataTableAllRowsValid(DataTable dataTable)
@@ -846,17 +970,23 @@ namespace EMView.UI
         {
             try
             {
-                pollingTimer.Stop();
-                if (modbusClient.Connected)  //hassancode
+                if (pollingTimer.Enabled)
                 {
-                    modbusClient.Disconnect();
+                    pollingTimer.Stop();
+                }
+                if (modbusClient != null)
+                {
+                    if (modbusClient.Connected)  //hassancode
+                    {
+                        modbusClient.Disconnect();
+                    }
                 }
             }
             catch (Exception ex)
             {
                 this.Invoke(new Action(() =>
                 {
-                    statusConnection.Text = "Stop Polling: "+ex.Message;
+                    statusConnection.Text = "Stop Polling: " + ex.Message;
                 }));
             }
         }
@@ -1085,22 +1215,6 @@ namespace EMView.UI
 
         private string previousCommType = string.Empty;
 
-        private void commType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Check if the selected item has changed
-            if (commType.SelectedItem?.ToString() != previousCommType)
-            {
-                // Store the new selection as the previous selection
-                previousCommType = commType.SelectedItem?.ToString();
-
-                // Check if the selected item is "CAN BUS"
-                if (previousCommType == "CAN BUS")
-                {
-                    InitializeSerialPortCanbus();
-                }
-            }
-        }
-
 
         #region CANBUS
         private SerialPort _serialPort;
@@ -1119,10 +1233,24 @@ namespace EMView.UI
                 Encoding = Encoding.ASCII   // Set encoding (usually ASCII for CAN data)
             };
 
-            _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandlerCanbus);
+            _serialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+
+            if (!_serialPort.IsOpen)
+            {
+                _serialPort.Open();
+                richTextBox1.AppendText("Started reading CAN data...\n");
+            }
+
+            //_serialPort.DataReceived += (sender, e) =>
+            //{
+            //    // Your code for handling the data received
+            //    // This can be inline or call another method
+            //    DataReceivedHandlerCanbus(sender, e);
+            //};
+
         }
 
-        private void DataReceivedHandlerCanbus(object sender, SerialDataReceivedEventArgs e)
+        private void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
         {
             int bytesToRead = _serialPort.BytesToRead;
             byte[] buffer = new byte[bytesToRead];
@@ -1131,13 +1259,13 @@ namespace EMView.UI
             _dataBuffer.Append(hexData);
             ProcessBuffer();
         }
-
+        static bool isCanbusSelected = false;
         private void ProcessBuffer()
         {
             string bufferString = _dataBuffer.ToString();
             List<string> frames = new List<string>();
 
-            while (true)
+            while (isCanbusSelected) //true)
             {
                 try
                 {
@@ -1173,7 +1301,7 @@ namespace EMView.UI
                 }
             }
             byte[] canDummyPkt = { 0xAA, 0xC8, 0xFF, 0x07, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x55 };
-            SendCANPacket(canDummyPkt);
+            SendCANPacketCanbus(canDummyPkt);
             //AppendFramesToRichTextBox(frames);
         }
 
@@ -1186,9 +1314,26 @@ namespace EMView.UI
             {
                 data[i] = Convert.ToByte(frame.Substring(8 + i * 2, 2), 16);
             }
+
+
+            // Define regular expressions for each value
+            //var moduleVoltageMatch = Regex.Match(data, @"Module Voltage:\s*([\d\.]+V)");
+            //var totalCurrentMatch = Regex.Match(data, @"Total Current:\s*([\d\.]+A)");
+            //var avgTemperatureMatch = Regex.Match(data, @"Avg Temperature:\s*([\d\.]+°C)");
+            //var chargeVoltageMatch = Regex.Match(data, @"Charge Voltage:\s*([\d\.]+V)");
+            //var chargeLimitMatch = Regex.Match(data, @"Charge Limit:\s*([\d]+A)");
+            //var dischargeLimitMatch = Regex.Match(data, @"Discharge Limit:\s*([\d]+A)");
+            //var socMatch = Regex.Match(data, @"SOC:\s*([\d]+%)");
+            //var sohMatch = Regex.Match(data, @"SOH:\s*([\d]+%)");
+
+            this.Invoke(new Action(() => lblCanbusId.Text = canId.ToString()));
+            int chargeCurrentLimit ;
+            int dischargeCurrentLimit ;
+            int chargeVoltage ;
+
             switch (canId)
             {
-                case 0x5903:// CAN ID 0x359: Parse Protection and Alarm Tables, Module Number
+                case 0x5903:  // CAN ID 0x359: Parse Protection and Alarm Tables, Module Number
                     bool dischargeOverCurrent = (data[0] & 0x80) != 0; // Bit 7 of Byte 0
                     bool cellUnderTemperature = (data[0] & 0x40) != 0; // Bit 6 of Byte 0
                     byte moduleNumber = data[4];
@@ -1198,29 +1343,47 @@ namespace EMView.UI
                     break;
 
                 case 0x5103:// CAN ID 0x351: Parse Battery Charge Voltage, Charge/Discharge Current Limits
-                    int chargeVoltage = (data[1] << 8) | data[0]; // Combine bytes for 16-bit value
-                    int chargeCurrentLimit = (short)((data[3] << 8) | data[2]); // Two's complement
-                    int dischargeCurrentLimit = (short)((data[5] << 8) | data[4]); // Two's complement
+                     chargeVoltage = (data[1] << 8) | data[0]; // Combine bytes for 16-bit value
+                     chargeCurrentLimit = (short)((data[3] << 8) | data[2]); // Two's complement
+                     dischargeCurrentLimit = (short)((data[5] << 8) | data[4]); // Two's complement
                     this.Invoke(new Action(() => richTextBox1.AppendText($"CAN ID 0x351: Charge Voltage: {chargeVoltage * 0.1}V, Charge Limit: {chargeCurrentLimit * 0.1}A, Discharge Limit: {dischargeCurrentLimit * 0.1}A" + Environment.NewLine)));
+                    var ss = $"CAN ID 0x351: Charge Voltage: {chargeVoltage * 0.1}V, Charge Limit: {chargeCurrentLimit * 0.1}A, Discharge Limit: {dischargeCurrentLimit * 0.1}A" + Environment.NewLine;
+
+                    //////this.Invoke(new Action(() => lblVoltageCanbus.Text = (chargeVoltage * 0.1) + "V"));
+                    //////this.Invoke(new Action(() => lblCurrentCanbus.Text = (chargeCurrentLimit * 0.1) + "A"));
+                    //////this.Invoke(new Action(() => lblAvgTempCanbus.Text = (dischargeCurrentLimit * 0.1) + "A"));
+                    //////this.Invoke(new Action(() => lblPowerCanbus.Text = ((Convert.ToDouble((chargeCurrentLimit * 0.1)) * Convert.ToDouble((chargeVoltage * 0.1))) / 1000).ToString()));
+                    
+
                     break;
 
                 case 0x5503:// CAN ID 0x355: Parse SOC and SOH
                     int soc = (data[1] << 8) | data[0];
                     int soh = (data[3] << 8) | data[2];
-                    this.Invoke(new Action(() => richTextBox1.AppendText($"CAN ID 0x355: SOC: {soc}%, SOH: {soh}%" + Environment.NewLine)));
+
+                    this.Invoke(new Action(() => lblSOCCanbus.Text = soc + "%"));
+                    this.Invoke(new Action(() => lblSOHCanbus.Text = soh + "%"));
                     break;
 
                 case 0x5603:// CAN ID 0x356: Parse Voltage, Current, Temperature
                     int moduleVoltage = (short)((data[1] << 8) | data[0]); // Two's complement
                     int totalCurrent = (short)((data[3] << 8) | data[2]); // Two's complement
                     int avgTemperature = (short)((data[5] << 8) | data[4]); // Two's complement
-                    this.Invoke(new Action(() => richTextBox1.AppendText($"CAN ID 0x356: Module Voltage: {moduleVoltage * 0.01}V, Total Current: {totalCurrent * 0.1}A, Avg Temperature: {avgTemperature * 0.1}°C" + Environment.NewLine)));
+                                                                            //this.Invoke(new Action(() => richTextBox1.AppendText($"CAN ID 0x356: Module Voltage: {moduleVoltage * 0.01}V, Total Current: {totalCurrent * 0.1}A, Avg Temperature: {avgTemperature * 0.1}°C" + Environment.NewLine)));
+
+                    this.Invoke(new Action(() => lblVoltageCanbus.Text = (moduleVoltage * 0.01) + "V"));
+                    this.Invoke(new Action(() => lblCurrentCanbus.Text = (totalCurrent * 0.1) + "A"));
+                    this.Invoke(new Action(() => lblAvgTempCanbus.Text = (avgTemperature * 0.1) + "C"));
+                    this.Invoke(new Action(() => lblPowerCanbus.Text = ((moduleVoltage * totalCurrent)/1000000) + "kW"));
                     break;
 
                 case 0x5C03: // CAN ID 0x35C: Parse Request Flags
                     bool chargeEnable = (data[0] & 0x80) != 0; // Bit 7 of Byte 0
                     bool dischargeEnable = (data[0] & 0x40) != 0; // Bit 6 of Byte 0
-                    this.Invoke(new Action(() => richTextBox1.AppendText($"CAN ID 0x35C: Charge Enable: {chargeEnable}, Discharge Enable: {dischargeEnable}" + Environment.NewLine)));
+                                                                  //this.Invoke(new Action(() => richTextBox1.AppendText($"CAN ID 0x35C: Charge Enable: {chargeEnable}, Discharge Enable: {dischargeEnable}" + Environment.NewLine)));
+
+                    //this.Invoke(new Action(() => lblSOCCanbus.Text = soc + "%"));   // ?
+                    //this.Invoke(new Action(() => lblSOHCanbus.Text = soh + "%"));   // ?
                     break;
 
                 default:
@@ -1245,6 +1408,66 @@ namespace EMView.UI
         private void dataGridViewAlarm_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void commType_SelectedValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+
+
+                // Check if the selected item has changed
+                if (commType.SelectedItem?.ToString() != previousCommType)
+                {
+                    // Store the new selection as the previous selection
+                    previousCommType = commType.SelectedItem?.ToString();
+
+                    if (previousCommType == "MODBUS")
+                    {
+                        lblCanbus.Text = "-";
+                        isCanbusSelected = false;
+                        //HideUI
+                        Task.Run(() =>
+                        {
+                            this.Invoke(new Action(() => panel9.Visible = true));
+                            this.Invoke(new Action(() => panel3.Visible = true));
+                            this.Invoke(new Action(() => panel2.Visible = false));
+                        });
+
+                        StopPortCanbus();
+                        StopPollingDatabaseCanbus();
+                    }
+
+                    // Check if the selected item is "CAN BUS"
+                    if (previousCommType == "CAN BUS")
+                    {
+                        //first close openPorts
+                        StopPolling();
+                        StopPollingDatabase();
+
+                        minuteTimerCanbus = new Timer { Interval = 10000 }; //10000 }; // 1 minute interval hassanCode
+                        minuteTimerCanbus.Tick += MinuteTimerTickCanbus;
+                        StartPollingDatabaseCanbus();
+                        isCanbusSelected = true;
+
+                        //HideUI
+                        Task.Run(() =>
+                        {
+                            this.Invoke(new Action(() => panel9.Visible = false));
+                            this.Invoke(new Action(() => panel3.Visible = false));
+                            this.Invoke(new Action(() => panel2.Visible = true));
+                        });
+
+                        //then start CANBUS Port
+                        InitializeSerialPortCanbus();
+                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                JIMessageBox.WarningMessage(ex.Message);
+            }
         }
 
         private void label14_Click(object sender, EventArgs e)
@@ -1341,9 +1564,9 @@ namespace EMView.UI
                                         #region DynamicData
                                         voltage = (registers[VOLTAGE]) * 0.1;                  //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| voltage: " + voltage.ToString());
-                                        current = ((registers[CURRENT] - 30000) * 0.1)*-1;          //uncomment
+                                        current = ((registers[CURRENT] - 30000) * 0.1) * -1;          //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| current: " + current.ToString());
-                                        power = (((double)registers[POWER])/1000.0);                            //uncomment
+                                        power = (((double)registers[POWER]) / 1000.0);                            //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| power: " + current.ToString());
                                         soc = (registers[SOC]) * 0.1;                          //uncomment
                                         Logger.Info("MainParamaterForm/LoadModbusData| soc: " + soc.ToString());
@@ -2212,6 +2435,7 @@ namespace EMView.UI
         }
         private async void iconButton1_Click(object sender, EventArgs e)
         {
+
             if (commType.Text == "MODBUS")   //uncomment
             {
                 try
@@ -2466,23 +2690,41 @@ namespace EMView.UI
                 MessageBox.Show("Serial port is not open.");
             }
         }
-        private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        private void SendCANPacketCanbus(byte[] packet)
         {
-            SerialPort serialPort = (SerialPort)sender;
-            string inData = serialPort.ReadExisting();
-       
-            Logger.Info("MainParamaterForm/DataReceivedHandler|  canPacket Ack:" + inData);
-            try
+            if (_serialPort.IsOpen)
             {
-                serialPort.Close();
+                try
+                {
+                    _serialPort.Write(packet, 0, packet.Length);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error sending setpoint command: " + ex.Message);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                Logger.Error("MainParamaterForm/DataReceivedHandler|  SendCANPacket Exception:" + ex.Message.ToString());
-                JIMessageBox.ErrorMessage("DataReceivedHandler: " + ex.Message);
+                MessageBox.Show("Serial port is not open.");
             }
-
         }
+        //private static void DataReceivedHandler(object sender, SerialDataReceivedEventArgs e)
+        //{
+        //    SerialPort serialPort = (SerialPort)sender;
+        //    string inData = serialPort.ReadExisting();
+
+        //    Logger.Info("MainParamaterForm/DataReceivedHandler|  canPacket Ack:" + inData);
+        //    try
+        //    {
+        //        serialPort.Close();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Error("MainParamaterForm/DataReceivedHandler|  SendCANPacket Exception:" + ex.Message.ToString());
+        //        JIMessageBox.ErrorMessage("DataReceivedHandler: " + ex.Message);
+        //    }
+
+        //}
 
         private byte[] CreateCANPacket(string identifier, byte[] data)
         {
