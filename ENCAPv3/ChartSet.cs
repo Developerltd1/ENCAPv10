@@ -25,7 +25,7 @@ namespace EMView
         }
         public async Task chartGT3Async(List<ChartValues<double>> allList, LiveCharts.WinForms.CartesianChart cartesianChart1)
         {
-          
+
             if (allList.Count > 0)
             {
                 SolidColorBrush VoltageColor = new SolidColorBrush(System.Windows.Media.Color.FromRgb(54, 172, 9));
@@ -40,14 +40,17 @@ namespace EMView
                 {
                     // Update or add series for each parameter
                     UpdateOrAddSeries(cartesianChart1.Series, 0, allList[0], "Voltage (V)", 1, VoltageColor, cartesianChart1);
-                UpdateOrAddSeries(cartesianChart1.Series, 1, allList[1], "Current (Amps)", 2, CurrentColor, cartesianChart1);
-                UpdateOrAddSeries(cartesianChart1.Series, 2, allList[2], "Power (kW)", 3, PowerColor, cartesianChart1);
-                UpdateOrAddSeries(cartesianChart1.Series, 3, allList[3], "SOC", 4, SocColor, cartesianChart1);
-                UpdateOrAddSeries(cartesianChart1.Series, 4, allList[4], "Temperature (C)", 6, TempColor, cartesianChart1);
+                    UpdateOrAddSeries(cartesianChart1.Series, 1, allList[1], "Current (Amps)", 2, CurrentColor, cartesianChart1);
+                    UpdateOrAddSeries(cartesianChart1.Series, 2, allList[2], "Power (kW)", 3, PowerColor, cartesianChart1);
+                    UpdateOrAddSeries(cartesianChart1.Series, 3, allList[3], "SOC", 4, SocColor, cartesianChart1);
+                    if (StaticValues.IsCanbusSelected == "CAN BUS")
+                        UpdateOrAddSeries(cartesianChart1.Series, 4, allList[4], "SOH", 6, TempColor, cartesianChart1);
+                    else
+                        UpdateOrAddSeries(cartesianChart1.Series, 4, allList[4], "Temperature (C)", 6, TempColor, cartesianChart1);
                 });
 
 
-              
+
             }
 
 
@@ -95,7 +98,7 @@ namespace EMView
 
         }
 
-        
+
         public void chartGT3(List<ChartValues<double>> allList, LiveCharts.WinForms.CartesianChart cartesianChart1, List<string> xAxisLabels)
         {
             if (allList.Count <= 0)

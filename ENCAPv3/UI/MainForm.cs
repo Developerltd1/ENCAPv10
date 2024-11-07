@@ -29,7 +29,18 @@ namespace EMView.UI
             InitializeComponent();
 
         }
+        // Inside MainForm (Parent Form)
+        public void HideNavigationButtons()
+        {
+            pnBtnDashboard.Visible = false;
+            pnBtnSetting.Visible = false;
+        }
 
+        public void ShowNavigationButtons()
+        {
+            pnBtnDashboard.Visible = true;
+            pnBtnSetting.Visible = true;
+        }
         #region DateTimeSetting
         private Timer pollingTimer;
         private void fnDateTime()
@@ -145,6 +156,11 @@ namespace EMView.UI
                 await Task.Yield(); // Yield control to ensure UI updates.
             }
             await NavColor("pnBtnAboutUs");
+        }
+        public void hideButton()
+        {
+            pnBtnDashboard.Visible = false;
+            pnBtnSetting.Visible = false;
         }
         private async void pnBtnSetting_Click(object sender, EventArgs e)
         {

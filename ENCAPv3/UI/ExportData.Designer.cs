@@ -34,6 +34,7 @@ namespace EMView.UI
             this.dataTable1BindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.set1 = new EMView.Set1();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.lblcanbus = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.datePickerEndDate = new System.Windows.Forms.DateTimePicker();
             this.label1 = new System.Windows.Forms.Label();
@@ -74,6 +75,7 @@ namespace EMView.UI
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(47)))), ((int)(((byte)(59)))), ((int)(((byte)(57)))));
+            this.panel1.Controls.Add(this.lblcanbus);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.datePickerEndDate);
             this.panel1.Controls.Add(this.label1);
@@ -83,6 +85,18 @@ namespace EMView.UI
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1133, 74);
             this.panel1.TabIndex = 4;
+            // 
+            // lblcanbus
+            // 
+            this.lblcanbus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblcanbus.AutoSize = true;
+            this.lblcanbus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblcanbus.ForeColor = System.Drawing.Color.White;
+            this.lblcanbus.Location = new System.Drawing.Point(1049, 26);
+            this.lblcanbus.Name = "lblcanbus";
+            this.lblcanbus.Size = new System.Drawing.Size(12, 16);
+            this.lblcanbus.TabIndex = 39;
+            this.lblcanbus.Text = "-";
             // 
             // label2
             // 
@@ -376,5 +390,6 @@ namespace EMView.UI
         private Set1 set1;
         private FontAwesome.Sharp.IconButton btnExportCSV;
         private System.Windows.Forms.CheckBox cbTemprature;
+        private System.Windows.Forms.Label lblcanbus;
     }
 }

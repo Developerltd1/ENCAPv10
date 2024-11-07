@@ -27,7 +27,7 @@ namespace EMView.UI
     {
 
         private static readonly ILog Logger = LogManager.GetLogger(typeof(MainParamatersForm));
-
+        
 
         #region DatabasePollingEnrty
 
@@ -363,6 +363,11 @@ namespace EMView.UI
                     JIMessageBox.ErrorMessage("001" + ex.Message);
                 }
             }
+            else if (commType.Text == "CAN BUS")   //uncomment
+            {
+                commType_SelectedValueChanged(null, null);
+
+            }
             else
             {
                 //modbusClient.Disconnect();
@@ -691,7 +696,7 @@ namespace EMView.UI
                 CheckDatabaseConnection();
 
                 string _voltCanbus = lblVoltageCanbus.Text;
-                 _voltCanbus = Regex.Replace(_voltCanbus, @"\D", "");
+                _voltCanbus = Regex.Replace(_voltCanbus, @"\D", "");
                 string _currentCanbus = lblCurrentCanbus.Text;
                 _currentCanbus = Regex.Replace(_currentCanbus, @"\D", "");
                 string _PowerCanbus = lblPowerCanbus.Text;
@@ -1327,9 +1332,9 @@ namespace EMView.UI
             //var sohMatch = Regex.Match(data, @"SOH:\s*([\d]+%)");
 
             this.Invoke(new Action(() => lblCanbusId.Text = canId.ToString()));
-            int chargeCurrentLimit ;
-            int dischargeCurrentLimit ;
-            int chargeVoltage ;
+            int chargeCurrentLimit;
+            int dischargeCurrentLimit;
+            int chargeVoltage;
 
             switch (canId)
             {
@@ -1343,9 +1348,9 @@ namespace EMView.UI
                     break;
 
                 case 0x5103:// CAN ID 0x351: Parse Battery Charge Voltage, Charge/Discharge Current Limits
-                     chargeVoltage = (data[1] << 8) | data[0]; // Combine bytes for 16-bit value
-                     chargeCurrentLimit = (short)((data[3] << 8) | data[2]); // Two's complement
-                     dischargeCurrentLimit = (short)((data[5] << 8) | data[4]); // Two's complement
+                    chargeVoltage = (data[1] << 8) | data[0]; // Combine bytes for 16-bit value
+                    chargeCurrentLimit = (short)((data[3] << 8) | data[2]); // Two's complement
+                    dischargeCurrentLimit = (short)((data[5] << 8) | data[4]); // Two's complement
                     this.Invoke(new Action(() => richTextBox1.AppendText($"CAN ID 0x351: Charge Voltage: {chargeVoltage * 0.1}V, Charge Limit: {chargeCurrentLimit * 0.1}A, Discharge Limit: {dischargeCurrentLimit * 0.1}A" + Environment.NewLine)));
                     var ss = $"CAN ID 0x351: Charge Voltage: {chargeVoltage * 0.1}V, Charge Limit: {chargeCurrentLimit * 0.1}A, Discharge Limit: {dischargeCurrentLimit * 0.1}A" + Environment.NewLine;
 
@@ -1353,7 +1358,7 @@ namespace EMView.UI
                     //////this.Invoke(new Action(() => lblCurrentCanbus.Text = (chargeCurrentLimit * 0.1) + "A"));
                     //////this.Invoke(new Action(() => lblAvgTempCanbus.Text = (dischargeCurrentLimit * 0.1) + "A"));
                     //////this.Invoke(new Action(() => lblPowerCanbus.Text = ((Convert.ToDouble((chargeCurrentLimit * 0.1)) * Convert.ToDouble((chargeVoltage * 0.1))) / 1000).ToString()));
-                    
+
 
                     break;
 
@@ -1374,7 +1379,7 @@ namespace EMView.UI
                     this.Invoke(new Action(() => lblVoltageCanbus.Text = (moduleVoltage * 0.01) + "V"));
                     this.Invoke(new Action(() => lblCurrentCanbus.Text = (totalCurrent * 0.1) + "A"));
                     this.Invoke(new Action(() => lblAvgTempCanbus.Text = (avgTemperature * 0.1) + "C"));
-                    this.Invoke(new Action(() => lblPowerCanbus.Text = ((moduleVoltage * totalCurrent)/1000000) + "kW"));
+                    this.Invoke(new Action(() => lblPowerCanbus.Text = ((moduleVoltage * totalCurrent) / 1000000) + "kW"));
                     break;
 
                 case 0x5C03: // CAN ID 0x35C: Parse Request Flags
@@ -1424,16 +1429,6 @@ namespace EMView.UI
 
                     if (previousCommType == "MODBUS")
                     {
-                        lblCanbus.Text = "-";
-                        isCanbusSelected = false;
-                        //HideUI
-                        Task.Run(() =>
-                        {
-                            this.Invoke(new Action(() => panel9.Visible = true));
-                            this.Invoke(new Action(() => panel3.Visible = true));
-                            this.Invoke(new Action(() => panel2.Visible = false));
-                        });
-
                         StopPortCanbus();
                         StopPollingDatabaseCanbus();
                     }
@@ -1450,23 +1445,81 @@ namespace EMView.UI
                         StartPollingDatabaseCanbus();
                         isCanbusSelected = true;
 
-                        //HideUI
-                        Task.Run(() =>
-                        {
-                            this.Invoke(new Action(() => panel9.Visible = false));
-                            this.Invoke(new Action(() => panel3.Visible = false));
-                            this.Invoke(new Action(() => panel2.Visible = true));
-                        });
+
 
                         //then start CANBUS Port
                         InitializeSerialPortCanbus();
-                        
                     }
                 }
             }
             catch (Exception ex)
             {
                 JIMessageBox.WarningMessage(ex.Message);
+            }
+
+
+
+        }
+
+        private void commType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            // Assuming you have a ComboBox control for selecting CAN BUS or MODBUS
+            if (this.MdiParent is MainForm parentForm) // If it's an MDI parent-child relationship
+            {
+                string selectedValue = commType.SelectedItem?.ToString();
+
+                if (selectedValue == "CAN BUS")
+                {
+                    parentForm.HideNavigationButtons(); // Hide buttons in parent form
+                }
+                else if (selectedValue == "MODBUS")
+                {
+                    parentForm.ShowNavigationButtons(); // Show buttons in parent form
+                }
+            }
+
+
+
+            MainForm mainForm = new MainForm();
+            if (commType.SelectedItem?.ToString() != previousCommType)
+            {
+                previousCommType = commType.SelectedItem?.ToString();
+                StaticValues.IsCanbusSelected = previousCommType;
+                if (previousCommType == "MODBUS")
+                {
+                    lblCanbus.Text = "-";
+                    isCanbusSelected = false;
+                    //HideUI
+                    Task.Run(() =>
+                    {
+                        this.Invoke(new Action(() => panel9.Visible = true));
+                        this.Invoke(new Action(() => panel3.Visible = true));
+                        this.Invoke(new Action(() => panel2.Visible = false));
+
+                        //this.Invoke(new Action(() => mainForm.pnBtnDashboard.Visible = true));
+                        //this.Invoke(new Action(() => mainForm.pnBtnSetting.Visible = true));
+                    });
+
+                    StopPortCanbus();
+                    StopPollingDatabaseCanbus();
+                }
+                if (previousCommType == "CAN BUS")
+                {
+                    //first close openPorts
+                    StopPolling();
+                    StopPollingDatabase();
+
+                    //HideUI
+                    Task.Run(() =>
+                    {
+                        this.Invoke(new Action(() => panel9.Visible = false));
+                        this.Invoke(new Action(() => panel3.Visible = false));
+                        this.Invoke(new Action(() => panel2.Visible = true));
+                       // mainForm.hideButton();
+                    });
+
+                }
             }
         }
 

@@ -69,6 +69,7 @@
     <Compile Include="Model\LoginModel.cs" />
     <Compile Include="Model\StaticModel.cs" />
     <Compile Include="Model\StaticModelValues.cs" />
+    <Compile Include="Model\StaticValues.cs" />
     <Compile Include="Model\StorePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticData.cs" />

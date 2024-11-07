@@ -203,12 +203,18 @@ namespace BusinessLogic
                     cmd.Dispose();
             }
         }
-        public async Task<List<ChartModel>> GetStorePoints(DateTime startDate, DateTime endDate, bool includeVoltage, bool includeCurrents, bool includePower, bool includeSOC, bool includeTemp, bool selectAll)
+        public async Task<List<ChartModel>> GetStorePoints(DateTime startDate, DateTime endDate, bool includeVoltage, bool includeCurrents, bool includePower, bool includeSOC, bool includeTemp, bool selectAll, string IsCanbusSelected = null)
         {
             List<ChartModel> allList = new List<ChartModel>();
             using (SqlConnection connection = new SqlConnection(new DbConnection().connectionString))
             {
-                using (SqlCommand command = new SqlCommand("usp_MainParametersCharts", connection))
+                string spName = null;
+                if (IsCanbusSelected == "CAN BUS")
+                    spName = "usp_CanbusCharts";
+                else
+                    spName = "usp_MainParametersCharts";
+
+                using (SqlCommand command = new SqlCommand(spName, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@StartDate", startDate);
@@ -310,13 +316,19 @@ namespace BusinessLogic
             }
             return dataTable;
         }
-        public async Task<DataTable> GetDataForCSV(DateTime startDate, DateTime endDate, CheckBox cbVoltage, CheckBox cbCurrent, CheckBox cbPower, CheckBox cbSOC, CheckBox cbTemp, CheckBox cbSelectAll)
+        public async Task<DataTable> GetDataForCSV(DateTime startDate, DateTime endDate, CheckBox cbVoltage, CheckBox cbCurrent, CheckBox cbPower, CheckBox cbSOC, CheckBox cbTemp, CheckBox cbSelectAll, string IsCanbusSelected)
         {
             DataTable transposedDataTable = null;
             DataTable mergeDataTable = null;
             using (SqlConnection connection = new SqlConnection(new DbConnection().connectionString))
             {
-                using (SqlCommand command = new SqlCommand("usp_GetRdlcReportData", connection))
+                string spName = null;
+                if (IsCanbusSelected == "CAN BUS")
+                    spName = "usp_GetRdlcReportDataCanbus";
+                else
+                    spName = "usp_GetRdlcReportData";
+
+                using (SqlCommand command = new SqlCommand(spName, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
 
@@ -340,146 +352,154 @@ namespace BusinessLogic
                             await connection.OpenAsync();
                             DataTable originalTable = new DataTable();
                             adapter.Fill(originalTable);
-
-                            #region Transpose
-                            // Assuming you have an existing DataTable called "originalDataTable"
-                            transposedDataTable = new DataTable();
-                            // Step 1: Add DateCheck column as the first header
-                            transposedDataTable.Columns.Add("DateCheck", typeof(DateTime));
-                            transposedDataTable.Columns.Add("SlaveId", typeof(int));
-                            int z = 1;
-                            // Step 2: Add columns with Parameter values as headers
-                            foreach (DataRow row in originalTable.Rows)
+                            if (IsCanbusSelected == "CAN BUS")
                             {
-                                string parameter = row["Parameter"].ToString();
-                                //if (parameter == "Serial")
-                                //{
-                                //}
-                                //else
-                                //{
-                                if (!transposedDataTable.Columns.Contains(parameter)) // Check if column already exists
-                                {
-                                    transposedDataTable.Columns.Add(parameter);
-                                }
-                                //}
+                                mergeDataTable = originalTable;
+                                return mergeDataTable;
                             }
-                            // Assign "Battery1" value to the new row
-                            foreach (DataRow row in originalTable.Rows) // Iterate over each row
+                            else
                             {
-                                foreach (DataColumn column in originalTable.Columns) // Iterate over each column in the row
+                                #region Transpose
+                                // Assuming you have an existing DataTable called "originalDataTable"
+                                transposedDataTable = new DataTable();
+                                // Step 1: Add DateCheck column as the first header
+                                transposedDataTable.Columns.Add("DateCheck", typeof(DateTime));
+                                transposedDataTable.Columns.Add("SlaveId", typeof(int));
+                                int z = 1;
+                                // Step 2: Add columns with Parameter values as headers
+                                foreach (DataRow row in originalTable.Rows)
                                 {
-                                    if (column.ColumnName != "Parameter" && column.ColumnName != "DateCheck")
+                                    string parameter = row["Parameter"].ToString();
+                                    //if (parameter == "Serial")
+                                    //{
+                                    //}
+                                    //else
+                                    //{
+                                    if (!transposedDataTable.Columns.Contains(parameter)) // Check if column already exists
                                     {
-                                        int columnIndex = originalTable.Columns.IndexOf(column); // Get the index of the current column
-                                        columnIndex = columnIndex - 2;
-                                        columnIndex++;
-                                        var value = row[column];
-                                        if (value != null && !string.IsNullOrEmpty(value.ToString()) && value.ToString() != "{}")
+                                        transposedDataTable.Columns.Add(parameter);
+                                    }
+                                    //}
+                                }
+                                // Assign "Battery1" value to the new row
+                                foreach (DataRow row in originalTable.Rows) // Iterate over each row
+                                {
+                                    foreach (DataColumn column in originalTable.Columns) // Iterate over each column in the row
+                                    {
+                                        if (column.ColumnName != "Parameter" && column.ColumnName != "DateCheck")
                                         {
-                                            DataRow newRow = transposedDataTable.NewRow();
-                                            newRow["DateCheck"] = row["DateCheck"];
-                                            newRow["SlaveId"] = columnIndex;
-                                            string parameterName = row["Parameter"].ToString();
-                                            if (parameterName == "Serial" && transposedDataTable.Columns.Contains("Serial"))
+                                            int columnIndex = originalTable.Columns.IndexOf(column); // Get the index of the current column
+                                            columnIndex = columnIndex - 2;
+                                            columnIndex++;
+                                            var value = row[column];
+                                            if (value != null && !string.IsNullOrEmpty(value.ToString()) && value.ToString() != "{}")
                                             {
-                                                newRow["Serial"] = value;
-                                            }
-                                            if (parameterName == "SOC" && transposedDataTable.Columns.Contains("SOC"))
-                                            {
-                                                newRow["SOC"] = value;
-                                            }
-                                            else if (parameterName == "Power (kW)" && transposedDataTable.Columns.Contains("Power (kW)"))
-                                            {
-                                                newRow["Power (kW)"] = value;
-                                            }
-                                            else if (parameterName == "Voltage (V)" && transposedDataTable.Columns.Contains("Voltage (V)"))
-                                            {
-                                                newRow["Voltage (V)"] = value;
-                                            }
-                                            else if (parameterName == "Current (Amps)" && transposedDataTable.Columns.Contains("Current (Amps)"))
-                                            {
-                                                newRow["Current (Amps)"] = value;
-                                            }
-                                            else if (parameterName == "Total Remaining Capacity(Ah)" && transposedDataTable.Columns.Contains("Total Remaining Capacity(Ah)"))
-                                            {
-                                                newRow["Total Remaining Capacity(Ah)"] = value;
-                                            }
-                                            else if (parameterName == "Temperature (C)" && transposedDataTable.Columns.Contains("Temperature (C)"))
-                                            {
-                                                newRow["Temperature (C)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-1 (V)" && transposedDataTable.Columns.Contains("Cell-1 (V)"))
-                                            {
-                                                newRow["Cell-1 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-2 (V)" && transposedDataTable.Columns.Contains("Cell-2 (V)"))
-                                            {
-                                                newRow["Cell-2 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-3 (V)" && transposedDataTable.Columns.Contains("Cell-3 (V)"))
-                                            {
-                                                newRow["Cell-3 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-4 (V)" && transposedDataTable.Columns.Contains("Cell-4 (V)"))
-                                            {
-                                                newRow["Cell-4 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-5 (V)" && transposedDataTable.Columns.Contains("Cell-5 (V)"))
-                                            {
-                                                newRow["Cell-5 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-6 (V)" && transposedDataTable.Columns.Contains("Cell-6 (V)"))
-                                            {
-                                                newRow["Cell-6 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-7 (V)" && transposedDataTable.Columns.Contains("Cell-7 (V)"))
-                                            {
-                                                newRow["Cell-7 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-8 (V)" && transposedDataTable.Columns.Contains("Cell-8 (V)"))
-                                            {
-                                                newRow["Cell-8 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-9 (V)" && transposedDataTable.Columns.Contains("Cell-9 (V)"))
-                                            {
-                                                newRow["Cell-9 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-10 (V)" && transposedDataTable.Columns.Contains("Cell-10 (V)"))
-                                            {
-                                                newRow["Cell-10 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-11 (V)" && transposedDataTable.Columns.Contains("Cell-11 (V)"))
-                                            {
-                                                newRow["Cell-11 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-12 (V)" && transposedDataTable.Columns.Contains("Cell-12 (V)"))
-                                            {
-                                                newRow["Cell-12 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-13 (V)" && transposedDataTable.Columns.Contains("Cell-13 (V)"))
-                                            {
-                                                newRow["Cell-13 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-14 (V)" && transposedDataTable.Columns.Contains("Cell-14 (V)"))
-                                            {
-                                                newRow["Cell-14 (V)"] = value;
-                                            }
-                                            else if (parameterName == "Cell-15 (V)" && transposedDataTable.Columns.Contains("Cell-15 (V)"))
-                                            {
-                                                newRow["Cell-15 (V)"] = value;
-                                            }
+                                                DataRow newRow = transposedDataTable.NewRow();
+                                                newRow["DateCheck"] = row["DateCheck"];
+                                                newRow["SlaveId"] = columnIndex;
+                                                string parameterName = row["Parameter"].ToString();
+                                                if (parameterName == "Serial" && transposedDataTable.Columns.Contains("Serial"))
+                                                {
+                                                    newRow["Serial"] = value;
+                                                }
+                                                if (parameterName == "SOC" && transposedDataTable.Columns.Contains("SOC"))
+                                                {
+                                                    newRow["SOC"] = value;
+                                                }
+                                                else if (parameterName == "Power (kW)" && transposedDataTable.Columns.Contains("Power (kW)"))
+                                                {
+                                                    newRow["Power (kW)"] = value;
+                                                }
+                                                else if (parameterName == "Voltage (V)" && transposedDataTable.Columns.Contains("Voltage (V)"))
+                                                {
+                                                    newRow["Voltage (V)"] = value;
+                                                }
+                                                else if (parameterName == "Current (Amps)" && transposedDataTable.Columns.Contains("Current (Amps)"))
+                                                {
+                                                    newRow["Current (Amps)"] = value;
+                                                }
+                                                else if (parameterName == "Total Remaining Capacity(Ah)" && transposedDataTable.Columns.Contains("Total Remaining Capacity(Ah)"))
+                                                {
+                                                    newRow["Total Remaining Capacity(Ah)"] = value;
+                                                }
+                                                else if (parameterName == "Temperature (C)" && transposedDataTable.Columns.Contains("Temperature (C)"))
+                                                {
+                                                    newRow["Temperature (C)"] = value;
+                                                    
+                                                }
+                                                else if (parameterName == "Cell-1 (V)" && transposedDataTable.Columns.Contains("Cell-1 (V)"))
+                                                {
+                                                    newRow["Cell-1 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-2 (V)" && transposedDataTable.Columns.Contains("Cell-2 (V)"))
+                                                {
+                                                    newRow["Cell-2 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-3 (V)" && transposedDataTable.Columns.Contains("Cell-3 (V)"))
+                                                {
+                                                    newRow["Cell-3 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-4 (V)" && transposedDataTable.Columns.Contains("Cell-4 (V)"))
+                                                {
+                                                    newRow["Cell-4 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-5 (V)" && transposedDataTable.Columns.Contains("Cell-5 (V)"))
+                                                {
+                                                    newRow["Cell-5 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-6 (V)" && transposedDataTable.Columns.Contains("Cell-6 (V)"))
+                                                {
+                                                    newRow["Cell-6 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-7 (V)" && transposedDataTable.Columns.Contains("Cell-7 (V)"))
+                                                {
+                                                    newRow["Cell-7 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-8 (V)" && transposedDataTable.Columns.Contains("Cell-8 (V)"))
+                                                {
+                                                    newRow["Cell-8 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-9 (V)" && transposedDataTable.Columns.Contains("Cell-9 (V)"))
+                                                {
+                                                    newRow["Cell-9 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-10 (V)" && transposedDataTable.Columns.Contains("Cell-10 (V)"))
+                                                {
+                                                    newRow["Cell-10 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-11 (V)" && transposedDataTable.Columns.Contains("Cell-11 (V)"))
+                                                {
+                                                    newRow["Cell-11 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-12 (V)" && transposedDataTable.Columns.Contains("Cell-12 (V)"))
+                                                {
+                                                    newRow["Cell-12 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-13 (V)" && transposedDataTable.Columns.Contains("Cell-13 (V)"))
+                                                {
+                                                    newRow["Cell-13 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-14 (V)" && transposedDataTable.Columns.Contains("Cell-14 (V)"))
+                                                {
+                                                    newRow["Cell-14 (V)"] = value;
+                                                }
+                                                else if (parameterName == "Cell-15 (V)" && transposedDataTable.Columns.Contains("Cell-15 (V)"))
+                                                {
+                                                    newRow["Cell-15 (V)"] = value;
+                                                }
 
-                                            transposedDataTable.Rows.Add(newRow);
+                                                transposedDataTable.Rows.Add(newRow);
 
+                                            }
                                         }
                                     }
-                                }
 
+                                }
+                                #endregion
+                                #region Merge
+                                mergeDataTable = MergeDataTable(transposedDataTable);
+                                #endregion
                             }
-                            #endregion
-                            #region Merge
-                            mergeDataTable = MergeDataTable(transposedDataTable);
-                            #endregion
                         }
                         catch (Exception ex)
                         {

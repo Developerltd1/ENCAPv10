@@ -20,7 +20,7 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using CheckBox = System.Windows.Forms.CheckBox;
 
-namespace EMView.UI  
+namespace EMView.UI
 {
     public partial class ExportData : BaseForm//Form
     {
@@ -34,17 +34,41 @@ namespace EMView.UI
 
 
 
-        public async  void ExportData_Load(object sender, EventArgs e)
+        public async void ExportData_Load(object sender, EventArgs e)
         {
+            if (StaticValues.IsCanbusSelected == null)
+            {
+                JIMessageBox.ErrorMessage("First select Protocol from Dashboard");
+                return;
+            }
+            lblcanbus.Text = StaticValues.IsCanbusSelected.ToString();
+
+            if (StaticValues.IsCanbusSelected == "CAN BUS")
+            { cbTemprature.Text = "SOH"; }
+            else
+            {
+                cbTemprature.Text = "Temperature";
+            }
+           
+               
+
             try
             {
                 datePickerStartDate.Value = DateTime.Now.AddHours(-1);
                 datePickerEndDate.Value = DateTime.Now;
-               await StartEndDateReport(datePickerStartDate.Value, datePickerEndDate.Value);
-                InitializeChart();
 
-                new ChartSet().ExportData_Clear(chartExportData, cbSelectAll, cbSOC, cbPower, cbVoltage, cbCurrent);
-                cbSelectAll.Checked = true;
+                if (StaticValues.IsCanbusSelected == "CAN BUS")
+                {
+                    await StartEndDateReport(datePickerStartDate.Value, datePickerEndDate.Value, StaticValues.IsCanbusSelected);
+                }
+                else
+                {
+                    await StartEndDateReport(datePickerStartDate.Value, datePickerEndDate.Value);
+                    InitializeChart();
+
+                    new ChartSet().ExportData_Clear(chartExportData, cbSelectAll, cbSOC, cbPower, cbVoltage, cbCurrent);
+                    cbSelectAll.Checked = true;
+                }
             }
             catch (Exception ex)
             {
@@ -54,7 +78,7 @@ namespace EMView.UI
 
 
 
-        
+
 
         #region Chart
         private async void ChkBox_CheckedChanged(object sender, EventArgs e) //SelectSingle
@@ -92,7 +116,7 @@ namespace EMView.UI
                 JIMessageBox.ErrorMessage(ex.Message);
             }
         }
-      
+
 
         #endregion
         #region Export CSV
@@ -121,7 +145,7 @@ namespace EMView.UI
             StartEndDateReport(startDate, endDate);
         }
 
-        private async Task StartEndDateReport(DateTime startDate, DateTime endDate)
+        private async Task StartEndDateReport(DateTime startDate, DateTime endDate, string IsCanbusSelected = null)
         {
             try
             {
@@ -130,14 +154,21 @@ namespace EMView.UI
                     JIMessageBox.InformationMessage("EndDate Must be less then StartDate");
                     return;
                 }
-                //Get frm Db
+
                 List<ChartModel> LstChartRecordFromDb = new List<ChartModel>();
-
-                LstChartRecordFromDb = await new MainLogicClass().GetStorePoints(startDate, endDate, cbVoltage.Checked,cbCurrent.Checked, cbPower.Checked, cbSOC.Checked, cbTemprature.Checked, cbSelectAll.Checked); //Get From DB
-
+                if (IsCanbusSelected == "CAN BUS")
+                {
+                    //Get frm Db
+                    LstChartRecordFromDb = await new MainLogicClass().GetStorePoints(startDate, endDate, cbVoltage.Checked, cbCurrent.Checked, cbPower.Checked, cbSOC.Checked, cbTemprature.Checked, cbSelectAll.Checked, IsCanbusSelected); //Get From DB
+                }
+                else
+                {
+                    //Get frm Db
+                    LstChartRecordFromDb = await new MainLogicClass().GetStorePoints(startDate, endDate, cbVoltage.Checked, cbCurrent.Checked, cbPower.Checked, cbSOC.Checked, cbTemprature.Checked, cbSelectAll.Checked); //Get From DB
+                }
                 //  listForCSV = allList;//hassanCode
                 #region ChartList
-                 List<LiveCharts.ChartValues<double>> allLists = new List<LiveCharts.ChartValues<double>>();
+                List<LiveCharts.ChartValues<double>> allLists = new List<LiveCharts.ChartValues<double>>();
                 ChartValues<double> voltageList = new ChartValues<double>();
                 ChartValues<double> currentList = new ChartValues<double>();
                 ChartValues<double> powerList = new ChartValues<double>();
@@ -196,18 +227,20 @@ namespace EMView.UI
         {
 
         }
-        
+
+         
         private async void btnExportCSV_Click(object sender, EventArgs e)
         {
+            
             btnExportCSV.Enabled = false; // Disable button to prevent multiple clicks
             try
             {
-                if (cbVoltage.Checked == false && cbCurrent.Checked == false &&  cbPower.Checked == false && cbSOC.Checked == false && cbTemprature.Checked == false && cbSelectAll.Checked == false)
+                if (cbVoltage.Checked == false && cbCurrent.Checked == false && cbPower.Checked == false && cbSOC.Checked == false && cbTemprature.Checked == false && cbSelectAll.Checked == false)
                 {
                     return;
                 }
                 DataTable dt = new DataTable();
-                dt = await new MainLogicClass().GetDataForCSV(datePickerStartDate.Value, datePickerEndDate.Value, cbVoltage, cbCurrent, cbPower, cbSOC, cbTemprature, cbSelectAll);
+                dt = await new MainLogicClass().GetDataForCSV(datePickerStartDate.Value, datePickerEndDate.Value, cbVoltage, cbCurrent, cbPower, cbSOC, cbTemprature, cbSelectAll, StaticValues.IsCanbusSelected);
                 if (dt.Rows.Count > 0)
                 {
                     ExportToCsv(dt, datePickerStartDate.Value, datePickerEndDate.Value);
@@ -278,7 +311,7 @@ namespace EMView.UI
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 // Set the default filename to the current date and time
-                saveFileDialog.FileName = "AlarmReport__"+startDate.ToString("yyyy-MM-dd HH-mm-ss tt") + "__" + endDate.ToString("yyyy-MM-dd HH-mm-ss tt") + ".csv";
+                saveFileDialog.FileName = "AlarmReport__" + startDate.ToString("yyyy-MM-dd HH-mm-ss tt") + "__" + endDate.ToString("yyyy-MM-dd HH-mm-ss tt") + ".csv";
                 saveFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
                 saveFileDialog.Title = "Save CSV File";
 

@@ -310,15 +310,15 @@ namespace EMView.UI
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.FlowLayoutPanel sidebarPanel;
         private FontAwesome.Sharp.IconButton pnBtnMenu;
-        private FontAwesome.Sharp.IconButton pnBtnSetting;
         private FontAwesome.Sharp.IconButton pnBtnAboutUs;
         private System.Windows.Forms.Timer SidebarTransaction;
-        private FontAwesome.Sharp.IconButton pnBtnDashboard;
         private MetroSet_UI.Controls.MetroSetControlBox metroSetControlBox1;
         private FontAwesome.Sharp.IconButton pnBtnDataExport;
         private System.Windows.Forms.Label labelDate;
         private System.Windows.Forms.Label labelTime;
         private FontAwesome.Sharp.IconButton iconButtonIsGuest;
         public System.Windows.Forms.Label labelIsGuest;
+        public FontAwesome.Sharp.IconButton pnBtnSetting;
+        public FontAwesome.Sharp.IconButton pnBtnDashboard;
     }
 }
