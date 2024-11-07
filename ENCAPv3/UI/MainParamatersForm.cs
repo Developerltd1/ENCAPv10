@@ -707,17 +707,17 @@ namespace EMView.UI
                 _SOCCanbus = Regex.Replace(_SOCCanbus, @"\D", "");
                 string _SOHCanbus = lblSOHCanbus.Text;
                 _SOHCanbus = Regex.Replace(_SOHCanbus, @"\D", "");
-                if (_voltCanbus == "-")
+                if (_voltCanbus == "-" || _voltCanbus == "")
                     _voltCanbus = null;
-                if (_currentCanbus == "-")
+                if (_currentCanbus == "-" || _currentCanbus == "")
                     _currentCanbus = null;
-                if (_PowerCanbus == "-")
+                if (_PowerCanbus == "-" || _PowerCanbus == "")
                     _PowerCanbus = null;
-                if (_AvgTempCanbus == "-")
+                if (_AvgTempCanbus == "-" || _AvgTempCanbus == "")
                     _AvgTempCanbus = null;
-                if (_SOCCanbus == "-")
+                if (_SOCCanbus == "-" || _SOCCanbus == "")
                     _SOCCanbus = null;
-                if (_SOHCanbus == "-")
+                if (_SOHCanbus == "-" || _SOHCanbus == "")
                     _SOHCanbus = null;
 
                 decimal? voltCanbus = _voltCanbus != null ? Convert.ToDecimal(_voltCanbus) : (decimal?)null;
@@ -1246,6 +1246,12 @@ namespace EMView.UI
                 richTextBox1.AppendText("Started reading CAN data...\n");
             }
 
+
+            byte[] canDummyPkt = { 0xAA, 0xC8, 0xFF, 0x07, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x55 };
+            SendCANPacketCanbus(canDummyPkt);
+
+            byte[] canBaud9600 = { 0xAA, 0x55, 0x06, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0B };
+            SendCANPacketCanbus(canBaud9600);
             //_serialPort.DataReceived += (sender, e) =>
             //{
             //    // Your code for handling the data received
@@ -1422,8 +1428,8 @@ namespace EMView.UI
 
 
                 // Check if the selected item has changed
-                if (commType.SelectedItem?.ToString() != previousCommType)
-                {
+                //if (commType.SelectedItem?.ToString() != previousCommType)
+                //{
                     // Store the new selection as the previous selection
                     previousCommType = commType.SelectedItem?.ToString();
 
@@ -1449,8 +1455,10 @@ namespace EMView.UI
 
                         //then start CANBUS Port
                         InitializeSerialPortCanbus();
-                    }
+                    
+                   
                 }
+                //}
             }
             catch (Exception ex)
             {
@@ -1472,6 +1480,7 @@ namespace EMView.UI
                 if (selectedValue == "CAN BUS")
                 {
                     parentForm.HideNavigationButtons(); // Hide buttons in parent form
+                   
                 }
                 else if (selectedValue == "MODBUS")
                 {
@@ -1496,6 +1505,8 @@ namespace EMView.UI
                         this.Invoke(new Action(() => panel9.Visible = true));
                         this.Invoke(new Action(() => panel3.Visible = true));
                         this.Invoke(new Action(() => panel2.Visible = false));
+                        this.Invoke(new Action(() => moduleCount.Visible = true));
+                        this.Invoke(new Action(() => label15.Visible = true));
 
                         //this.Invoke(new Action(() => mainForm.pnBtnDashboard.Visible = true));
                         //this.Invoke(new Action(() => mainForm.pnBtnSetting.Visible = true));
@@ -1516,7 +1527,9 @@ namespace EMView.UI
                         this.Invoke(new Action(() => panel9.Visible = false));
                         this.Invoke(new Action(() => panel3.Visible = false));
                         this.Invoke(new Action(() => panel2.Visible = true));
-                       // mainForm.hideButton();
+                        this.Invoke(new Action(() => moduleCount.Visible = false));
+                        this.Invoke(new Action(() => label15.Visible = false));
+                        // mainForm.hideButton();
                     });
 
                 }
